@@ -9,9 +9,7 @@ CREATE TABLE SUBJECT (
     enroll_id       VARCHAR(50),
 
     CONSTRAINT pk_subject_id
-        PRIMARY KEY (subject_id)
-        ON UPDATE CASCADE
-        ON DELETE SET NULL,
+        PRIMARY KEY (subject_id),
 
     CONSTRAINT fk_subject_sched_option_id
         FOREIGN KEY (sched_option_id)
