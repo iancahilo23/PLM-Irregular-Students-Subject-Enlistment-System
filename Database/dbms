@@ -26,4 +26,106 @@ CREATE TABLE SUBJECT (
         ON DELETE SET NULL
 );
 
+--FIRST YEAR (1ST SEMESTER)
 
+INSERT INTO SUBJECT VALUES 
+('STS 0002','Science, Technology and Society','02:30:00','00:00:00',3,NULL,NULL),
+('AAP 0007','Art Appreciation','03:00:00','00:00:00',3,NULL,NULL),
+('PCM 0006','Purposive Communications','02:00:00','00:00:00',3,NULL,NULL),
+('MMW 0001','Mathematics in the Modern World','02:30:00','00:00:00',3,NULL,NULL),
+('IPP 0010','Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag','03:00:00','00:00:00',3,NULL,NULL),
+('ICC 0101','Introduction to Computing (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0101.1','Introduction to Computing (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('ICC 0102','Fundamentals of Programming (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0102.1','Fundamentals of Programming (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('PATHFIT 1','Physical Activities towards Health and Fitness 1 (Movement Competency Training)','01:30:00','00:00:00',2,NULL,NULL),
+('NSTP 1','National Service Training Program 1','03:00:00','00:00:00',3,NULL,NULL);
+
+--FIRST YEAR (2ND SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('CET 0111','Calculus 1','03:00:00','00:00:00',3,NULL,NULL),
+('CET 0114','General Chemistry (lec)','02:00:00','00:00:00',3,NULL,NULL),
+('CET 0114.1','General Chemistry (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0121','Introduction to Computer Human Interaction (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0121.1','Introduction to Computer Human Interaction (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0122','Discrete Mathematics','02:30:00','00:00:00',3,NULL,NULL),
+('EIT 0123','Web Systems Technology (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0123.1','Web Systems Technology (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('ICC 0103','Intermediate Programming (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0103.1','Intermediate Programming (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('GTB 121','Great Books','02:00:00','00:00:00',3,NULL,NULL),
+('PATHFIT 2','Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)','01:30:00','00:00:00',2,NULL,NULL),
+('NSTP 2','National Service Training Program 2','03:00:00','00:00:00',3,NULL,NULL);
+
+--SECOND YEAR (1ST SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('CET 0121','Calculus 2','03:00:00','00:00:00',3,NULL,NULL),
+('CET 0225','Physics for IT (lec)','02:00:00','00:00:00',3,NULL,NULL),
+('CET 0225.1','Physics for IT (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('TCW 0005','The Contemporary World','02:30:00','00:00:00',3,NULL,NULL),
+('ICC 0104','Data Structures (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0104.1','Data Structures (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0211','Object Oriented Programming (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0211.1','Object Oriented Programming (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('PPC 121','Philippine Popular Culture','02:30:00','00:00:00',3,NULL,NULL),
+('EIT Elective 1','Professional Elective 1','03:00:00','00:00:00',3,NULL,NULL),
+('PATHFIT 3','PE Elective 1','01:30:00','00:00:00',2,NULL,NULL);
+
+--SECOND YEAR (2ND SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('UTS 0003','Understanding the Self','02:00:00','00:00:00',3,NULL,NULL),
+('RPH 0004','Readings in Philippine History','02:30:00','00:00:00',3,NULL,NULL),
+('EIT 0212','Platform Technology','02:30:00','00:00:00',3,NULL,NULL),
+('ICC 0105','Information Management (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0105.1','Information Management (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0221','Quantitative Methods','02:30:00','00:00:00',3,NULL,NULL),
+('EIT 0222','Networking 1 (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0222.1','Networking 1 (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('GES 0013','Environmental Science','03:00:00','00:00:00',3,NULL,NULL),
+('EIT Elective 2','Professional Elective 2','03:00:00','00:00:00',3,NULL,NULL),
+('PATHFIT 4','PE Elective 2','01:30:00','00:00:00',2,NULL,NULL);
+
+--THIRD YEAR (1ST SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('ICC 0335','Application and Emerging Technologies (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('ICC 0335.1','Application and Emerging Technologies (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0311','Advanced Database Systems (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0311.1','Advanced Database Systems (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0312','Networking 2 (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0312.1','Networking 2 (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT Elective 3','Professional Elective 3','03:00:00','00:00:00',3,NULL,NULL),
+('LWR 0009','Life and Works of Rizal','03:00:00','00:00:00',3,NULL,NULL);
+
+--THIRD YEAR (2ND SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('EIT 0321','Information Assurance and Security 1 (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0321.1','Information Assurance and Security 1 (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0322','System Integration and Architecture 1 (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0322.1','System Integration and Architecture 1 (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('EIT 0323','Integrative Programming and Technologies (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0323.1','Integrative Programming and Technologies (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('ETH 0008','Ethics','02:30:00','00:00:00',3,NULL,NULL);
+
+--THIRD YEAR (SUMMER)
+INSERT INTO SUBJECT VALUES
+('EIT 0331','System Integration and Architecture 2 (lec)','02:00:00','00:00:00',2,NULL,NULL),
+('EIT 0331.1','System Integration and Architecture 2 (lab)','00:00:00','03:00:00',1,NULL,NULL),
+('CAP 0101','Capstone Project 1','03:00:00','00:00:00',3,NULL,NULL);
+
+--FOURTH YEAR (1ST SEMESTER)
+
+INSERT INTO SUBJECT VALUES
+('EIT Elective 4','Professional Elective 4','03:00:00','00:00:00',3,NULL,NULL),
+('EIT Elective 5','Professional Elective 5','03:00:00','00:00:00',3,NULL,NULL),
+('EIT Elective 6','Professional Elective 6','03:00:00','00:00:00',3,NULL,NULL),
+('CAP 0102','Capstone Project 2','03:00:00','00:00:00',3,NULL,NULL);
+
+--FOURTH YEAR (2ND SEMESTER)
+INSERT INTO SUBJECT VALUES
+('IIP 0101','Practicum (Lecture)','02:00:00','00:00:00',2,NULL,NULL),
+('IIP 0102','Practicum (Immersion)','03:00:00','00:00:00',4,NULL,NULL);
