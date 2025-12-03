@@ -1,1 +1,29 @@
 
+CREATE TABLE SUBJECT (
+    subject_id      VARCHAR(50)         NOT NULL,
+    subject_title   VARCHAR(150)        NOT NULL,
+    lec_hours       TIME                NOT NULL,
+    lab_hours       TIME                NOT NULL,
+    units           DECIMAL(4,1)        NOT NULL,
+    sched_option_id VARCHAR(50),
+    enroll_id       VARCHAR(50),
+
+    CONSTRAINT pk_subject_id
+        PRIMARY KEY (subject_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_subject_sched_option_id
+        FOREIGN KEY (sched_option_id)
+        REFERENCES SCHEDULE_OPTION(sched_option_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_subject_enroll_id
+        FOREIGN KEY (enroll_id)
+        REFERENCES ENROLLMENT_STATUS(enroll_id)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
+);
+
+
