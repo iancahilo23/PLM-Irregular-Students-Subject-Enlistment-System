@@ -1,3 +1,32 @@
+--STATUS TABLES
+
+CREATE TABLE student_type (
+    type_id           VARCHAR(3)
+  , type_title        VARCHAR(5)
+  , CONSTRAINT stype_pk PRIMARY KEY(type_id)
+);
+
+INSERT INTO student_type VALUES ('N', 'New');
+INSERT INTO student_type VALUES ('O', 'Old');
+
+CREATE TABLE registration_status (
+    registration_id           VARCHAR(5)
+  , registration_title        VARCHAR(15)
+  , CONSTRAINT rstatus_pk PRIMARY KEY(registration_id)
+);
+
+INSERT INTO registration_status VALUES ('REG', 'Regular');
+INSERT INTO registration_status VALUES ('IRR', 'Irregular');
+
+CREATE TABLE enrollment_status (
+    enroll_id           VARCHAR(5)
+  , enroll_title        VARCHAR(15)
+  , CONSTRAINT estatus_pk PRIMARY KEY(enroll_id)
+);
+
+INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
+INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
+
 
 
 --STUDENT TABLE
