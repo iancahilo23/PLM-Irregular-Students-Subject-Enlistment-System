@@ -54,7 +54,7 @@ INSERT INTO college VALUES ('GSL', 'Graduate School of Law');
 --COURSE TABLE (BSIT, BSCS, etc.)
 
 CREATE TABLE COURSE(
-    course_id           VARCHAR(5)    NOT NULL
+    course_id           VARCHAR(15)    NOT NULL
     , course_title      VARCHAR(75)   DEFAULT ' '
     , college_id        VARCHAR(5)    NOT NULL
     , CONSTRAINT        pk_course_id  PRIAMRY KEY (course_id)
@@ -63,6 +63,7 @@ CREATE TABLE COURSE(
 
 INSERT INTO college VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'CISTM');
 INSERT INTO college VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'CISTM');
+INSERT INTO college VALUES ('BSA', 'BBachelor of Science in Accountancy', 'CA');
 
 --STUDENT TABLE
 
