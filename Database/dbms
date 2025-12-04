@@ -78,29 +78,59 @@ CREATE TABLE STUDENT (
     , section            INT                 NOT NULL
     , semester           VARCHAR(50)         NOT NULL
     , school_year        VARCHAR(50)         NOT NULL
-    , date_enrolled      DATE                NOT NULL
+    , date_enrolled      DATE                DEFAULT NULL
     , type_id            VARCHAR(50)
     , registration_id    VARCHAR(50)
-
     , CONSTRAINT pk_student_id PRIMARY KEY (student_id)
-
     , CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id)
-
     , CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
       
 );
 
 INSERT INTO STUDENT VALUES
-('2025-0001', 'Garcia', 'Jose', 'P', 'BSIT', 1, 1, '1st', '2025-2026', '2025-08-01', 'N', 'REG'),
-('2025-0002', 'Santos', 'Maria', 'L', 'BSIT', 1, 2, '1st', '2025-2026', '2025-08-02', 'N', 'REG'),
-('2025-0003', 'Reyes', 'Mark', 'D', 'BSCS', 1, 1, '1st', '2025-2026', '2025-08-03', 'N', 'REG'),
-('2024-0045', 'Dizon', 'Anne', 'C', 'BSIT', 2, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
-('2024-0089', 'Tan', 'Kevin', 'S', 'BSIT', 2, 3, '1st', '2025-2026', '2025-08-05', 'O', 'IRR'),
-('2023-0102', 'Lim', 'Christine', 'M', 'BSCS', 3, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
-('2023-0055', 'Yap', 'Michael', 'R', 'BSIT', 3, 2, '1st', '2025-2026', '2025-08-04', 'O', 'REG'),
-('2022-0012', 'Torres', 'Jane', 'V', 'BSIT', 4, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
-('2022-0033', 'Mendoza', 'Paul', 'B', 'BSCS', 4, 1, '1st', '2025-2026', '2025-08-02', 'O', 'IRR'),
-('2025-0010', 'Cruz', 'Sarah', 'J', 'BSIT', 1, 3, '1st', '2025-2026', '2025-08-10', 'N', 'REG');
+('2025-00001', 'Garcia', 'Jose', 'P', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00002', 'Santos', 'Maria', 'L', 'BSIT', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00003', 'Reyes', 'Mark', 'D', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00004', 'Dizon', 'Anne', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00005', 'Tan', 'Kevin', 'S', 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00006', 'Lim', 'Christine', 'M', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00007', 'Yap', 'Michael', 'R', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00008', 'Torres', 'Jane', 'V', 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00009', 'Mendoza', 'Paul', 'B', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00010', 'Cruz', 'Sarah', 'J', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
+
+('2025-00011', 'Salazar', 'Ashley Allan', 'Q', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00012', 'Verano', 'Brahm Daniel', 'T', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00013', 'Jarlego', 'Jamie', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00014', 'Jacinto', 'Ken Jeremiah', '', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00015', 'Dulay', 'Earl Stephen', 'E', 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00016', 'Solidor', 'Prinze Jude', 'R', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00017', 'Dela Guardia', 'Neil Gabriel', 'D', 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00018', 'Capco', 'Cedrix', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00019', 'Cahilo', 'Ian Carlo', 'T', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00020', 'Cruz', 'Jenizon', '', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
+
+('2025-00021', 'Ligon', 'Justine', 'Y', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00022', 'Sarte', 'Nathaniel Chaz', 'N', 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00023', 'Voluntad', 'Sherelyn Joy', 'F', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00024', 'Dela Cruz', 'Juan', 'A', 'BSCS', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00025', 'de los Santos', 'Maria Clara', 'A', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00026', 'Ibarra', 'Crisostomo', 'M', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00027', 'Verdolagas', 'Damaso', '', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00028', 'Villamor', 'Isagani', '', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00029', 'Doe', 'John', 'F', 'BSCS', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00030', 'Perez', 'Juanito', 'B', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR')
+
+('2025-00031', 'Stark', 'Anthony', 'E', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00032', 'Talis', 'Jayce', 'G', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00033', 'Caspar', 'Navia', 'O', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00034', 'Yang', 'Welt', 'J', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00035', 'Howard', 'Grace', 'B', 'BSCS', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00036', 'Dist', 'Andrew', 'O', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00037', 'Bayani', 'Himmel', 'A', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00038', 'Cain', 'Viktor', 'R', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00039', 'White', 'Walter', 'H', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00040', 'Asistido', 'Yasmin', 'M', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR');
 
 
 
