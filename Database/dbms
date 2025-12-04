@@ -63,21 +63,21 @@ CREATE TABLE COURSE(
     , CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
 );
 
-INSERT INTO college VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
-INSERT INTO college VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
-INSERT INTO college VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
-INSERT INTO college VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
-INSERT INTO college VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
-INSERT INTO college VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
-INSERT INTO college VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
-INSERT INTO college VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
-INSERT INTO college VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSBA FM', 'Bachelor of Science in Business Administration Major in Financial Management', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSBA HRM', 'Bachelor of Science in Business Administration Major in Human Resource Management', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSBA MM', 'Bachelor of Science in Business Administration Major in Marketing Management', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSE', 'Bachelor of Science in Entrepreneurship', 'UNDER', 'CBA');
-INSERT INTO college VALUES ('BSREM', 'Bachelor of Science in Real Estate Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
+INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
+INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
+INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
+INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA FM', 'Bachelor of Science in Business Administration Major in Financial Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA HRM', 'Bachelor of Science in Business Administration Major in Human Resource Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA MM', 'Bachelor of Science in Business Administration Major in Marketing Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSE', 'Bachelor of Science in Entrepreneurship', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSREM', 'Bachelor of Science in Real Estate Management', 'UNDER', 'CBA');
 
 --COURSE TYPE TABLE 
 
