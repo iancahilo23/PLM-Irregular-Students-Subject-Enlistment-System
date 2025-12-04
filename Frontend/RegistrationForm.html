@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLM Student Enrollment Record</title>
+    <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GENERAL RESET --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Times New Roman', serif;
+        }
+
+        body {
+            background-color: #505050; /* Grey background for screen view */
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- THE PAPER CONTAINER --- */
+        .paper {
+            background: white;
+            width: 8.5in;
+            height: 11in;
+            padding: 0.4in; /* Slightly tighter padding like the real form */
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- HEADER SECTION --- */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 2px solid black;
+            padding-bottom: 5px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 35%;
+        }
+
+        .header-left img {
+            height: 50px;
+        }
+
+        .header-left div h1 {
+            font-size: 11px; /* Small but uppercase */
+            font-weight: bold;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .header-left div p {
+            font-size: 10px;
+            font-style: italic;
+            line-height: 1.1;
+        }
+
+        .header-center {
+            text-align: center;
+            width: 30%;
+        }
+
+        .header-center h2 {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .header-center p {
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .header-right {
+            width: 35%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .copy-box {
+            border: 2px solid black;
+            padding: 5px 10px;
+            font-weight: bold;
+            font-size: 12px;
+            background: #e0e0e0; /* Slight grey fill like the image */
+        }
+
+        /* --- STUDENT INFO GRID (The Boxed Layout) --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 3fr 1fr 1fr;
+            border: 2px solid black;
+            margin-bottom: 10px;
+        }
+
+        .info-cell {
+            border: 1px solid black;
+            padding: 4px;
+        }
+
+        .info-cell label {
+            display: block;
+            font-size: 10px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .info-cell span {
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Merging cells visually */
+        .col-span-2 { grid-column: span 2; }
+        .col-span-4 { grid-column: span 4; }
+
+        /* --- SUBJECT TABLE --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            border: 2px solid black;
+            margin-bottom: 0; /* Connected to footer */
+        }
+
+        th {
+            background-color: #d9d9d9; /* Grey header */
+            border: 1px solid black;
+            padding: 4px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        td {
+            border: 1px solid black;
+            padding: 4px;
+            height: 20px; /* Min height for rows */
+        }
+
+        td.center { text-align: center; }
+
+        /* --- FOOTER SECTION (The Bottom Boxes) --- */
+        .footer-section {
+            border: 2px solid black;
+            border-top: none; /* Connects to table */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .remarks-row {
+            border-bottom: 1px solid black;
+            padding: 5px;
+            font-size: 11px;
+            height: 30px;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .bottom-cell {
+            border-right: 1px solid black;
+            padding: 5px;
+        }
+
+        .bottom-cell:last-child { border-right: none; }
+
+        .bottom-label {
+            font-size: 10px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .bottom-value {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* --- PRINT BUTTON --- */
+        .print-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #3a40a2;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-family: sans-serif;
+        }
+
+        /* --- PRINT MEDIA QUERY --- */
+        @media print {
+                body { background: none; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                .paper { box-shadow: none; margin: 0; width: 100%; height: 100%; }
+                .print-btn { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="paper">
+        
+        <div class="header-container">
+            <div class="header-left">
+                <img src="Media/PLMlogo.png" alt="PLM Logo">
+                <div>
+                    <h1>Pamantasan ng Lungsod ng Maynila</h1>
+                    <p>(University of the City of Manila)</p>
+                    <p>Intramuros, Manila</p>
+                </div>
+            </div>
+            <div class="header-center">
+                <h2>Student Enrollment Record</h2>
+                <p>First Semester School Year 2025-2026</p>
+            </div>
+            <div class="header-right">
+                <div class="copy-box">STUDENT'S COPY</div>
+            </div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-cell">
+                <label>Student No:</label>
+                <span id="p-id">Loading...</span>
+            </div>
+            <div class="info-cell">
+                <label>Student Name:</label>
+                <span id="p-name">Loading...</span>
+            </div>
+            <div class="info-cell">
+                <label>Year Level:</label>
+                <span id="p-year">3</span> </div>
+            <div class="info-cell">
+                <label>Date:</label>
+                <span id="p-date">Loading...</span>
+            </div>
+
+            <div class="info-cell">
+                <label>College:</label>
+                <span>CET</span> </div>
+            <div class="info-cell">
+                <label>Course:</label>
+                <span id="p-program">Loading...</span>
+            </div>
+            <div class="info-cell">
+                <label>Type:</label>
+                <span id="p-status">Old</span>
+            </div>
+            <div class="info-cell">
+                <label>Reg Status:</label>
+                <span>Irregular</span>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 12%">Subject Code</th>
+                    <th style="width: 8%">Sec.</th>
+                    <th style="width: 35%">Subject Title</th>
+                    <th style="width: 5%">Units</th>
+                    <th style="width: 25%">Time / Days</th>
+                    <th style="width: 15%">Room</th>
+                </tr>
+            </thead>
+            <tbody id="print-table-body">
+                </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right; border-right: 1px solid black; padding-right: 10px; font-weight: bold;">Total Units:</td>
+                    <td class="center" style="font-weight: bold; font-size: 14px;" id="p-total-units">0</td>
+                    <td colspan="2" style="background: #f0f0f0;"></td>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="footer-section">
+            <div class="remarks-row">
+                <b>Remarks:</b> This enrollment becomes official until all requirements are complied with.
+            </div>
+            <div class="bottom-grid">
+                <div class="bottom-cell">
+                    <span class="bottom-label">Encoder:</span>
+                    <div class="bottom-value">SYSTEM-GENERATED</div>
+                </div>
+                <div class="bottom-cell">
+                    <span class="bottom-label">Date:</span>
+                    <div class="bottom-value" id="p-gen-date"></div>
+                </div>
+                <div class="bottom-cell">
+                    <span class="bottom-label">Student Signature:</span>
+                    <div class="bottom-value" style="margin-top: 15px; border-top: 1px solid black; width: 80%; margin-left: auto; margin-right: auto;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. RETRIEVE DATA
+            const storedData = localStorage.getItem("PLM_Enlistment_Data");
+            if (!storedData) return;
+
+            const data = JSON.parse(storedData);
+            const today = new Date().toLocaleDateString();
+
+            // 2. FILL INFO
+            document.getElementById('p-id').innerText = data.student.id;
+            document.getElementById('p-name').innerText = data.student.name;
+            document.getElementById('p-program').innerText = data.student.program; // e.g., "BSIT"
+            document.getElementById('p-status').innerText = data.student.status || "Old";
+            document.getElementById('p-date').innerText = today;
+            document.getElementById('p-gen-date').innerText = today;
+
+            // Simple parser for Year Level (e.g., "Third Year" -> "3")
+            const yearMap = { "First Year": "1", "Second Year": "2", "Third Year": "3", "Fourth Year": "4" };
+            document.getElementById('p-year').innerText = yearMap[data.student.year] || data.student.year;
+
+            // 3. FILL TABLE
+            const tbody = document.getElementById('print-table-body');
+            let totalUnits = 0;
+            tbody.innerHTML = "";
+
+            data.subjects.forEach(sub => {
+                totalUnits += sub.units;
+                const row = `
+                    <tr>
+                        <td style="font-weight: bold;">${sub.code}</td>
+                        <td class="center">${sub.section || '1'}</td>
+                        <td>${sub.desc}</td> <td class="center">${sub.units}</td>
+                        <td class="center">${sub.schedule}</td>
+                        <td class="center">${sub.room}</td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+
+            // Fill empty rows to make the form look "full" like a real document
+            const rowsToAdd = 10 - data.subjects.length;
+            if (rowsToAdd > 0) {
+                for (let i = 0; i < rowsToAdd; i++) {
+                    tbody.innerHTML += `<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>`;
+                }
+            }
+
+            document.getElementById('p-total-units').innerText = totalUnits;
+        });
+    </script>
+
+</body>
+</html>
