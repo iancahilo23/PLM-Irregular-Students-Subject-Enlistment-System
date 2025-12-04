@@ -65,3 +65,323 @@ INSERT INTO STUDENT VALUES
 ('2022-0033', 'Mendoza', 'Paul', 'B', 'BSCS', 4, 1, '1st', '2025-2026', '2025-08-02', 'O', 'IRR'),
 ('2025-0010', 'Cruz', 'Sarah', 'J', 'BSIT', 1, 3, '1st', '2025-2026', '2025-08-10', 'N', 'REG');
 
+--SCHEDULES AND OPTIONS
+
+CREATE TABLE schedule (
+    sched_id            VARCHAR(15)
+  , day_of_week         VARCHAR(5)
+  , time_start          VARCHAR(10)
+  , time_end            VARCHAR(10)
+  , CONSTRAINT sched_pk PRIMARY KEY(sched_id)
+);
+
+CREATE TABLE schedule_option (
+    sched_option_id           VARCHAR(15)
+  , sched_id                  VARCHAR(15)
+  , faculty_id                VARCHAR(15)
+  , CONSTRAINT schedopt_pk PRIMARY KEY(sched_option_id)
+  , CONSTRAINT sosched_fk FOREIGN KEY (sched_id) REFERENCES schedule(sched_id)
+  , CONSTRAINT sofaculty_fk FOREIGN KEY (faculty_id) REFERENCES faculty(faculty_id)
+);
+
+-- sched_id format: DAY-HRS/MINS-START
+INSERT INTO schedule VALUES ('M130-0700', 'M', '07:00', '08:30');
+INSERT INTO schedule VALUES ('M130-0830', 'M', '08:30', '10:00');
+INSERT INTO schedule VALUES ('M130-1000', 'M', '10:00', '11:30');
+INSERT INTO schedule VALUES ('M130-1130', 'M', '11:30', '13:00');
+INSERT INTO schedule VALUES ('M130-1300', 'M', '13:00', '14:30');
+INSERT INTO schedule VALUES ('M130-1430', 'M', '14:30', '16:00');
+INSERT INTO schedule VALUES ('M130-1600', 'M', '16:00', '17:30');
+INSERT INTO schedule VALUES ('M130-1730', 'M', '17:30', '19:00');
+INSERT INTO schedule VALUES ('M130-1900', 'M', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('M200-0700', 'M', '07:00', '09:00');
+INSERT INTO schedule VALUES ('M200-0800', 'M', '08:00', '10:00');
+INSERT INTO schedule VALUES ('M200-0900', 'M', '09:00', '11:00');
+INSERT INTO schedule VALUES ('M200-1000', 'M', '10:00', '12:00');
+INSERT INTO schedule VALUES ('M200-1100', 'M', '11:00', '13:00');
+INSERT INTO schedule VALUES ('M200-1200', 'M', '12:00', '14:00');
+INSERT INTO schedule VALUES ('M200-1300', 'M', '13:00', '15:00');
+INSERT INTO schedule VALUES ('M200-1400', 'M', '14:00', '16:00');
+INSERT INTO schedule VALUES ('M200-1500', 'M', '15:00', '17:00');
+INSERT INTO schedule VALUES ('M200-1600', 'M', '16:00', '18:00');
+INSERT INTO schedule VALUES ('M200-1700', 'M', '17:00', '19:00');
+INSERT INTO schedule VALUES ('M200-1800', 'M', '18:00', '20:00');
+INSERT INTO schedule VALUES ('M200-1900', 'M', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('M300-0700', 'M', '07:00', '10:00');
+INSERT INTO schedule VALUES ('M300-0800', 'M', '08:00', '11:00');
+INSERT INTO schedule VALUES ('M300-0900', 'M', '09:00', '12:00');
+INSERT INTO schedule VALUES ('M300-1000', 'M', '10:00', '13:00');
+INSERT INTO schedule VALUES ('M300-1100', 'M', '11:00', '14:00');
+INSERT INTO schedule VALUES ('M300-1200', 'M', '12:00', '15:00');
+INSERT INTO schedule VALUES ('M300-1300', 'M', '13:00', '16:00');
+INSERT INTO schedule VALUES ('M300-1400', 'M', '14:00', '17:00');
+INSERT INTO schedule VALUES ('M300-1500', 'M', '15:00', '18:00');
+INSERT INTO schedule VALUES ('M300-1600', 'M', '16:00', '19:00');
+INSERT INTO schedule VALUES ('M300-1700', 'M', '17:00', '20:00');
+INSERT INTO schedule VALUES ('M300-1800', 'M', '18:00', '21:00');
+
+INSERT INTO schedule VALUES ('T130-0700', 'T', '07:00', '08:30');
+INSERT INTO schedule VALUES ('T130-0830', 'T', '08:30', '10:00');
+INSERT INTO schedule VALUES ('T130-1000', 'T', '10:00', '11:30');
+INSERT INTO schedule VALUES ('T130-1130', 'T', '11:30', '13:00');
+INSERT INTO schedule VALUES ('T130-1300', 'T', '13:00', '14:30');
+INSERT INTO schedule VALUES ('T130-1430', 'T', '14:30', '16:00');
+INSERT INTO schedule VALUES ('T130-1600', 'T', '16:00', '17:30');
+INSERT INTO schedule VALUES ('T130-1730', 'T', '17:30', '19:00');
+INSERT INTO schedule VALUES ('T130-1900', 'T', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('T200-0700', 'T', '07:00', '09:00');
+INSERT INTO schedule VALUES ('T200-0800', 'T', '08:00', '10:00');
+INSERT INTO schedule VALUES ('T200-0900', 'T', '09:00', '11:00');
+INSERT INTO schedule VALUES ('T200-1000', 'T', '10:00', '12:00');
+INSERT INTO schedule VALUES ('T200-1100', 'T', '11:00', '13:00');
+INSERT INTO schedule VALUES ('T200-1200', 'T', '12:00', '14:00');
+INSERT INTO schedule VALUES ('T200-1300', 'T', '13:00', '15:00');
+INSERT INTO schedule VALUES ('T200-1400', 'T', '14:00', '16:00');
+INSERT INTO schedule VALUES ('T200-1500', 'T', '15:00', '17:00');
+INSERT INTO schedule VALUES ('T200-1600', 'T', '16:00', '18:00');
+INSERT INTO schedule VALUES ('T200-1700', 'T', '17:00', '19:00');
+INSERT INTO schedule VALUES ('T200-1800', 'T', '18:00', '20:00');
+INSERT INTO schedule VALUES ('T200-1900', 'T', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('T300-0700', 'T', '07:00', '10:00');
+INSERT INTO schedule VALUES ('T300-0800', 'T', '08:00', '11:00');
+INSERT INTO schedule VALUES ('T300-0900', 'T', '09:00', '12:00');
+INSERT INTO schedule VALUES ('T300-1000', 'T', '10:00', '13:00');
+INSERT INTO schedule VALUES ('T300-1100', 'T', '11:00', '14:00');
+INSERT INTO schedule VALUES ('T300-1200', 'T', '12:00', '15:00');
+INSERT INTO schedule VALUES ('T300-1300', 'T', '13:00', '16:00');
+INSERT INTO schedule VALUES ('T300-1400', 'T', '14:00', '17:00');
+INSERT INTO schedule VALUES ('T300-1500', 'T', '15:00', '18:00');
+INSERT INTO schedule VALUES ('T300-1600', 'T', '16:00', '19:00');
+INSERT INTO schedule VALUES ('T300-1700', 'T', '17:00', '20:00');
+INSERT INTO schedule VALUES ('T300-1800', 'T', '18:00', '21:00');
+
+INSERT INTO schedule VALUES ('W130-0700', 'W', '07:00', '08:30');
+INSERT INTO schedule VALUES ('W130-0830', 'W', '08:30', '10:00');
+INSERT INTO schedule VALUES ('W130-1000', 'W', '10:00', '11:30');
+INSERT INTO schedule VALUES ('W130-1130', 'W', '11:30', '13:00');
+INSERT INTO schedule VALUES ('W130-1300', 'W', '13:00', '14:30');
+INSERT INTO schedule VALUES ('W130-1430', 'W', '14:30', '16:00');
+INSERT INTO schedule VALUES ('W130-1600', 'W', '16:00', '17:30');
+INSERT INTO schedule VALUES ('W130-1730', 'W', '17:30', '19:00');
+INSERT INTO schedule VALUES ('W130-1900', 'W', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('W200-0700', 'W', '07:00', '09:00');
+INSERT INTO schedule VALUES ('W200-0800', 'W', '08:00', '10:00');
+INSERT INTO schedule VALUES ('W200-0900', 'W', '09:00', '11:00');
+INSERT INTO schedule VALUES ('W200-1000', 'W', '10:00', '12:00');
+INSERT INTO schedule VALUES ('W200-1100', 'W', '11:00', '13:00');
+INSERT INTO schedule VALUES ('W200-1200', 'W', '12:00', '14:00');
+INSERT INTO schedule VALUES ('W200-1300', 'W', '13:00', '15:00');
+INSERT INTO schedule VALUES ('W200-1400', 'W', '14:00', '16:00');
+INSERT INTO schedule VALUES ('W200-1500', 'W', '15:00', '17:00');
+INSERT INTO schedule VALUES ('W200-1600', 'W', '16:00', '18:00');
+INSERT INTO schedule VALUES ('W200-1700', 'W', '17:00', '19:00');
+INSERT INTO schedule VALUES ('W200-1800', 'W', '18:00', '20:00');
+INSERT INTO schedule VALUES ('W200-1900', 'W', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('W300-0700', 'W', '07:00', '10:00');
+INSERT INTO schedule VALUES ('W300-0800', 'W', '08:00', '11:00');
+INSERT INTO schedule VALUES ('W300-0900', 'W', '09:00', '12:00');
+INSERT INTO schedule VALUES ('W300-1000', 'W', '10:00', '13:00');
+INSERT INTO schedule VALUES ('W300-1100', 'W', '11:00', '14:00');
+INSERT INTO schedule VALUES ('W300-1200', 'W', '12:00', '15:00');
+INSERT INTO schedule VALUES ('W300-1300', 'W', '13:00', '16:00');
+INSERT INTO schedule VALUES ('W300-1400', 'W', '14:00', '17:00');
+INSERT INTO schedule VALUES ('W300-1500', 'W', '15:00', '18:00');
+INSERT INTO schedule VALUES ('W300-1600', 'W', '16:00', '19:00');
+INSERT INTO schedule VALUES ('W300-1700', 'W', '17:00', '20:00');
+INSERT INTO schedule VALUES ('W300-1800', 'W', '18:00', '21:00');
+
+INSERT INTO schedule VALUES ('Th130-0700', 'Th', '07:00', '08:30');
+INSERT INTO schedule VALUES ('Th130-0830', 'Th', '08:30', '10:00');
+INSERT INTO schedule VALUES ('Th130-1000', 'Th', '10:00', '11:30');
+INSERT INTO schedule VALUES ('Th130-1130', 'Th', '11:30', '13:00');
+INSERT INTO schedule VALUES ('Th130-1300', 'Th', '13:00', '14:30');
+INSERT INTO schedule VALUES ('Th130-1430', 'Th', '14:30', '16:00');
+INSERT INTO schedule VALUES ('Th130-1600', 'Th', '16:00', '17:30');
+INSERT INTO schedule VALUES ('Th130-1730', 'Th', '17:30', '19:00');
+INSERT INTO schedule VALUES ('Th130-1900', 'Th', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('Th200-0700', 'Th', '07:00', '09:00');
+INSERT INTO schedule VALUES ('Th200-0800', 'Th', '08:00', '10:00');
+INSERT INTO schedule VALUES ('Th200-0900', 'Th', '09:00', '11:00');
+INSERT INTO schedule VALUES ('Th200-1000', 'Th', '10:00', '12:00');
+INSERT INTO schedule VALUES ('Th200-1100', 'Th', '11:00', '13:00');
+INSERT INTO schedule VALUES ('Th200-1200', 'Th', '12:00', '14:00');
+INSERT INTO schedule VALUES ('Th200-1300', 'Th', '13:00', '15:00');
+INSERT INTO schedule VALUES ('Th200-1400', 'Th', '14:00', '16:00');
+INSERT INTO schedule VALUES ('Th200-1500', 'Th', '15:00', '17:00');
+INSERT INTO schedule VALUES ('Th200-1600', 'Th', '16:00', '18:00');
+INSERT INTO schedule VALUES ('Th200-1700', 'Th', '17:00', '19:00');
+INSERT INTO schedule VALUES ('Th200-1800', 'Th', '18:00', '20:00');
+INSERT INTO schedule VALUES ('Th200-1900', 'Th', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('Th300-0700', 'Th', '07:00', '10:00');
+INSERT INTO schedule VALUES ('Th300-0800', 'Th', '08:00', '11:00');
+INSERT INTO schedule VALUES ('Th300-0900', 'Th', '09:00', '12:00');
+INSERT INTO schedule VALUES ('Th300-1000', 'Th', '10:00', '13:00');
+INSERT INTO schedule VALUES ('Th300-1100', 'Th', '11:00', '14:00');
+INSERT INTO schedule VALUES ('Th300-1200', 'Th', '12:00', '15:00');
+INSERT INTO schedule VALUES ('Th300-1300', 'Th', '13:00', '16:00');
+INSERT INTO schedule VALUES ('Th300-1400', 'Th', '14:00', '17:00');
+INSERT INTO schedule VALUES ('Th300-1500', 'Th', '15:00', '18:00');
+INSERT INTO schedule VALUES ('Th300-1600', 'Th', '16:00', '19:00');
+INSERT INTO schedule VALUES ('Th300-1700', 'Th', '17:00', '20:00');
+INSERT INTO schedule VALUES ('Th300-1800', 'Th', '18:00', '21:00');
+
+INSERT INTO schedule VALUES ('F130-0700', 'F', '07:00', '08:30');
+INSERT INTO schedule VALUES ('F130-0830', 'F', '08:30', '10:00');
+INSERT INTO schedule VALUES ('F130-1000', 'F', '10:00', '11:30');
+INSERT INTO schedule VALUES ('F130-1130', 'F', '11:30', '13:00');
+INSERT INTO schedule VALUES ('F130-1300', 'F', '13:00', '14:30');
+INSERT INTO schedule VALUES ('F130-1430', 'F', '14:30', '16:00');
+INSERT INTO schedule VALUES ('F130-1600', 'F', '16:00', '17:30');
+INSERT INTO schedule VALUES ('F130-1730', 'F', '17:30', '19:00');
+INSERT INTO schedule VALUES ('F130-1900', 'F', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('F200-0700', 'F', '07:00', '09:00');
+INSERT INTO schedule VALUES ('F200-0800', 'F', '08:00', '10:00');
+INSERT INTO schedule VALUES ('F200-0900', 'F', '09:00', '11:00');
+INSERT INTO schedule VALUES ('F200-1000', 'F', '10:00', '12:00');
+INSERT INTO schedule VALUES ('F200-1100', 'F', '11:00', '13:00');
+INSERT INTO schedule VALUES ('F200-1200', 'F', '12:00', '14:00');
+INSERT INTO schedule VALUES ('F200-1300', 'F', '13:00', '15:00');
+INSERT INTO schedule VALUES ('F200-1400', 'F', '14:00', '16:00');
+INSERT INTO schedule VALUES ('F200-1500', 'F', '15:00', '17:00');
+INSERT INTO schedule VALUES ('F200-1600', 'F', '16:00', '18:00');
+INSERT INTO schedule VALUES ('F200-1700', 'F', '17:00', '19:00');
+INSERT INTO schedule VALUES ('F200-1800', 'F', '18:00', '20:00');
+INSERT INTO schedule VALUES ('F200-1900', 'F', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('F300-0700', 'F', '07:00', '10:00');
+INSERT INTO schedule VALUES ('F300-0800', 'F', '08:00', '11:00');
+INSERT INTO schedule VALUES ('F300-0900', 'F', '09:00', '12:00');
+INSERT INTO schedule VALUES ('F300-1000', 'F', '10:00', '13:00');
+INSERT INTO schedule VALUES ('F300-1100', 'F', '11:00', '14:00');
+INSERT INTO schedule VALUES ('F300-1200', 'F', '12:00', '15:00');
+INSERT INTO schedule VALUES ('F300-1300', 'F', '13:00', '16:00');
+INSERT INTO schedule VALUES ('F300-1400', 'F', '14:00', '17:00');
+INSERT INTO schedule VALUES ('F300-1500', 'F', '15:00', '18:00');
+INSERT INTO schedule VALUES ('F300-1600', 'F', '16:00', '19:00');
+INSERT INTO schedule VALUES ('F300-1700', 'F', '17:00', '20:00');
+INSERT INTO schedule VALUES ('F300-1800', 'F', '18:00', '21:00');
+
+INSERT INTO schedule VALUES ('S130-0700', 'S', '07:00', '08:30');
+INSERT INTO schedule VALUES ('S130-0830', 'S', '08:30', '10:00');
+INSERT INTO schedule VALUES ('S130-1000', 'S', '10:00', '11:30');
+INSERT INTO schedule VALUES ('S130-1130', 'S', '11:30', '13:00');
+INSERT INTO schedule VALUES ('S130-1300', 'S', '13:00', '14:30');
+INSERT INTO schedule VALUES ('S130-1430', 'S', '14:30', '16:00');
+INSERT INTO schedule VALUES ('S130-1600', 'S', '16:00', '17:30');
+INSERT INTO schedule VALUES ('S130-1730', 'S', '17:30', '19:00');
+INSERT INTO schedule VALUES ('S130-1900', 'S', '19:00', '20:30');
+
+INSERT INTO schedule VALUES ('S200-0700', 'S', '07:00', '09:00');
+INSERT INTO schedule VALUES ('S200-0800', 'S', '08:00', '10:00');
+INSERT INTO schedule VALUES ('S200-0900', 'S', '09:00', '11:00');
+INSERT INTO schedule VALUES ('S200-1000', 'S', '10:00', '12:00');
+INSERT INTO schedule VALUES ('S200-1100', 'S', '11:00', '13:00');
+INSERT INTO schedule VALUES ('S200-1200', 'S', '12:00', '14:00');
+INSERT INTO schedule VALUES ('S200-1300', 'S', '13:00', '15:00');
+INSERT INTO schedule VALUES ('S200-1400', 'S', '14:00', '16:00');
+INSERT INTO schedule VALUES ('S200-1500', 'S', '15:00', '17:00');
+INSERT INTO schedule VALUES ('S200-1600', 'S', '16:00', '18:00');
+INSERT INTO schedule VALUES ('S200-1700', 'S', '17:00', '19:00');
+INSERT INTO schedule VALUES ('S200-1800', 'S', '18:00', '20:00');
+INSERT INTO schedule VALUES ('S200-1900', 'S', '19:00', '21:00');
+
+INSERT INTO schedule VALUES ('S300-0700', 'S', '07:00', '10:00');
+INSERT INTO schedule VALUES ('S300-0800', 'S', '08:00', '11:00');
+INSERT INTO schedule VALUES ('S300-0900', 'S', '09:00', '12:00');
+INSERT INTO schedule VALUES ('S300-1000', 'S', '10:00', '13:00');
+INSERT INTO schedule VALUES ('S300-1100', 'S', '11:00', '14:00');
+INSERT INTO schedule VALUES ('S300-1200', 'S', '12:00', '15:00');
+INSERT INTO schedule VALUES ('S300-1300', 'S', '13:00', '16:00');
+INSERT INTO schedule VALUES ('S300-1400', 'S', '14:00', '17:00');
+INSERT INTO schedule VALUES ('S300-1500', 'S', '15:00', '18:00');
+INSERT INTO schedule VALUES ('S300-1600', 'S', '16:00', '19:00');
+INSERT INTO schedule VALUES ('S300-1700', 'S', '17:00', '20:00');
+INSERT INTO schedule VALUES ('S300-1800', 'S', '18:00', '21:00');
+
+-- sched_opt_id format: FAC-DAYS-ORDERofCLASS
+INSERT INTO schedule_option VALUES ('001-MTh-01', 'M130-0700', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-01', 'Th130-0700', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-02', 'M130-0830', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-02', 'Th130-0830', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-03', 'M130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-03', 'Th130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-04', 'M130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-04', 'Th130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-01', 'T130-0700', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-01', 'F130-0700', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-02', 'T130-0830', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-02', 'F130-0830', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-03', 'T130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-03', 'F130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-04', 'T130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-04', 'F130-1000', 'FAC001');
+
+INSERT INTO schedule_option VALUES ('002-TF-01', 'T130-1300', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-TF-01', 'F130-1300', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-TF-02', 'T130-1430', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-TF-02', 'F130-1430', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-TF-03', 'T130-1600', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-TF-03', 'F130-1600', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-01', 'W130-1300', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-01', 'S130-1300', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-02', 'W130-1430', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-02', 'S130-1430', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-03', 'W130-1600', 'FAC002');
+INSERT INTO schedule_option VALUES ('002-WS-03', 'S130-1600', 'FAC002');
+
+INSERT INTO schedule_option VALUES ('003-M-01', 'M200-0700', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-M-02', 'M200-0900', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-Th-01', 'Th300-0700', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-Th-02', 'Th300-1200', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-W-01', 'W200-0700', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-W-02', 'W200-0900', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-S-01', 'S300-0700', 'FAC003');
+INSERT INTO schedule_option VALUES ('003-S-02', 'S300-1200', 'FAC003');
+
+INSERT INTO schedule_option VALUES ('004-M-01', 'M200-1600', 'FAC004');
+INSERT INTO schedule_option VALUES ('004-M-02', 'M300-1800', 'FAC004');
+INSERT INTO schedule_option VALUES ('004-Th-01', 'Th300-1600', 'FAC004');
+INSERT INTO schedule_option VALUES ('004-Th-02', 'Th200-1900', 'FAC004');
+
+INSERT INTO schedule_option VALUES ('005-T-01', 'T300-1300', 'FAC005');
+INSERT INTO schedule_option VALUES ('005-T-02', 'T200-1600', 'FAC005');
+INSERT INTO schedule_option VALUES ('005-F-01', 'F200-1300', 'FAC005');
+INSERT INTO schedule_option VALUES ('005-F-02', 'F300-1500', 'FAC005');
+
+INSERT INTO schedule_option VALUES ('006-W-01', 'W200-0700', 'FAC006');
+INSERT INTO schedule_option VALUES ('006-W-02', 'W200-0900', 'FAC006');
+INSERT INTO schedule_option VALUES ('006-S-01', 'S300-0700', 'FAC006');
+INSERT INTO schedule_option VALUES ('006-S-02', 'S300-1000', 'FAC006');
+
+INSERT INTO schedule_option VALUES ('007-M-01', 'M300-1300', 'FAC007');
+INSERT INTO schedule_option VALUES ('007-M-02', 'M200-1600', 'FAC007');
+INSERT INTO schedule_option VALUES ('007-Th-01', 'Th200-1300', 'FAC007');
+INSERT INTO schedule_option VALUES ('007-Th-02', 'Th300-1500', 'FAC007');
+
+INSERT INTO schedule_option VALUES ('008-T-01', 'T200-1600', 'FAC008');
+INSERT INTO schedule_option VALUES ('008-T-02', 'T300-1800', 'FAC008');
+INSERT INTO schedule_option VALUES ('008-F-01', 'F300-1600', 'FAC008');
+INSERT INTO schedule_option VALUES ('008-F-02', 'F200-1900', 'FAC008');
+
+INSERT INTO schedule_option VALUES ('009-WS-01', 'W130-1600', 'FAC009');
+INSERT INTO schedule_option VALUES ('009-WS-01', 'S130-1600', 'FAC009');
+INSERT INTO schedule_option VALUES ('009-WS-02', 'W130-1730', 'FAC009');
+INSERT INTO schedule_option VALUES ('009-WS-02', 'S130-1730', 'FAC009');
+
+INSERT INTO schedule_option VALUES ('010-MTh-01', 'M130-0700', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-MTh-01', 'Th130-0700', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-TF-02', 'T130-1000', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-TF-02', 'F130-1000', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-WS-01', 'W130-1300', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-WS-01', 'S130-1300', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-WS-02', 'W130-1600', 'FAC010');
+INSERT INTO schedule_option VALUES ('010-WS-02', 'S130-1600', 'FAC010');
