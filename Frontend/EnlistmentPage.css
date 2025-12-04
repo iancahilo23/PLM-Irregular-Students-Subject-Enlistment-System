@@ -3,6 +3,10 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-y: scroll;
+}
+
 :root {
     /* PALETTE */
     --primary-blue: #3a40a2;       
@@ -18,7 +22,7 @@
 
 body {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #f8f9fc;
+    background-color: #fafff8;
     margin: 0;
     color: var(--primary-gray);
 }

@@ -1,0 +1,306 @@
+/* --- GLOBAL RESETS --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden; /* Prevents scrolling */
+    background-color: #f5f5f5; /* Fallback color */
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- SPLASH SCREEN --- */
+.splash-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    z-index: 9999;
+    
+    /* BACKGROUND STACK */
+    background-image: url('Media/PLMbg.png'); 
+    
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flame-logo.white-logo {
+    width: 180px;
+    height: auto;
+    filter: brightness(0) invert(1); 
+    animation: pulseLogo 2s infinite;
+}
+
+@keyframes pulseLogo {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.9; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+
+/* --- LOGIN SCREEN BACKGROUND --- */
+.login-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; /* Adds padding so card doesn't touch edges on mobile */
+}
+
+/* 1. The Building Image */
+.login-bg-image {
+    position: absolute;
+    inset: 0;
+    background-image: url('Media/PLMbg.png'); 
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+/* --- CENTER WRAPPER (NEW) --- */
+/* This holds the Header and the Login Card together in the center */
+.center-wrapper {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px; /* Space between Header and Card */
+    width: 100%;
+    max-width: 450px;
+}
+
+/* --- PAGE HEADER (Fixed Position) --- */
+.page-header {
+    position: absolute; 
+    top: 5%; /* Sets strict vertical position (adjust % to move up/down) */
+    left: 50%;
+    transform: translateX(-50%); /* Perfectly centers it horizontally */
+    z-index: 20;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Ensures content is centered */
+    gap: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+.header-logo {
+    width: 60px;
+    height: auto;
+    filter: brightness(0) invert(1);
+}
+
+.header-text {
+    border-left: 2px solid rgba(255,255,255,0.5);
+    padding-left: 15px;
+    color: white;
+}
+
+.header-text h1 {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    white-space: nowrap; /* Prevents wrapping on wider screens */
+}
+
+.header-text p {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* --- LOGIN CARD --- */
+.login-card {
+    background: white;
+    width: 100%;
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    margin-top: 80px;
+}
+
+.card-title {
+    color: #3a40a2; 
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* FORM ELEMENTS */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.input-group input {
+    width: 100%;
+    background-color: #e8e8e8; 
+    border: 1px solid transparent; 
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.input-group input:focus {
+    background-color: #fff;
+    border-color: #3a40a2;
+    box-shadow: 0 0 0 3px rgba(58, 64, 162, 0.1);
+}
+
+/* --- ERROR STYLES (NEW) --- */
+/* Applied by JS when input is invalid */
+.input-group input.error-border {
+    border-color: #dc2626; /* Red Border */
+    background-color: #fef2f2; /* Light Red BG */
+}
+
+/* The Error Message Text */
+.error-msg {
+    display: none; /* Hidden by default */
+    color: #dc2626; /* Red color */
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+/* Show error when parent group has 'show-error' class */
+.show-error .error-msg {
+    display: block;
+}
+
+/* --- LINKS & BUTTONS --- */
+.label-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.forgot-link {
+    font-size: 12px;
+    color: #3a40a2;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-button {
+    width: 100%;
+    background-color: #3a40a2; 
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.login-button:hover {
+    background-color: #2c3185;
+}
+
+.login-button:active {
+    transform: scale(0.98); 
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .page-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .header-text {
+        border-left: none;
+        padding-left: 0;
+        border-top: 2px solid rgba(255,255,255,0.5);
+        padding-top: 10px;
+    }
+    
+    .header-text h1 { font-size: 16px; }
+}
+
+/* --- FLATPICKR CUSTOMIZATION --- */
+
+/* 1. The Container */
+.flatpickr-calendar {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    border: none !important;
+}
+
+/* 2. The Header (Month/Year) */
+.flatpickr-month {
+    background: #3a40a2 !important; /* PLM Blue */
+    color: white !important;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding-top: 10px !important;
+}
+
+.flatpickr-current-month .flatpickr-monthDropdown-months,
+.flatpickr-current-month input.cur-year {
+    font-weight: 700 !important;
+}
+
+/* 3. The Arrows */
+.flatpickr-prev-month, .flatpickr-next-month {
+    fill: white !important; /* White arrows */
+    padding-top: 10px !important;
+}
+
+/* 4. The Days (Mon, Tue, Wed...) */
+span.flatpickr-weekday {
+    background: #3a40a2 !important;
+    color: rgba(255,255,255,0.8) !important;
+}
+
+/* 5. The Selected Date (Blue Circle) */
+.flatpickr-day.selected, 
+.flatpickr-day.startRange, 
+.flatpickr-day.endRange, 
+.flatpickr-day.selected.inRange, 
+.flatpickr-day.startRange.inRange, 
+.flatpickr-day.endRange.inRange, 
+.flatpickr-day.selected:focus, 
+.flatpickr-day.startRange:focus, 
+.flatpickr-day.endRange:focus, 
+.flatpickr-day.selected:hover, 
+.flatpickr-day.startRange:hover, 
+.flatpickr-day.endRange:hover {
+    background: #3a40a2 !important;
+    border-color: #3a40a2 !important;
+    font-weight: bold;
+}
+
+/* 6. Hover Effect */
+.flatpickr-day:hover {
+    background: #e3e4f3 !important; /* Light Blue Hover */
+    border-color: #e3e4f3 !important;
+}
