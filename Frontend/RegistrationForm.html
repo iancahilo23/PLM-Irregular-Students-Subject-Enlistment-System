@@ -73,7 +73,38 @@
             display: flex;
             flex-direction: column;
             font-family: 'Times New Roman', serif; /* Force Serif for Document */
+            
+            /* REQUIRED FOR WATERMARK */
             position: relative;
+            overflow: hidden; 
+        }
+
+        /* --- WATERMARK LOGO (Ghost Image) --- */
+        .paper::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Center it perfectly */
+            
+            width: 70%;  /* Size of the ghost logo relative to paper */
+            height: 70%;
+            
+            background-image: url('Media/PLMlogo.png'); /* Ensure this path is correct */
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            
+            opacity: 0.12; /* Transparency (0.1 - 0.2 is best) */
+            pointer-events: none; /* Ignore clicks */
+            z-index: 0; /* Sits at the bottom level of the paper */
+        }
+
+        /* LIFT CONTENT ABOVE WATERMARK */
+        /* This ensures text/tables are sharp and clickable on top of the logo */
+        .paper > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* --- HEADER SECTION --- */
@@ -127,6 +158,7 @@
         table {
             width: 100%; border-collapse: collapse; font-size: 11px;
             border: 2px solid black; margin-bottom: 0;
+            background: transparent; /* Allows watermark to show through empty cells */
         }
 
         th { background-color: #d9d9d9; border: 1px solid black; padding: 4px; font-weight: bold; text-align: center; }
@@ -152,10 +184,11 @@
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             font-family: sans-serif;
             transition: transform 0.2s;
+            z-index: 2000;
         }
         .print-btn:hover { transform: scale(1.05); }
 
-        /* --- 3. PRINT MEDIA QUERY (THE MAGIC PART) --- */
+        /* --- 3. PRINT MEDIA QUERY --- */
         @media print {
             /* Hide UI Elements */
             .navbar, .print-btn { display: none !important; }
@@ -166,10 +199,10 @@
             /* Reset Paper */
             .paper { margin: 0; box-shadow: none; width: 100%; height: 100%; padding: 0; border: none; }
             
-            /* Ensure Colors Print */
+            /* Ensure Colors & Backgrounds Print */
             * {
-                -webkit-print-color-adjust: exact; /* Chrome/Safari */
-                print-color-adjust: exact;         /* Standard */
+                -webkit-print-color-adjust: exact !important; 
+                print-color-adjust: exact !important;
             }
         }
     </style>

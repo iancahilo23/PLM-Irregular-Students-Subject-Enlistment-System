@@ -15,16 +15,15 @@ body {
     display: none !important;
 }
 
-/* --- SPLASH SCREEN --- */
+/* --- SPLASH SCREEN CONTAINER --- */
 .splash-container {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100vh;
     z-index: 9999;
     
-    /* BACKGROUND STACK */
+    /* BACKGROUND */
     background-image: url('Media/PLMbg.png'); 
-    
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -34,19 +33,35 @@ body {
     justify-content: center;
 }
 
-.flame-logo.white-logo {
+/* --- THE LOGO STYLE --- */
+.flame-logo {
     width: 180px;
     height: auto;
-    filter: brightness(0) invert(1); 
-    animation: pulseLogo 2s infinite;
+    
+    /* APPLY THE WAVING ANIMATION */
+    /* 3s duration = smooth, slow wave. Change to 2s for faster wind. */
+    animation: flame-sway 1.4s infinite ease-in-out;
+    
+    /* CRITICAL: This keeps the bottom of the torch/flame fixed 
+       while the top moves, just like real fire. */
+    transform-origin: bottom center;
+    
+    /* NOTE: I removed 'filter: brightness(0) invert(1)' 
+       so the flame colors are visible. If you want a white silhouette, add it back. */
 }
 
-@keyframes pulseLogo {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.05); opacity: 0.9; }
-    100% { transform: scale(1); opacity: 1; }
+/* --- THE WAVING FLAME KEYFRAMES --- */
+/* --- THE SMOOTH PENDULUM SWAY --- */
+@keyframes flame-sway {
+    /* START: Far Left */
+    0%   { transform: skewX(-3deg) scaleY(1); }
+    
+    /* MIDDLE: Far Right (The browser calculates the smooth center pass automatically) */
+    50%  { transform: skewX(3deg) scaleY(1); }
+    
+    /* END: Return to Far Left */
+    100% { transform: skewX(-3deg) scaleY(1); }
 }
-
 
 /* --- LOGIN SCREEN BACKGROUND --- */
 .login-container {
@@ -245,62 +260,92 @@ body {
     .header-text h1 { font-size: 16px; }
 }
 
-/* --- FLATPICKR CUSTOMIZATION --- */
-
-/* 1. The Container */
-.flatpickr-calendar {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    border-radius: 12px !important;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
-    border: none !important;
+/* --- CUSTOM DATEPICKER HEADER --- */
+/* Makes the years in the title look interactive */
+.custom-nav-year {
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: inline-block;
 }
 
-/* 2. The Header (Month/Year) */
-.flatpickr-month {
-    background: #3a40a2 !important; /* PLM Blue */
-    color: white !important;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    padding-top: 10px !important;
+.custom-nav-year:hover {
+    background-color: var(--adp-background-color-selected); /* PLM Blue */
+    color: white;
 }
 
-.flatpickr-current-month .flatpickr-monthDropdown-months,
-.flatpickr-current-month input.cur-year {
-    font-weight: 700 !important;
+/* --- AIR DATEPICKER CUSTOM THEME --- */
+:root {
+    /* 1. Main Colors */
+    --adp-background-color: #ffffff;
+    --adp-background-color-selected: #3a40a2; /* PLM Blue */
+    --adp-background-color-selected-hover: #2c3185;
+    --adp-background-color-hover: #f3f4f6;    /* Light Grey Hover */
+
+    /* 2. Text Colors */
+    --adp-color: #1f2937;                  /* Dark Grey Text */
+    --adp-color-secondary: #9ca3af;        /* Light Grey (Weekdays) */
+    --adp-color-current-date: #3a40a2;     /* Blue for 'Today' */
+
+    /* 3. Font & Shape */
+    --adp-font-family: 'Plus Jakarta Sans', sans-serif;
+    --adp-font-size: 14px;
+    --adp-border-radius: 16px;             /* Rounded corners for the card */
+    --adp-cell-border-radius: 8px;         /* Rounded corners for days */
+    --adp-day-cell-height: 32px;
+    
+    /* 4. Layering */
+    --adp-z-index: 1000;                   /* Ensures it sits on top */
 }
 
-/* 3. The Arrows */
-.flatpickr-prev-month, .flatpickr-next-month {
-    fill: white !important; /* White arrows */
-    padding-top: 10px !important;
+/* THE POPUP CARD */
+.air-datepicker {
+    border: none;                          /* Removes default border */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15); /* Adds the soft floaty shadow */
+    padding: 16px;
 }
 
-/* 4. The Days (Mon, Tue, Wed...) */
-span.flatpickr-weekday {
-    background: #3a40a2 !important;
-    color: rgba(255,255,255,0.8) !important;
+/* THE POINTER (Little Triangle) */
+.air-datepicker--pointer {
+    display: none; /* Hides the triangle for a cleaner "floating" look */
 }
 
-/* 5. The Selected Date (Blue Circle) */
-.flatpickr-day.selected, 
-.flatpickr-day.startRange, 
-.flatpickr-day.endRange, 
-.flatpickr-day.selected.inRange, 
-.flatpickr-day.startRange.inRange, 
-.flatpickr-day.endRange.inRange, 
-.flatpickr-day.selected:focus, 
-.flatpickr-day.startRange:focus, 
-.flatpickr-day.endRange:focus, 
-.flatpickr-day.selected:hover, 
-.flatpickr-day.startRange:hover, 
-.flatpickr-day.endRange:hover {
-    background: #3a40a2 !important;
-    border-color: #3a40a2 !important;
-    font-weight: bold;
+/* HEADER (Month & Year) */
+.air-datepicker-nav {
+    border-bottom: 1px solid #f3f3f3;      /* Subtle divider line */
+    padding-bottom: 10px;
+    margin-bottom: 5px;
 }
 
-/* 6. Hover Effect */
-.flatpickr-day:hover {
-    background: #e3e4f3 !important; /* Light Blue Hover */
-    border-color: #e3e4f3 !important;
+.air-datepicker-nav--title {
+    font-weight: 600;                      /* Bold Month Name */
+    font-size: 16px;
+    color: #111;
+}
+
+.air-datepicker-nav--action path {
+    stroke: #505050;                       /* Darker grey arrows */
+    stroke-width: 2px;
+}
+
+/* WEEKDAYS (Su, Mo, Tu...) */
+.air-datepicker-body--day-name {
+    color: #9ca3af;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+}
+
+/* TODAY'S DATE */
+.air-datepicker-cell.-current- {
+    border: 1px solid rgba(58, 64, 162, 0.3); /* Subtle blue ring */
+    font-weight: 600;
+}
+
+/* SELECTED DATE */
+.air-datepicker-cell.-selected- {
+    background: var(--adp-background-color-selected);
+    color: #fff;
+    font-weight: 600;
 }
