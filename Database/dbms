@@ -1,1 +1,67 @@
+--STATUS TABLES
+
+CREATE TABLE student_type (
+    type_id           VARCHAR(3)
+  , type_title        VARCHAR(5)
+  , CONSTRAINT stype_pk PRIMARY KEY(type_id)
+);
+
+INSERT INTO student_type VALUES ('N', 'New');
+INSERT INTO student_type VALUES ('O', 'Old');
+
+CREATE TABLE registration_status (
+    registration_id           VARCHAR(5)
+  , registration_title        VARCHAR(15)
+  , CONSTRAINT rstatus_pk PRIMARY KEY(registration_id)
+);
+
+INSERT INTO registration_status VALUES ('REG', 'Regular');
+INSERT INTO registration_status VALUES ('IRR', 'Irregular');
+
+CREATE TABLE enrollment_status (
+    enroll_id           VARCHAR(5)
+  , enroll_title        VARCHAR(15)
+  , CONSTRAINT estatus_pk PRIMARY KEY(enroll_id)
+);
+
+INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
+INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
+
+
+
+--STUDENT TABLE
+
+CREATE TABLE STUDENT (
+    student_id           VARCHAR(50)         NOT NULL
+    , lastname           VARCHAR(100)        DEFAULT ' '
+    , firstname          VARCHAR(100)        DEFAULT ' '
+    , middlename         VARCHAR(100)        DEFAULT ' '
+    , course_id          VARCHAR(50)         NOT NULL
+    , year_level         INT                 NOT NULL
+    , section            INT                 NOT NULL
+    , semester           VARCHAR(50)         NOT NULL
+    , school_year        VARCHAR(50)         NOT NULL
+    , date_enrolled      DATE                NOT NULL
+    , type_id            VARCHAR(50)
+    , registration_id    VARCHAR(50)
+
+    , CONSTRAINT pk_student_id PRIMARY KEY (student_id)
+
+    , CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id)
+
+    , CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
+      
+);
+
+INSERT INTO STUDENT VALUES
+('2025-0001', 'Garcia', 'Jose', 'P', 'BSIT', 1, 1, '1st', '2025-2026', '2025-08-01', 'N', 'REG'),
+('2025-0002', 'Santos', 'Maria', 'L', 'BSIT', 1, 2, '1st', '2025-2026', '2025-08-02', 'N', 'REG'),
+('2025-0003', 'Reyes', 'Mark', 'D', 'BSCS', 1, 1, '1st', '2025-2026', '2025-08-03', 'N', 'REG'),
+('2024-0045', 'Dizon', 'Anne', 'C', 'BSIT', 2, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
+('2024-0089', 'Tan', 'Kevin', 'S', 'BSIT', 2, 3, '1st', '2025-2026', '2025-08-05', 'O', 'IRR'),
+('2023-0102', 'Lim', 'Christine', 'M', 'BSCS', 3, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
+('2023-0055', 'Yap', 'Michael', 'R', 'BSIT', 3, 2, '1st', '2025-2026', '2025-08-04', 'O', 'REG'),
+('2022-0012', 'Torres', 'Jane', 'V', 'BSIT', 4, 1, '1st', '2025-2026', '2025-08-01', 'O', 'REG'),
+('2022-0033', 'Mendoza', 'Paul', 'B', 'BSCS', 4, 1, '1st', '2025-2026', '2025-08-02', 'O', 'IRR'),
+('2025-0010', 'Cruz', 'Sarah', 'J', 'BSIT', 1, 3, '1st', '2025-2026', '2025-08-10', 'N', 'REG');
 
