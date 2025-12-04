@@ -27,7 +27,42 @@ CREATE TABLE enrollment_status (
 INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
 INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
 
+--COLLEGE TABLE
 
+CREATE TABLE COLLEGE(
+    college_id          VARCHAR(5)    NOT NULL
+    , college_title     VARCHAR(75)   DEFAULT ' '
+    , CONSTRAINT        pk_college_id        PRIMARY KEY (college_id)
+);
+
+INSERT INTO college VALUES ('CISTM', 'College of Information Systems and Technology Management');
+INSERT INTO college VALUES ('CA', 'College of Accountancy');
+INSERT INTO college VALUES ('CASBE', 'College of Architecture and Sustainable Built Environments');
+INSERT INTO college VALUES ('CBA', 'College of Business Admininstration');
+INSERT INTO college VALUES ('CE', 'College of Engineering');
+INSERT INTO college VALUES ('CED', 'College of Education');
+INSERT INTO college VALUES ('CHASS', 'College of Humanities, Art and Social Sciences');
+INSERT INTO college VALUES ('CL', 'College of Law');
+INSERT INTO college VALUES ('CM', 'College of Medicine');
+INSERT INTO college VALUES ('CN', 'College of Nursing');    
+INSERT INTO college VALUES ('CPT', 'College of Physical Therapy');
+INSERT INTO college VALUES ('CLPA', 'College of Public Administration');
+INSERT INTO college VALUES ('CS', 'College of Science');
+INSERT INTO college VALUES ('CTHM', 'College of Tourism and Hospitality Management');
+INSERT INTO college VALUES ('GSL', 'Graduate School of Law');
+
+--COURSE TABLE (BSIT, BSCS, etc.)
+
+CREATE TABLE COURSE(
+    course_id           VARCHAR(5)    NOT NULL
+    , course_title      VARCHAR(75)   DEFAULT ' '
+    , college_id        VARCHAR(5)    NOT NULL
+    , CONSTRAINT        pk_course_id  PRIAMRY KEY (course_id)
+    , CONSTRAINT        fk_college_id FOREIGN KEY (college_id) REFERENCES COLLEGE(college_id)
+);
+
+INSERT INTO college VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'CISTM');
+INSERT INTO college VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'CISTM');
 
 --STUDENT TABLE
 
