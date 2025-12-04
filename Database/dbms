@@ -1,3 +1,4 @@
+-- SUBJECT TABLE
 
 CREATE TABLE SUBJECT (
     subject_id      VARCHAR(50)         NOT NULL,
@@ -127,3 +128,29 @@ INSERT INTO SUBJECT VALUES
 INSERT INTO SUBJECT VALUES
 ('IIP 0101','Practicum (Lecture)','02:00:00','00:00:00',2,NULL,NULL),
 ('IIP 0102','Practicum (Immersion)','03:00:00','00:00:00',4,NULL,NULL);
+
+-- STUDENT_TYPE TABLE
+CREATE TABLE STUDENT_TYPE (
+    type_id                VARCHAR(50)  NOT NULL
+    , type_title           VARCHAR(150) DEFAULT ' '
+    , CONSTRAINT pk_type_id PRIMARY KEY(type_id)
+    , CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES STUDENT(student_id)
+);
+
+-- REGISTRATION_STATUS TABLE
+
+CREATE TABLE REGISTRATION_STATUS (
+    registration_id        VARCHAR(50)  NOT NULL
+    , registration_title   VARCHAR(150) DEFAULT ' '
+    , CONSTRAINT pk_registration_id PRIMARY KEY(registration_id)
+    , CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES STUDENT(student_id)
+);
+
+-- ENROLLMENT_STATUS TABLE
+
+CREATE TABLE ENROLLMENT_STATUS (
+    enroll_id              VARCHAR(50)  NOT NULL
+    , enroll_title         VARCHAR(150) DEFAULT ' '
+    , CONSTRAINT pk_enroll_id PRIMARY KEY(enroll_id)
+    , CONSTRAINT fk_subject_id FOREIGN KEY(subject_id) REFERENCES SUBJECT(subjectt_id)
+);
