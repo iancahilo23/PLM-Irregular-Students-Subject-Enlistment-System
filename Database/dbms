@@ -87,6 +87,7 @@ CREATE TABLE course_type(
     , CONSTRAINT            pk_course_type_id    PRIMARY KEY (course_type_id)
 );
 
+
 INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
 INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
 
