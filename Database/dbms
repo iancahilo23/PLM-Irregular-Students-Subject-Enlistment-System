@@ -30,9 +30,9 @@ INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
 --COLLEGE TABLE
 
 CREATE TABLE COLLEGE(
-    college_id          VARCHAR(5)    NOT NULL
-    , college_title     VARCHAR(75)   DEFAULT ' '
-    , CONSTRAINT        pk_college_id        PRIMARY KEY (college_id)
+    college_id          VARCHAR(5)        NOT NULL
+    , college_title     VARCHAR(75)       DEFAULT ' '
+    , CONSTRAINT        pk_college_id     PRIMARY KEY (college_id)
 );
 
 INSERT INTO college VALUES ('CISTM', 'College of Information Systems and Technology Management');
@@ -54,13 +54,13 @@ INSERT INTO college VALUES ('GSL', 'Graduate School of Law');
 --COURSE TABLE (BSIT, BSCS, etc.)
 
 CREATE TABLE COURSE(
-    course_id           VARCHAR(15)       NOT NULL
-    , course_title      VARCHAR(100)      DEFAULT ' '
-    , course_type_id    VARCHAR(5)        DEFAULT ' '
-    , college_id        VARCHAR(5)        NOT NULL
-    , CONSTRAINT        pk_course_id      PRIAMRY KEY (course_id)
-    , CONSTRAINT        fk_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id)
-    , CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
+    course_id           VARCHAR(15)           NOT NULL
+    , course_title      VARCHAR(100)          DEFAULT ' '
+    , course_type_id    VARCHAR(5)            DEFAULT ' '
+    , college_id        VARCHAR(5)            NOT NULL
+    , CONSTRAINT        pk_course_id          PRIMARY KEY (course_id)
+    , CONSTRAINT        fk_cor_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id)
+    , CONSTRAINT        fk_cor_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
 );
 
 INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
