@@ -135,7 +135,6 @@ CREATE TABLE STUDENT_TYPE (
     type_id                VARCHAR(50)  NOT NULL
     , type_title           VARCHAR(150) DEFAULT ' '
     , CONSTRAINT pk_type_id PRIMARY KEY(type_id)
-    , CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES STUDENT(student_id)
 );
 
 INSERT INTO STUDENT_TYPE VALUES ('N','New');
@@ -147,7 +146,6 @@ CREATE TABLE REGISTRATION_STATUS (
     registration_id        VARCHAR(50)  NOT NULL
     , registration_title   VARCHAR(150) DEFAULT ' '
     , CONSTRAINT pk_registration_id PRIMARY KEY(registration_id)
-    , CONSTRAINT fk_student_id FOREIGN KEY(student_id) REFERENCES STUDENT(student_id)
 );
 
 INSERT INTO REGISTRATION_STATUS VALUES ('REG','Regular');
@@ -159,7 +157,6 @@ CREATE TABLE ENROLLMENT_STATUS (
     enroll_id              VARCHAR(50)  NOT NULL
     , enroll_title         VARCHAR(150) DEFAULT ' '
     , CONSTRAINT pk_enroll_id PRIMARY KEY(enroll_id)
-    , CONSTRAINT fk_subject_id FOREIGN KEY(subject_id) REFERENCES SUBJECT(subjectt_id)
 );
 
 INSERT INTO ENROLLMENT_STATUS VALUES ('ENR','Enrolled');
