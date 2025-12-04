@@ -1,2 +1,2 @@
 # PLM-Irregular-Students-Subject-Enlistment-System
-Irregular students can enlist his subjects from choices in a semester. 
+A web-based application designed specifically for irregular students of Pamantasan ng Lungsod ng Maynila, enabling them to enlist subjects, verify previously completed courses, and generate their registration form in PDF format. This system streamlines the enrollment process, ensuring accuracy, reducing manual workload, and helping students manage their academic requirements more efficiently.
