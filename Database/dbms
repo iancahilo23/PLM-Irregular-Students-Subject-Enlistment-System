@@ -464,3 +464,116 @@ INSERT INTO schedule_option VALUES ('010-WS-01', 'W130-1300', 'FAC010');
 INSERT INTO schedule_option VALUES ('010-WS-01', 'S130-1300', 'FAC010');
 INSERT INTO schedule_option VALUES ('010-WS-02', 'W130-1600', 'FAC010');
 INSERT INTO schedule_option VALUES ('010-WS-02', 'S130-1600', 'FAC010');
+
+--SUBJECT TABLE
+
+CREATE TABLE subject (
+    subject_id        VARCHAR(50)      NOT NULL,
+    subject_title     VARCHAR(150)     NOT NULL,
+    lec_hours         TIME             NOT NULL,
+    lab_hours         TIME             NOT NULL,
+    units             DECIMAL(4,1)     NOT NULL,
+    sched_option_id   VARCHAR(50),
+    enroll_id         VARCHAR(50),
+    CONSTRAINT subject_id_pk              PRIMARY KEY (subject_id),
+    CONSTRAINT subject_sched_option_id_fk FOREIGN KEY (sched_option_id) REFERENCES schedule_option(sched_option_id),
+    CONSTRAINT subject_enroll_id_fk       FOREIGN KEY (enroll_id)       REFERENCES enrollment_status(enroll_id)
+);
+
+-- FIRST YEAR — 1ST SEMESTER
+
+INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('AAP 0007', 'Art Appreciation', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('PCM 0006', 'Purposive Communications', '02:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('MMW 0001', 'Mathematics in the Modern World', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('IPP 0010', 'Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0101', 'Introduction to Computing (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0101.1', 'Introduction to Computing (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0102', 'Fundamentals of Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0102.1', 'Fundamentals of Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('PATHFIT 1', 'Physical Activities towards Health and Fitness 1 (Movement Competency Training)', '01:30:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('NSTP 1', 'National Service Training Program 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+
+-- FIRST YEAR — 2ND SEMESTER
+
+INSERT INTO subject VALUES ('CET 0111', 'Calculus 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0114', 'General Chemistry (lec)', '02:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0114.1', 'General Chemistry (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0121', 'Introduction to Computer Human Interaction (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0121.1', 'Introduction to Computer Human Interaction (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0122', 'Discrete Mathematics', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0123', 'Web Systems Technology (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0123.1', 'Web Systems Technology (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0103', 'Intermediate Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0103.1', 'Intermediate Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('GTB 121', 'Great Books', '02:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('PATHFIT 2', 'Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)', '01:30:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('NSTP 2', 'National Service Training Program 2', '03:00:00', '00:00:00', 3, NULL, NULL);
+
+-- SECOND YEAR — 1ST SEMESTER
+
+INSERT INTO subject VALUES ('CET 0121', 'Calculus 2', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0225', 'Physics for IT (lec)', '02:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0225.1', 'Physics for IT (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('TCW 0005', 'The Contemporary World', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0104', 'Data Structures (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0104.1', 'Data Structures (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0211', 'Object Oriented Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0211.1', 'Object Oriented Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
+INSERT INTO subject VALUES ('PPC 121', 'Philippine Popular Culture', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('EIT Elective 1', 'Professional Elective 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('PATHFIT 3', 'PE Elective 1', '01:30:00', '00:00:00', 2, NULL, NULL);
+
+-- SECOND YEAR — 2ND SEMESTER
+
+INSERT INTO subject VALUES ('UTS 0003', 'Understanding the Self', '02:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('RPH 0004', 'Readings in Philippine History', '02:30:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0212', 'Platform Technology', '02:30:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('ICC 0105', 'Information Management (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('ICC 0105.1', 'Information Management (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0221', 'Quantitative Methods', '02:30:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0222', 'Networking 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0222.1', 'Networking 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('GES 0013', 'Environmental Science', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('EIT Elective 2', 'Professional Elective 2', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('PATHFIT 4', 'PE Elective 2', '01:30:00', '00:00:00', 2, NULL, NULL);
+
+-- THIRD YEAR — 1ST SEMESTER
+
+INSERT INTO subject VALUES ('ICC 0335', 'Application and Emerging Technologies (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('ICC 0335.1', 'Application and Emerging Technologies (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0311', 'Advanced Database Systems (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0311.1', 'Advanced Database Systems (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0312', 'Networking 2 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0312.1', 'Networking 2 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT Elective 3', 'Professional Elective 3', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('LWR 0009', 'Life and Works of Rizal', '03:00:00', '00:00:00', 3, NULL, NULL);
+
+-- THIRD YEAR — 2ND SEMESTER
+
+INSERT INTO subject VALUES ('EIT 0321', 'Information Assurance and Security 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0321.1', 'Information Assurance and Security 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0322', 'System Integration and Architecture 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0322.1', 'System Integration and Architecture 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0323', 'Integrative Programming and Technologies (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0323.1', 'Integrative Programming and Technologies (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('ETH 0008', 'Ethics', '02:30:00', '00:00:00', 3, NULL, NULL);
+
+-- THIRD YEAR — SUMMER=
+
+INSERT INTO subject VALUES ('EIT 0331', 'System Integration and Architecture 2 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('EIT 0331.1', 'System Integration and Architecture 2 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
+INSERT INTO subject VALUES ('CAP 0101', 'Capstone Project 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+
+-- FOURTH YEAR — 1ST SEMESTER
+
+INSERT INTO subject VALUES ('EIT Elective 4', 'Professional Elective 4', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('EIT Elective 5', 'Professional Elective 5', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('EIT Elective 6', 'Professional Elective 6', '03:00:00', '00:00:00', 3, NULL, NULL),
+INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', '03:00:00', '00:00:00', 3, NULL, NULL);
+
+-- FOURTH YEAR — 2ND SEMESTER
+
+INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', '02:00:00', '00:00:00', 2, NULL, NULL),
+INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', '03:00:00', '00:00:00', 4, NULL, NULL);
+
