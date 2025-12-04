@@ -90,6 +90,7 @@ CREATE TABLE course_type(
 INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
 INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
 
+
 --STUDENT TABLE
 
 CREATE TABLE STUDENT (
