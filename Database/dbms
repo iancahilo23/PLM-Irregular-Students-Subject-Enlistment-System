@@ -77,16 +77,11 @@ CREATE TABLE COURSE(
     , course_title      VARCHAR(100)      DEFAULT ' '
     , course_type_id    VARCHAR(5)        DEFAULT ' '
     , college_id        VARCHAR(5)        NOT NULL
-    , CONSTRAINT        pk_course_id      PRIAMRY KEY (course_id)
+    , CONSTRAINT        pk_course_id      PRIMARY KEY (course_id)
     , CONSTRAINT        fk_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id)
     , CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
 );
 
-INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
-INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
-INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
 INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
 INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
 INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
