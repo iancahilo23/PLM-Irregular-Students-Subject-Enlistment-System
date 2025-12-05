@@ -628,3 +628,152 @@ INSERT INTO FACULTY VALUES('FAC008','Sison','Ariel','CISTM');
 INSERT INTO FACULTY VALUES('FAC009','Atienza','Francis','CISTM');
 INSERT INTO FACULTY VALUES('FAC010','Ramos','Jay Ryan','CISTM');
 
+-- LOG TABLE
+CREATE TABLE log_table (
+    log_message    VARCHAR2(500)
+    , log_date     DATE          DEFAULT SYSDATE
+    , log_user     VARCHAR2(50)  DEFAULT USER
+    , log_timestamp TIMESTAMP    DEFAULT SYSTIMESTAMP
+    , CONSTRAINT log_table_pk PRIMARY KEY(log_message,log_date,log_user,log_timestamp)
+);
+
+-- TRIGGERS
+CREATE OR REPLACE TRIGGER trLoggingStudent
+AFTER INSERT OR
+      UPDATE OR
+      DELETE ON STUDENT
+FOR EACH ROW
+BEGIN
+    CASE
+      WHEN inserting THEN
+         DBMS_OUTPUT.PUT_LINE('You inserted a new record to STUDENT table'||:NEW.student_id);
+         INSERT INTO log_table VALUES ('Inserting a record to STUDENT table'||:NEW.student_id
+                        ,sysdate
+                        ,user
+                        ,SYSTIMESTAMP);
+      WHEN deleting THEN
+         DBMS_OUTPUT.PUT_LINE('You deleted record from STUDENT table with student id :  '||:OLD.student_id);
+         INSERT INTO log_table VALUES ('Deleted a record from STUDENT table with student id : '||:OLD.student_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+      WHEN updating THEN
+         DBMS_OUTPUT.PUT_LINE('You updated a record '||:OLD.student_id);
+         INSERT INTO log_table VALUES ('Updated a record in STUDENT table with student id : '||:OLD.student_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+     END CASE;    
+END;
+
+CREATE OR REPLACE TRIGGER trLoggingFaculty
+AFTER INSERT OR
+      UPDATE OR
+      DELETE ON FACULTY
+FOR EACH ROW
+BEGIN
+    CASE
+      WHEN inserting THEN
+         DBMS_OUTPUT.PUT_LINE('You inserted a new record to FACULTY table'||:NEW.faculty_id);
+         INSERT INTO log_table VALUES ('Inserting a record to FACULTY table'||:NEW.faculty_id
+                        ,sysdate
+                        ,user
+                        ,SYSTIMESTAMP);
+      WHEN deleting THEN
+         DBMS_OUTPUT.PUT_LINE('You deleted record from FACULTY table with faculty id :  '||:OLD.faculty_id);
+         INSERT INTO log_table VALUES ('Deleted a record from FACULTY table with faculty id : '||:OLD.faculty_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+      WHEN updating THEN
+         DBMS_OUTPUT.PUT_LINE('You updated a record '||:OLD.faculty_id);
+         INSERT INTO log_table VALUES ('Updated a record in FACULTY table with faculty id : '||:OLD.faculty_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+     END CASE;    
+END;
+
+CREATE OR REPLACE TRIGGER trLoggingSubject
+AFTER INSERT OR
+      UPDATE OR
+      DELETE ON SUBJECT
+FOR EACH ROW
+BEGIN
+    CASE
+      WHEN inserting THEN
+         DBMS_OUTPUT.PUT_LINE('You inserted a new record to SUBJECT table'||:NEW.subject_id);
+         INSERT INTO log_table VALUES ('Inserting a record to SUBJECT table'||:NEW.subject_id
+                        ,sysdate
+                        ,user
+                        ,SYSTIMESTAMP);
+      WHEN deleting THEN
+         DBMS_OUTPUT.PUT_LINE('You deleted record from SUBJECT table with subject id :  '||:OLD.subject_id);
+         INSERT INTO log_table VALUES ('Deleted a record from SUBJECT table with subject id : '||:OLD.subject_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+      WHEN updating THEN
+         DBMS_OUTPUT.PUT_LINE('You updated a record '||:OLD.subject_id);
+         INSERT INTO log_table VALUES ('Updated a record in SUBJECT table with subject id : '||:OLD.subject_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+     END CASE;    
+END;
+
+CREATE OR REPLACE TRIGGER trLoggingCourse
+AFTER INSERT OR
+      UPDATE OR
+      DELETE ON COURSE
+FOR EACH ROW
+BEGIN
+    CASE
+      WHEN inserting THEN
+         DBMS_OUTPUT.PUT_LINE('You inserted a new record to COURSE table'||:NEW.course_id);
+         INSERT INTO log_table VALUES ('Inserting a record to COURSE table'||:NEW.course_id
+                        ,sysdate
+                        ,user
+                        ,SYSTIMESTAMP);
+      WHEN deleting THEN
+         DBMS_OUTPUT.PUT_LINE('You deleted record from COURSE table with course id :  '||:OLD.course_id);
+         INSERT INTO log_table VALUES ('Deleted a record from COURSE table with course id : '||:OLD.course_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+      WHEN updating THEN
+         DBMS_OUTPUT.PUT_LINE('You updated a record '||:OLD.course_id);
+         INSERT INTO log_table VALUES ('Updated a record in COURSE table with course id : '||:OLD.course_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+     END CASE;    
+END;
+
+CREATE OR REPLACE TRIGGER trLoggingCollege
+AFTER INSERT OR
+      UPDATE OR
+      DELETE ON COLLEGE
+FOR EACH ROW
+BEGIN
+    CASE
+      WHEN inserting THEN
+         DBMS_OUTPUT.PUT_LINE('You inserted a new record to COLLEGE table'||:NEW.college_id);
+         INSERT INTO log_table VALUES ('Inserting a record to COLLEGE table'||:NEW.college_id
+                        ,sysdate
+                        ,user
+                        ,SYSTIMESTAMP);
+      WHEN deleting THEN
+         DBMS_OUTPUT.PUT_LINE('You deleted record from COLLEGE table with college id :  '||:OLD.college_id);
+         INSERT INTO log_table VALUES ('Deleted a record from COLLEGE table with college id : '||:OLD.college_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+      WHEN updating THEN
+         DBMS_OUTPUT.PUT_LINE('You updated a record '||:OLD.college_id);
+         INSERT INTO log_table VALUES ('Updated a record in COLLEGE table with college id : '||:OLD.college_id
+                         ,sysdate
+                         ,user
+                         ,SYSTIMESTAMP);
+     END CASE;    
+END;
