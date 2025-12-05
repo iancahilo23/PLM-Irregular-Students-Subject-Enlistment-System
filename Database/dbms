@@ -9,6 +9,8 @@ CREATE TABLE student_type (
 INSERT INTO student_type VALUES ('N', 'New');
 INSERT INTO student_type VALUES ('O', 'Old');
 
+-- REGISTRATION_STATUS TABLE
+
 CREATE TABLE registration_status (
     registration_id           VARCHAR(5)
   , registration_title        VARCHAR(15)
@@ -17,6 +19,8 @@ CREATE TABLE registration_status (
 
 INSERT INTO registration_status VALUES ('REG', 'Regular');
 INSERT INTO registration_status VALUES ('IRR', 'Irregular');
+
+-- ENROLLMENT_STATUS TABLE
 
 CREATE TABLE enrollment_status (
     enroll_id           VARCHAR(5)
@@ -601,4 +605,26 @@ INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', '03:00:00', '00:00
 
 INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', '02:00:00', '00:00:00', 2, NULL, NULL),
 INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', '03:00:00', '00:00:00', 4, NULL, NULL);
+
+-- FACULTY TABLE
+
+CREATE TABLE FACULTY (
+    faculty_id             VARCHAR(50)  NOT NULL
+    , lastname             VARCHAR(100) DEFAULT ' '
+    , firstname            VARCHAR(100) DEFAULT ' '
+    , college_id           VARCHAR(50)
+    , CONSTRAINT pk_faculty_id PRIMARY KEY(faculty_id)
+    , CONSTRAINT fk_college_id FOREIGN KEY(college_id) REFERENCES COLLEGE(college_id)
+);
+
+INSERT INTO FACULTY VALUES('FAC001','Lee','Johnry','CISTM');
+INSERT INTO FACULTY VALUES('FAC002','Maupay','Ann Camille','CISTM');
+INSERT INTO FACULTY VALUES('FAC003','Co','Joseph','CISTM');
+INSERT INTO FACULTY VALUES('FAC004','Abando','Diony','CISTM');
+INSERT INTO FACULTY VALUES('FAC005','Regala','Richard','CISTM');
+INSERT INTO FACULTY VALUES('FAC006','Santos','Myra','CISTM');
+INSERT INTO FACULTY VALUES('FAC007','Centeno','Criselle','CISTM');
+INSERT INTO FACULTY VALUES('FAC008','Sison','Ariel','CISTM');
+INSERT INTO FACULTY VALUES('FAC009','Atienza','Francis','CISTM');
+INSERT INTO FACULTY VALUES('FAC010','Ramos','Jay Ryan','CISTM');
 
