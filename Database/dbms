@@ -1251,3 +1251,162 @@ EXCEPTION
         DBMS_OUTPUT.PUT_LINE('System Error: ' || SQLERRM);
         ROLLBACK;
 END;
+
+
+-- TABLE TO STORE STUDENT ENLISTMENTS (mapping students to subject sections)
+CREATE TABLE student_enlistment (
+    enlist_id     INT           AUTO_INCREMENT,
+    student_id    VARCHAR(50)   NOT NULL,
+    subject_id    VARCHAR(50)   NOT NULL,
+    section       INT           NOT NULL,
+    semester      VARCHAR(50)   NOT NULL,
+    school_year   VARCHAR(50)   NOT NULL,
+    enroll_id     VARCHAR(5)    DEFAULT 'PEN',
+    CONSTRAINT pk_student_enlistment PRIMARY KEY (enlist_id),
+    CONSTRAINT fk_se_student FOREIGN KEY (student_id)          REFERENCES STUDENT(student_id) ON DELETE CASCADE,
+    CONSTRAINT fk_se_subject FOREIGN KEY (subject_id, section) REFERENCES subject(subject_id, section) ON DELETE CASCADE,
+    CONSTRAINT fk_se_enroll  FOREIGN KEY (enroll_id)           REFERENCES enrollment_status(enroll_id)
+) ENGINE=InnoDB;
+
+-- SAMPLE: move a subject to enrolled for demonstration (uncomment/adjust as needed)
+-- INSERT INTO student_enlistment (student_id, subject_id, section, semester, school_year, enroll_id) VALUES ('2025-00001', 'ICC 0101', 1, '2nd', '2025-2026', 'ENR');
+
+-- STORED PROCEDURE: Uses a CURSOR to produce registered subjects for a student for the given semester/school year.
+DELIMITER $$
+CREATE PROCEDURE sp_get_registered_subjects(
+    IN p_student_id     VARCHAR(50),
+    IN p_semester       VARCHAR(50),
+    IN p_school_year    VARCHAR(50)
+)
+BEGIN
+    DECLARE done            INT DEFAULT 0;
+    DECLARE v_subject_id    VARCHAR(50);
+    DECLARE v_subject_title VARCHAR(150);
+    DECLARE v_lec_hours     TIME;
+    DECLARE v_lab_hours     TIME;
+    DECLARE v_units         DECIMAL(4,1);
+    DECLARE v_day           VARCHAR(5);
+    DECLARE v_time_start    TIME;
+    DECLARE v_time_end      TIME;
+
+    -- temporary table to collect results (cursor loop will insert here)
+    CREATE TEMPORARY TABLE IF NOT EXISTS tmp_registered_subjects (
+        subject_id      VARCHAR(50),
+        subject_title   VARCHAR(150),
+        lec_hours       TIME,
+        lab_hours       TIME,
+        units           DECIMAL(4,1),
+        day_of_week     VARCHAR(5),
+        time_start      TIME,
+        time_end        TIME
+    );
+
+    -- cursor selecting the required fields
+    DECLARE cur_subjects CURSOR FOR
+        SELECT s.subject_id,
+               s.subject_title,
+               s.lec_hours,
+               s.lab_hours,
+               s.units,
+               sch.day_of_week,
+               sch.time_start,
+               sch.time_end
+        FROM student_enlistment se
+        JOIN subject s ON se.subject_id = s.subject_id AND se.section = s.section
+        LEFT JOIN schedule_option so ON s.sched_option_id = so.sched_option_id
+        LEFT JOIN schedule sch ON so.sched_id = sch.sched_id
+        WHERE se.student_id = p_student_id
+          AND se.semester = p_semester
+          AND se.school_year = p_school_year
+          AND se.enroll_id = 'ENR';
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur_subjects;
+    read_loop: LOOP
+        FETCH cur_subjects INTO v_subject_id, v_subject_title, v_lec_hours, v_lab_hours, v_units, v_day, v_time_start, v_time_end;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        INSERT INTO tmp_registered_subjects VALUES (v_subject_id, v_subject_title, v_lec_hours, v_lab_hours, v_units, v_day, v_time_start, v_time_end);
+    END LOOP read_loop;
+    CLOSE cur_subjects;
+
+    -- return the collected rows
+    SELECT * FROM tmp_registered_subjects;
+
+    DROP TEMPORARY TABLE IF EXISTS tmp_registered_subjects;
+END$$
+DELIMITER ;
+
+-- STORED PROCEDURE: Uses a CURSOR to produce subjects available to register for the student
+-- Returns: subject_id, subject_title, lec_hours, lab_hours, units, day_of_week, time_start, time_end, enroll_title
+DELIMITER $$
+CREATE PROCEDURE sp_get_subjects_to_register(
+    IN p_student_id     VARCHAR(50),
+    IN p_semester       VARCHAR(50),
+    IN p_school_year    VARCHAR(50)
+)
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE v_subject_id    VARCHAR(50);
+    DECLARE v_subject_title VARCHAR(150);
+    DECLARE v_lec_hours     TIME;
+    DECLARE v_lab_hours     TIME;
+    DECLARE v_units         DECIMAL(4,1);
+    DECLARE v_day           VARCHAR(5);
+    DECLARE v_time_start    TIME;
+    DECLARE v_time_end      TIME;
+    DECLARE v_enroll_title  VARCHAR(50);
+
+    CREATE TEMPORARY TABLE IF NOT EXISTS tmp_subjects_to_register (
+        subject_id      VARCHAR(50),
+        subject_title   VARCHAR(150),
+        lec_hours       TIME,
+        lab_hours       TIME,
+        units           DECIMAL(4,1),
+        day_of_week     VARCHAR(5),
+        time_start      TIME,
+        time_end        TIME,
+        enroll_title    VARCHAR(50)
+    );
+
+    -- Cursor selects subjects that the student is not already enrolled in (or only has pending enlistment)
+    DECLARE cur_avail CURSOR FOR
+        SELECT s.subject_id,
+               s.subject_title,
+               s.lec_hours,
+               s.lab_hours,
+               s.units,
+               sch.day_of_week,
+               sch.time_start,
+               sch.time_end,
+               IFNULL(es.enroll_title, 'Available') AS enroll_title
+        FROM subject s
+        LEFT JOIN schedule_option so ON s.sched_option_id = so.sched_option_id
+        LEFT JOIN schedule sch ON so.sched_id = sch.sched_id
+        LEFT JOIN student_enlistment se ON s.subject_id = se.subject_id
+            AND s.section = se.section
+            AND se.student_id = p_student_id
+            AND se.semester = p_semester
+            AND se.school_year = p_school_year
+        LEFT JOIN enrollment_status es ON IFNULL(se.enroll_id, s.enroll_id) = es.enroll_id
+        WHERE (se.enlist_id IS NULL OR se.enroll_id <> 'ENR');
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN cur_avail;
+    read_loop: LOOP
+        FETCH cur_avail INTO v_subject_id, v_subject_title, v_lec_hours, v_lab_hours, v_units, v_day, v_time_start, v_time_end, v_enroll_title;
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+        INSERT INTO tmp_subjects_to_register VALUES (v_subject_id, v_subject_title, v_lec_hours, v_lab_hours, v_units, v_day, v_time_start, v_time_end, v_enroll_title);
+    END LOOP read_loop;
+    CLOSE cur_avail;
+
+    SELECT * FROM tmp_subjects_to_register;
+
+    DROP TEMPORARY TABLE IF EXISTS tmp_subjects_to_register;
+END$$
+DELIMITER ;
