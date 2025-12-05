@@ -1,3 +1,16 @@
+<?php
+    // 1. Start the session to access user data.
+    session_start();
+
+    // 2. Check if the user is logged in. If not, redirect to the login page.
+    if (!isset($_SESSION['user'])) {
+        header("Location: LoginPage.php");
+        exit(); // Stop script execution
+    }
+
+    // 3. Get user data from the session into a variable for easier access.
+    $user = $_SESSION['user'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,9 +40,9 @@
             </div>
         </div>
         <nav class="nav-links">
-            <a href="DashboardPage.html" class="active">Dashboard</a>
-            <a href="EnlistmentPage.html">Subject Enlistment</a>
-            <a href="RegistrationForm.html">Registration Form</a>
+            <a href="DashboardPage.php" class="active">Dashboard</a>
+            <a href="EnlistmentPage.php">Subject Enlistment</a>
+            <a href="RegistrationForm.php">Registration Form</a>
         </nav>
     </header>
 
@@ -40,11 +53,11 @@
                     <div class="student-info-grid">
                         <div class="info-content">
                             <div class="info-group">
-                                <div class="info-value name" id="display-name">Loading...</div>
+                                <div class="info-value name"><?php echo htmlspecialchars($user['name']); ?></div>
                                 <div class="info-label">Student Name</div>
                             </div>
                             <div class="info-group">
-                                <div class="info-value program-title">BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY</div>
+                                <div class="info-value program-title"><?php echo htmlspecialchars(strtoupper($user['program'])); ?></div>
                                 <div class="info-label">Program</div>
                             </div>
                             <div class="info-group">
@@ -53,21 +66,21 @@
                             </div>
                             <div class="info-row-3">
                                 <div class="info-group">
-                                    <div class="info-value" id="display-student-number">--</div>
+                                    <div class="info-value"><?php echo htmlspecialchars($user['id']); ?></div>
                                     <div class="info-label">Student Number</div>
                                 </div>
                                 <div class="info-group">
-                                    <div class="info-value" id="display-email">--</div>
+                                    <div class="info-value"><?php echo htmlspecialchars($user['email']); ?></div>
                                     <div class="info-label">PLM Email</div>
                                 </div>
                             </div>
                             <div class="info-row-3">
                                 <div class="info-group">
-                                    <div class="info-value" id="display-status">--</div>
+                                    <div class="info-value"><?php echo htmlspecialchars($user['status']); ?></div>
                                     <div class="info-label">Status</div>
                                 </div>
                                 <div class="info-group">
-                                    <div class="info-value">Third Year</div>
+                                    <div class="info-value"><?php echo htmlspecialchars($user['year']); ?></div>
                                     <div class="info-label">Year Level</div>
                                 </div>
                                 <div class="info-group">
@@ -108,7 +121,7 @@
                     </div>
                     <div class="progress-stats">
                         <div class="stat-item">
-                            <div class="stat-value" id="display-gwa">--</div>
+                            <div class="stat-value"><?php echo htmlspecialchars($user['gwa']); ?></div>
                             <div class="stat-label">Overall GWA</div>
                         </div>
                         <div class="stat-item">

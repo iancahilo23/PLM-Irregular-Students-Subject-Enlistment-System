@@ -33,25 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // --- 2. POPULATE MOCK DATA ---
-    const studentData = {
-        name: "ALCORAN, WILLARD JOHN",
-        studentNumber: "2023-36053",
-        email: "wjalcoran2023@plm.edu.ph",
-        status: "Irregular",
-        gwa: "2.23177"
-    };
-
-    const set = (id, value) => {
-        const element = document.getElementById(id);
-        if (element) element.innerText = value;
-    };
-
-    set('display-name', studentData.name);
-    set('display-student-number', studentData.studentNumber);
-    set('display-email', studentData.email);
-    set('display-status', studentData.status);
-    set('display-gwa', studentData.gwa);
+    // --- 2. POPULATE MOCK DATA (REMOVED) ---
+    // This section is no longer needed. The user's data is now rendered
+    // directly into the HTML by the PHP server before the page is sent
+    // to the browser. This makes the page load faster and simplifies the client-side code.
 
 
     // --- 3. FLOATING BUTTON & LOGOUT LOGIC (NEW) ---
@@ -81,12 +66,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // C. HANDLE LOGOUT
         logoutBtn.addEventListener('click', () => {
-            // 1. Clear session data
-            sessionStorage.clear(); // Resets splash screen history
-            localStorage.removeItem('plm_student_name'); // Clears user data
-            
-            // 2. Redirect to Login Page
-            window.location.href = 'LoginPage.html'; 
+            // Redirect to the server-side logout script to properly end the session.
+            window.location.href = 'logout.php'; 
         });
     }
 });
