@@ -58,6 +58,8 @@ CREATE TABLE student_type (
 INSERT INTO student_type VALUES ('N', 'New');
 INSERT INTO student_type VALUES ('O', 'Old');
 
+-- REGISTRATION_STATUS TABLE
+
 CREATE TABLE registration_status (
     registration_id           VARCHAR(5)
   , registration_title        VARCHAR(15)
@@ -66,6 +68,8 @@ CREATE TABLE registration_status (
 
 INSERT INTO registration_status VALUES ('REG', 'Regular');
 INSERT INTO registration_status VALUES ('IRR', 'Irregular');
+
+-- ENROLLMENT_STATUS TABLE
 
 CREATE TABLE enrollment_status (
     enroll_id           VARCHAR(5)
@@ -207,23 +211,37 @@ INSERT INTO STUDENT VALUES
 
 
 
---- STUDENT-SUBJECT ENROLLMENT
-    student_id            VARCHAR(15)
-  , subject_id            VARCHAR(15)
-  , CONSTRAINT enroll_pk PRIMARY KEY(student_id, subject_id)
-  , CONSTRAINT enstud_fk FOREIGN KEY (student_id) REFERENCES student(student_id)
-  , CONSTRAINT ensubj_fk FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
+-- FACULTY TABLE
+
+CREATE TABLE FACULTY (
+    faculty_id             VARCHAR(50)  NOT NULL
+    , lastname             VARCHAR(100) DEFAULT ' '
+    , firstname            VARCHAR(100) DEFAULT ' '
+    , college_id           VARCHAR(50)
+    , CONSTRAINT pk_faculty_id PRIMARY KEY(faculty_id)
+    , CONSTRAINT fk_college_id FOREIGN KEY(college_id) REFERENCES COLLEGE(college_id)
 );
+
+INSERT INTO FACULTY VALUES('FAC001','Lee','Johnry','CISTM');
+INSERT INTO FACULTY VALUES('FAC002','Maupay','Ann Camille','CISTM');
+INSERT INTO FACULTY VALUES('FAC003','Co','Joseph','CISTM');
+INSERT INTO FACULTY VALUES('FAC004','Abando','Diony','CISTM');
+INSERT INTO FACULTY VALUES('FAC005','Regala','Richard','CISTM');
+INSERT INTO FACULTY VALUES('FAC006','Santos','Myra','CISTM');
+INSERT INTO FACULTY VALUES('FAC007','Centeno','Criselle','CISTM');
+INSERT INTO FACULTY VALUES('FAC008','Sison','Ariel','CISTM');
+INSERT INTO FACULTY VALUES('FAC009','Atienza','Francis','CISTM');
+INSERT INTO FACULTY VALUES('FAC010','Ramos','Jay Ryan','CISTM');
 
 
 
 --SCHEDULES AND OPTIONS
 
 CREATE TABLE schedule (
-    sched_id            VARCHAR(15)
-  , day_of_week         VARCHAR(5)
-  , time_start          VARCHAR(10)
-  , time_end            VARCHAR(10)
+    sched_id            VARCHAR(15)    NOT NULL
+  , day_of_week         VARCHAR(5)     NOT NULL
+  , time_start          TIME           NOT NULL
+  , time_end            TIME           NOT NULL
   , CONSTRAINT sched_pk PRIMARY KEY(sched_id)
 );
 
@@ -237,227 +255,227 @@ CREATE TABLE schedule_option (
 );
 
 -- sched_id format: DAY-HRS/MINS-START
-INSERT INTO schedule VALUES ('M130-0700', 'M', '07:00', '08:30');
-INSERT INTO schedule VALUES ('M130-0830', 'M', '08:30', '10:00');
-INSERT INTO schedule VALUES ('M130-1000', 'M', '10:00', '11:30');
-INSERT INTO schedule VALUES ('M130-1130', 'M', '11:30', '13:00');
-INSERT INTO schedule VALUES ('M130-1300', 'M', '13:00', '14:30');
-INSERT INTO schedule VALUES ('M130-1430', 'M', '14:30', '16:00');
-INSERT INTO schedule VALUES ('M130-1600', 'M', '16:00', '17:30');
-INSERT INTO schedule VALUES ('M130-1730', 'M', '17:30', '19:00');
-INSERT INTO schedule VALUES ('M130-1900', 'M', '19:00', '20:30');
+INSERT INTO schedule VALUES ('M130-0700', 'M', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('M130-0830', 'M', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('M130-1000', 'M', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('M130-1130', 'M', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('M130-1300', 'M', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('M130-1430', 'M', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('M130-1600', 'M', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('M130-1730', 'M', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('M130-1900', 'M', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('M200-0700', 'M', '07:00', '09:00');
-INSERT INTO schedule VALUES ('M200-0800', 'M', '08:00', '10:00');
-INSERT INTO schedule VALUES ('M200-0900', 'M', '09:00', '11:00');
-INSERT INTO schedule VALUES ('M200-1000', 'M', '10:00', '12:00');
-INSERT INTO schedule VALUES ('M200-1100', 'M', '11:00', '13:00');
-INSERT INTO schedule VALUES ('M200-1200', 'M', '12:00', '14:00');
-INSERT INTO schedule VALUES ('M200-1300', 'M', '13:00', '15:00');
-INSERT INTO schedule VALUES ('M200-1400', 'M', '14:00', '16:00');
-INSERT INTO schedule VALUES ('M200-1500', 'M', '15:00', '17:00');
-INSERT INTO schedule VALUES ('M200-1600', 'M', '16:00', '18:00');
-INSERT INTO schedule VALUES ('M200-1700', 'M', '17:00', '19:00');
-INSERT INTO schedule VALUES ('M200-1800', 'M', '18:00', '20:00');
-INSERT INTO schedule VALUES ('M200-1900', 'M', '19:00', '21:00');
+INSERT INTO schedule VALUES ('M200-0700', 'M', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('M200-0800', 'M', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('M200-0900', 'M', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('M200-1000', 'M', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('M200-1100', 'M', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('M200-1200', 'M', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('M200-1300', 'M', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('M200-1400', 'M', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('M200-1500', 'M', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('M200-1600', 'M', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('M200-1700', 'M', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('M200-1800', 'M', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('M200-1900', 'M', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('M300-0700', 'M', '07:00', '10:00');
-INSERT INTO schedule VALUES ('M300-0800', 'M', '08:00', '11:00');
-INSERT INTO schedule VALUES ('M300-0900', 'M', '09:00', '12:00');
-INSERT INTO schedule VALUES ('M300-1000', 'M', '10:00', '13:00');
-INSERT INTO schedule VALUES ('M300-1100', 'M', '11:00', '14:00');
-INSERT INTO schedule VALUES ('M300-1200', 'M', '12:00', '15:00');
-INSERT INTO schedule VALUES ('M300-1300', 'M', '13:00', '16:00');
-INSERT INTO schedule VALUES ('M300-1400', 'M', '14:00', '17:00');
-INSERT INTO schedule VALUES ('M300-1500', 'M', '15:00', '18:00');
-INSERT INTO schedule VALUES ('M300-1600', 'M', '16:00', '19:00');
-INSERT INTO schedule VALUES ('M300-1700', 'M', '17:00', '20:00');
-INSERT INTO schedule VALUES ('M300-1800', 'M', '18:00', '21:00');
+INSERT INTO schedule VALUES ('M300-0700', 'M', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('M300-0800', 'M', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('M300-0900', 'M', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('M300-1000', 'M', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('M300-1100', 'M', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('M300-1200', 'M', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('M300-1300', 'M', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('M300-1400', 'M', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('M300-1500', 'M', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('M300-1600', 'M', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('M300-1700', 'M', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('M300-1800', 'M', '18:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('T130-0700', 'T', '07:00', '08:30');
-INSERT INTO schedule VALUES ('T130-0830', 'T', '08:30', '10:00');
-INSERT INTO schedule VALUES ('T130-1000', 'T', '10:00', '11:30');
-INSERT INTO schedule VALUES ('T130-1130', 'T', '11:30', '13:00');
-INSERT INTO schedule VALUES ('T130-1300', 'T', '13:00', '14:30');
-INSERT INTO schedule VALUES ('T130-1430', 'T', '14:30', '16:00');
-INSERT INTO schedule VALUES ('T130-1600', 'T', '16:00', '17:30');
-INSERT INTO schedule VALUES ('T130-1730', 'T', '17:30', '19:00');
-INSERT INTO schedule VALUES ('T130-1900', 'T', '19:00', '20:30');
+INSERT INTO schedule VALUES ('T130-0700', 'T', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('T130-0830', 'T', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('T130-1000', 'T', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('T130-1130', 'T', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('T130-1300', 'T', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('T130-1430', 'T', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('T130-1600', 'T', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('T130-1730', 'T', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('T130-1900', 'T', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('T200-0700', 'T', '07:00', '09:00');
-INSERT INTO schedule VALUES ('T200-0800', 'T', '08:00', '10:00');
-INSERT INTO schedule VALUES ('T200-0900', 'T', '09:00', '11:00');
-INSERT INTO schedule VALUES ('T200-1000', 'T', '10:00', '12:00');
-INSERT INTO schedule VALUES ('T200-1100', 'T', '11:00', '13:00');
-INSERT INTO schedule VALUES ('T200-1200', 'T', '12:00', '14:00');
-INSERT INTO schedule VALUES ('T200-1300', 'T', '13:00', '15:00');
-INSERT INTO schedule VALUES ('T200-1400', 'T', '14:00', '16:00');
-INSERT INTO schedule VALUES ('T200-1500', 'T', '15:00', '17:00');
-INSERT INTO schedule VALUES ('T200-1600', 'T', '16:00', '18:00');
-INSERT INTO schedule VALUES ('T200-1700', 'T', '17:00', '19:00');
-INSERT INTO schedule VALUES ('T200-1800', 'T', '18:00', '20:00');
-INSERT INTO schedule VALUES ('T200-1900', 'T', '19:00', '21:00');
+INSERT INTO schedule VALUES ('T200-0700', 'T', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('T200-0800', 'T', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('T200-0900', 'T', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('T200-1000', 'T', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('T200-1100', 'T', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('T200-1200', 'T', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('T200-1300', 'T', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('T200-1400', 'T', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('T200-1500', 'T', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('T200-1600', 'T', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('T200-1700', 'T', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('T200-1800', 'T', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('T200-1900', 'T', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('T300-0700', 'T', '07:00', '10:00');
-INSERT INTO schedule VALUES ('T300-0800', 'T', '08:00', '11:00');
-INSERT INTO schedule VALUES ('T300-0900', 'T', '09:00', '12:00');
-INSERT INTO schedule VALUES ('T300-1000', 'T', '10:00', '13:00');
-INSERT INTO schedule VALUES ('T300-1100', 'T', '11:00', '14:00');
-INSERT INTO schedule VALUES ('T300-1200', 'T', '12:00', '15:00');
-INSERT INTO schedule VALUES ('T300-1300', 'T', '13:00', '16:00');
-INSERT INTO schedule VALUES ('T300-1400', 'T', '14:00', '17:00');
-INSERT INTO schedule VALUES ('T300-1500', 'T', '15:00', '18:00');
-INSERT INTO schedule VALUES ('T300-1600', 'T', '16:00', '19:00');
-INSERT INTO schedule VALUES ('T300-1700', 'T', '17:00', '20:00');
-INSERT INTO schedule VALUES ('T300-1800', 'T', '18:00', '21:00');
+INSERT INTO schedule VALUES ('T300-0700', 'T', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('T300-0800', 'T', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('T300-0900', 'T', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('T300-1000', 'T', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('T300-1100', 'T', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('T300-1200', 'T', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('T300-1300', 'T', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('T300-1400', 'T', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('T300-1500', 'T', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('T300-1600', 'T', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('T300-1700', 'T', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('T300-1800', 'T', '18:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('W130-0700', 'W', '07:00', '08:30');
-INSERT INTO schedule VALUES ('W130-0830', 'W', '08:30', '10:00');
-INSERT INTO schedule VALUES ('W130-1000', 'W', '10:00', '11:30');
-INSERT INTO schedule VALUES ('W130-1130', 'W', '11:30', '13:00');
-INSERT INTO schedule VALUES ('W130-1300', 'W', '13:00', '14:30');
-INSERT INTO schedule VALUES ('W130-1430', 'W', '14:30', '16:00');
-INSERT INTO schedule VALUES ('W130-1600', 'W', '16:00', '17:30');
-INSERT INTO schedule VALUES ('W130-1730', 'W', '17:30', '19:00');
-INSERT INTO schedule VALUES ('W130-1900', 'W', '19:00', '20:30');
+INSERT INTO schedule VALUES ('W130-0700', 'W', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('W130-0830', 'W', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('W130-1000', 'W', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('W130-1130', 'W', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('W130-1300', 'W', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('W130-1430', 'W', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('W130-1600', 'W', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('W130-1730', 'W', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('W130-1900', 'W', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('W200-0700', 'W', '07:00', '09:00');
-INSERT INTO schedule VALUES ('W200-0800', 'W', '08:00', '10:00');
-INSERT INTO schedule VALUES ('W200-0900', 'W', '09:00', '11:00');
-INSERT INTO schedule VALUES ('W200-1000', 'W', '10:00', '12:00');
-INSERT INTO schedule VALUES ('W200-1100', 'W', '11:00', '13:00');
-INSERT INTO schedule VALUES ('W200-1200', 'W', '12:00', '14:00');
-INSERT INTO schedule VALUES ('W200-1300', 'W', '13:00', '15:00');
-INSERT INTO schedule VALUES ('W200-1400', 'W', '14:00', '16:00');
-INSERT INTO schedule VALUES ('W200-1500', 'W', '15:00', '17:00');
-INSERT INTO schedule VALUES ('W200-1600', 'W', '16:00', '18:00');
-INSERT INTO schedule VALUES ('W200-1700', 'W', '17:00', '19:00');
-INSERT INTO schedule VALUES ('W200-1800', 'W', '18:00', '20:00');
-INSERT INTO schedule VALUES ('W200-1900', 'W', '19:00', '21:00');
+INSERT INTO schedule VALUES ('W200-0700', 'W', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('W200-0800', 'W', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('W200-0900', 'W', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('W200-1000', 'W', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('W200-1100', 'W', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('W200-1200', 'W', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('W200-1300', 'W', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('W200-1400', 'W', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('W200-1500', 'W', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('W200-1600', 'W', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('W200-1700', 'W', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('W200-1800', 'W', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('W200-1900', 'W', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('W300-0700', 'W', '07:00', '10:00');
-INSERT INTO schedule VALUES ('W300-0800', 'W', '08:00', '11:00');
-INSERT INTO schedule VALUES ('W300-0900', 'W', '09:00', '12:00');
-INSERT INTO schedule VALUES ('W300-1000', 'W', '10:00', '13:00');
-INSERT INTO schedule VALUES ('W300-1100', 'W', '11:00', '14:00');
-INSERT INTO schedule VALUES ('W300-1200', 'W', '12:00', '15:00');
-INSERT INTO schedule VALUES ('W300-1300', 'W', '13:00', '16:00');
-INSERT INTO schedule VALUES ('W300-1400', 'W', '14:00', '17:00');
-INSERT INTO schedule VALUES ('W300-1500', 'W', '15:00', '18:00');
-INSERT INTO schedule VALUES ('W300-1600', 'W', '16:00', '19:00');
-INSERT INTO schedule VALUES ('W300-1700', 'W', '17:00', '20:00');
-INSERT INTO schedule VALUES ('W300-1800', 'W', '18:00', '21:00');
+INSERT INTO schedule VALUES ('W300-0700', 'W', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('W300-0800', 'W', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('W300-0900', 'W', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('W300-1000', 'W', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('W300-1100', 'W', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('W300-1200', 'W', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('W300-1300', 'W', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('W300-1400', 'W', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('W300-1500', 'W', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('W300-1600', 'W', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('W300-1700', 'W', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('W300-1800', 'W', '18:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('Th130-0700', 'Th', '07:00', '08:30');
-INSERT INTO schedule VALUES ('Th130-0830', 'Th', '08:30', '10:00');
-INSERT INTO schedule VALUES ('Th130-1000', 'Th', '10:00', '11:30');
-INSERT INTO schedule VALUES ('Th130-1130', 'Th', '11:30', '13:00');
-INSERT INTO schedule VALUES ('Th130-1300', 'Th', '13:00', '14:30');
-INSERT INTO schedule VALUES ('Th130-1430', 'Th', '14:30', '16:00');
-INSERT INTO schedule VALUES ('Th130-1600', 'Th', '16:00', '17:30');
-INSERT INTO schedule VALUES ('Th130-1730', 'Th', '17:30', '19:00');
-INSERT INTO schedule VALUES ('Th130-1900', 'Th', '19:00', '20:30');
+INSERT INTO schedule VALUES ('Th130-0700', 'Th', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('Th130-0830', 'Th', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('Th130-1000', 'Th', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('Th130-1130', 'Th', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('Th130-1300', 'Th', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('Th130-1430', 'Th', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('Th130-1600', 'Th', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('Th130-1730', 'Th', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('Th130-1900', 'Th', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('Th200-0700', 'Th', '07:00', '09:00');
-INSERT INTO schedule VALUES ('Th200-0800', 'Th', '08:00', '10:00');
-INSERT INTO schedule VALUES ('Th200-0900', 'Th', '09:00', '11:00');
-INSERT INTO schedule VALUES ('Th200-1000', 'Th', '10:00', '12:00');
-INSERT INTO schedule VALUES ('Th200-1100', 'Th', '11:00', '13:00');
-INSERT INTO schedule VALUES ('Th200-1200', 'Th', '12:00', '14:00');
-INSERT INTO schedule VALUES ('Th200-1300', 'Th', '13:00', '15:00');
-INSERT INTO schedule VALUES ('Th200-1400', 'Th', '14:00', '16:00');
-INSERT INTO schedule VALUES ('Th200-1500', 'Th', '15:00', '17:00');
-INSERT INTO schedule VALUES ('Th200-1600', 'Th', '16:00', '18:00');
-INSERT INTO schedule VALUES ('Th200-1700', 'Th', '17:00', '19:00');
-INSERT INTO schedule VALUES ('Th200-1800', 'Th', '18:00', '20:00');
-INSERT INTO schedule VALUES ('Th200-1900', 'Th', '19:00', '21:00');
+INSERT INTO schedule VALUES ('Th200-0700', 'Th', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('Th200-0800', 'Th', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('Th200-0900', 'Th', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('Th200-1000', 'Th', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('Th200-1100', 'Th', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('Th200-1200', 'Th', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('Th200-1300', 'Th', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('Th200-1400', 'Th', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('Th200-1500', 'Th', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('Th200-1600', 'Th', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('Th200-1700', 'Th', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('Th200-1800', 'Th', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('Th200-1900', 'Th', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('Th300-0700', 'Th', '07:00', '10:00');
-INSERT INTO schedule VALUES ('Th300-0800', 'Th', '08:00', '11:00');
-INSERT INTO schedule VALUES ('Th300-0900', 'Th', '09:00', '12:00');
-INSERT INTO schedule VALUES ('Th300-1000', 'Th', '10:00', '13:00');
-INSERT INTO schedule VALUES ('Th300-1100', 'Th', '11:00', '14:00');
-INSERT INTO schedule VALUES ('Th300-1200', 'Th', '12:00', '15:00');
-INSERT INTO schedule VALUES ('Th300-1300', 'Th', '13:00', '16:00');
-INSERT INTO schedule VALUES ('Th300-1400', 'Th', '14:00', '17:00');
-INSERT INTO schedule VALUES ('Th300-1500', 'Th', '15:00', '18:00');
-INSERT INTO schedule VALUES ('Th300-1600', 'Th', '16:00', '19:00');
-INSERT INTO schedule VALUES ('Th300-1700', 'Th', '17:00', '20:00');
-INSERT INTO schedule VALUES ('Th300-1800', 'Th', '18:00', '21:00');
+INSERT INTO schedule VALUES ('Th300-0700', 'Th', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('Th300-0800', 'Th', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('Th300-0900', 'Th', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('Th300-1000', 'Th', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('Th300-1100', 'Th', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('Th300-1200', 'Th', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('Th300-1300', 'Th', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('Th300-1400', 'Th', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('Th300-1500', 'Th', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('Th300-1600', 'Th', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('Th300-1700', 'Th', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('Th300-1800', 'Th', '18:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('F130-0700', 'F', '07:00', '08:30');
-INSERT INTO schedule VALUES ('F130-0830', 'F', '08:30', '10:00');
-INSERT INTO schedule VALUES ('F130-1000', 'F', '10:00', '11:30');
-INSERT INTO schedule VALUES ('F130-1130', 'F', '11:30', '13:00');
-INSERT INTO schedule VALUES ('F130-1300', 'F', '13:00', '14:30');
-INSERT INTO schedule VALUES ('F130-1430', 'F', '14:30', '16:00');
-INSERT INTO schedule VALUES ('F130-1600', 'F', '16:00', '17:30');
-INSERT INTO schedule VALUES ('F130-1730', 'F', '17:30', '19:00');
-INSERT INTO schedule VALUES ('F130-1900', 'F', '19:00', '20:30');
+INSERT INTO schedule VALUES ('F130-0700', 'F', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('F130-0830', 'F', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('F130-1000', 'F', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('F130-1130', 'F', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('F130-1300', 'F', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('F130-1430', 'F', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('F130-1600', 'F', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('F130-1730', 'F', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('F130-1900', 'F', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('F200-0700', 'F', '07:00', '09:00');
-INSERT INTO schedule VALUES ('F200-0800', 'F', '08:00', '10:00');
-INSERT INTO schedule VALUES ('F200-0900', 'F', '09:00', '11:00');
-INSERT INTO schedule VALUES ('F200-1000', 'F', '10:00', '12:00');
-INSERT INTO schedule VALUES ('F200-1100', 'F', '11:00', '13:00');
-INSERT INTO schedule VALUES ('F200-1200', 'F', '12:00', '14:00');
-INSERT INTO schedule VALUES ('F200-1300', 'F', '13:00', '15:00');
-INSERT INTO schedule VALUES ('F200-1400', 'F', '14:00', '16:00');
-INSERT INTO schedule VALUES ('F200-1500', 'F', '15:00', '17:00');
-INSERT INTO schedule VALUES ('F200-1600', 'F', '16:00', '18:00');
-INSERT INTO schedule VALUES ('F200-1700', 'F', '17:00', '19:00');
-INSERT INTO schedule VALUES ('F200-1800', 'F', '18:00', '20:00');
-INSERT INTO schedule VALUES ('F200-1900', 'F', '19:00', '21:00');
+INSERT INTO schedule VALUES ('F200-0700', 'F', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('F200-0800', 'F', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('F200-0900', 'F', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('F200-1000', 'F', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('F200-1100', 'F', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('F200-1200', 'F', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('F200-1300', 'F', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('F200-1400', 'F', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('F200-1500', 'F', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('F200-1600', 'F', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('F200-1700', 'F', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('F200-1800', 'F', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('F200-1900', 'F', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('F300-0700', 'F', '07:00', '10:00');
-INSERT INTO schedule VALUES ('F300-0800', 'F', '08:00', '11:00');
-INSERT INTO schedule VALUES ('F300-0900', 'F', '09:00', '12:00');
-INSERT INTO schedule VALUES ('F300-1000', 'F', '10:00', '13:00');
-INSERT INTO schedule VALUES ('F300-1100', 'F', '11:00', '14:00');
-INSERT INTO schedule VALUES ('F300-1200', 'F', '12:00', '15:00');
-INSERT INTO schedule VALUES ('F300-1300', 'F', '13:00', '16:00');
-INSERT INTO schedule VALUES ('F300-1400', 'F', '14:00', '17:00');
-INSERT INTO schedule VALUES ('F300-1500', 'F', '15:00', '18:00');
-INSERT INTO schedule VALUES ('F300-1600', 'F', '16:00', '19:00');
-INSERT INTO schedule VALUES ('F300-1700', 'F', '17:00', '20:00');
-INSERT INTO schedule VALUES ('F300-1800', 'F', '18:00', '21:00');
+INSERT INTO schedule VALUES ('F300-0700', 'F', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('F300-0800', 'F', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('F300-0900', 'F', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('F300-1000', 'F', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('F300-1100', 'F', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('F300-1200', 'F', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('F300-1300', 'F', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('F300-1400', 'F', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('F300-1500', 'F', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('F300-1600', 'F', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('F300-1700', 'F', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('F300-1800', 'F', '18:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('S130-0700', 'S', '07:00', '08:30');
-INSERT INTO schedule VALUES ('S130-0830', 'S', '08:30', '10:00');
-INSERT INTO schedule VALUES ('S130-1000', 'S', '10:00', '11:30');
-INSERT INTO schedule VALUES ('S130-1130', 'S', '11:30', '13:00');
-INSERT INTO schedule VALUES ('S130-1300', 'S', '13:00', '14:30');
-INSERT INTO schedule VALUES ('S130-1430', 'S', '14:30', '16:00');
-INSERT INTO schedule VALUES ('S130-1600', 'S', '16:00', '17:30');
-INSERT INTO schedule VALUES ('S130-1730', 'S', '17:30', '19:00');
-INSERT INTO schedule VALUES ('S130-1900', 'S', '19:00', '20:30');
+INSERT INTO schedule VALUES ('S130-0700', 'S', '07:00:00', '08:30:00');
+INSERT INTO schedule VALUES ('S130-0830', 'S', '08:30:00', '10:00:00');
+INSERT INTO schedule VALUES ('S130-1000', 'S', '10:00:00', '11:30:00');
+INSERT INTO schedule VALUES ('S130-1130', 'S', '11:30:00', '13:00:00');
+INSERT INTO schedule VALUES ('S130-1300', 'S', '13:00:00', '14:30:00');
+INSERT INTO schedule VALUES ('S130-1430', 'S', '14:30:00', '16:00:00');
+INSERT INTO schedule VALUES ('S130-1600', 'S', '16:00:00', '17:30:00');
+INSERT INTO schedule VALUES ('S130-1730', 'S', '17:30:00', '19:00:00');
+INSERT INTO schedule VALUES ('S130-1900', 'S', '19:00:00', '20:30:00');
 
-INSERT INTO schedule VALUES ('S200-0700', 'S', '07:00', '09:00');
-INSERT INTO schedule VALUES ('S200-0800', 'S', '08:00', '10:00');
-INSERT INTO schedule VALUES ('S200-0900', 'S', '09:00', '11:00');
-INSERT INTO schedule VALUES ('S200-1000', 'S', '10:00', '12:00');
-INSERT INTO schedule VALUES ('S200-1100', 'S', '11:00', '13:00');
-INSERT INTO schedule VALUES ('S200-1200', 'S', '12:00', '14:00');
-INSERT INTO schedule VALUES ('S200-1300', 'S', '13:00', '15:00');
-INSERT INTO schedule VALUES ('S200-1400', 'S', '14:00', '16:00');
-INSERT INTO schedule VALUES ('S200-1500', 'S', '15:00', '17:00');
-INSERT INTO schedule VALUES ('S200-1600', 'S', '16:00', '18:00');
-INSERT INTO schedule VALUES ('S200-1700', 'S', '17:00', '19:00');
-INSERT INTO schedule VALUES ('S200-1800', 'S', '18:00', '20:00');
-INSERT INTO schedule VALUES ('S200-1900', 'S', '19:00', '21:00');
+INSERT INTO schedule VALUES ('S200-0700', 'S', '07:00:00', '09:00:00');
+INSERT INTO schedule VALUES ('S200-0800', 'S', '08:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('S200-0900', 'S', '09:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('S200-1000', 'S', '10:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('S200-1100', 'S', '11:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('S200-1200', 'S', '12:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('S200-1300', 'S', '13:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('S200-1400', 'S', '14:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('S200-1500', 'S', '15:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('S200-1600', 'S', '16:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('S200-1700', 'S', '17:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('S200-1800', 'S', '18:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('S200-1900', 'S', '19:00:00', '21:00:00');
 
-INSERT INTO schedule VALUES ('S300-0700', 'S', '07:00', '10:00');
-INSERT INTO schedule VALUES ('S300-0800', 'S', '08:00', '11:00');
-INSERT INTO schedule VALUES ('S300-0900', 'S', '09:00', '12:00');
-INSERT INTO schedule VALUES ('S300-1000', 'S', '10:00', '13:00');
-INSERT INTO schedule VALUES ('S300-1100', 'S', '11:00', '14:00');
-INSERT INTO schedule VALUES ('S300-1200', 'S', '12:00', '15:00');
-INSERT INTO schedule VALUES ('S300-1300', 'S', '13:00', '16:00');
-INSERT INTO schedule VALUES ('S300-1400', 'S', '14:00', '17:00');
-INSERT INTO schedule VALUES ('S300-1500', 'S', '15:00', '18:00');
-INSERT INTO schedule VALUES ('S300-1600', 'S', '16:00', '19:00');
-INSERT INTO schedule VALUES ('S300-1700', 'S', '17:00', '20:00');
-INSERT INTO schedule VALUES ('S300-1800', 'S', '18:00', '21:00');
+INSERT INTO schedule VALUES ('S300-0700', 'S', '07:00:00', '10:00:00');
+INSERT INTO schedule VALUES ('S300-0800', 'S', '08:00:00', '11:00:00');
+INSERT INTO schedule VALUES ('S300-0900', 'S', '09:00:00', '12:00:00');
+INSERT INTO schedule VALUES ('S300-1000', 'S', '10:00:00', '13:00:00');
+INSERT INTO schedule VALUES ('S300-1100', 'S', '11:00:00', '14:00:00');
+INSERT INTO schedule VALUES ('S300-1200', 'S', '12:00:00', '15:00:00');
+INSERT INTO schedule VALUES ('S300-1300', 'S', '13:00:00', '16:00:00');
+INSERT INTO schedule VALUES ('S300-1400', 'S', '14:00:00', '17:00:00');
+INSERT INTO schedule VALUES ('S300-1500', 'S', '15:00:00', '18:00:00');
+INSERT INTO schedule VALUES ('S300-1600', 'S', '16:00:00', '19:00:00');
+INSERT INTO schedule VALUES ('S300-1700', 'S', '17:00:00', '20:00:00');
+INSERT INTO schedule VALUES ('S300-1800', 'S', '18:00:00', '21:00:00');
 
 -- sched_opt_id format: FAC-DAYS-ORDERofCLASS
 INSERT INTO schedule_option VALUES ('001-MTh-01', 'M130-0700', 'FAC001');
@@ -466,16 +484,16 @@ INSERT INTO schedule_option VALUES ('001-MTh-02', 'M130-0830', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-MTh-02', 'Th130-0830', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-MTh-03', 'M130-1000', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-MTh-03', 'Th130-1000', 'FAC001');
-INSERT INTO schedule_option VALUES ('001-MTh-04', 'M130-1000', 'FAC001');
-INSERT INTO schedule_option VALUES ('001-MTh-04', 'Th130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-04', 'M130-1300', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-MTh-04', 'Th130-1300', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-01', 'T130-0700', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-01', 'F130-0700', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-02', 'T130-0830', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-02', 'F130-0830', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-03', 'T130-1000', 'FAC001');
 INSERT INTO schedule_option VALUES ('001-TF-03', 'F130-1000', 'FAC001');
-INSERT INTO schedule_option VALUES ('001-TF-04', 'T130-1000', 'FAC001');
-INSERT INTO schedule_option VALUES ('001-TF-04', 'F130-1000', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-04', 'T130-1300', 'FAC001');
+INSERT INTO schedule_option VALUES ('001-TF-04', 'F130-1300', 'FAC001');
 
 INSERT INTO schedule_option VALUES ('002-TF-01', 'T130-1300', 'FAC002');
 INSERT INTO schedule_option VALUES ('002-TF-01', 'F130-1300', 'FAC002');
@@ -543,6 +561,7 @@ INSERT INTO schedule_option VALUES ('010-WS-02', 'S130-1600', 'FAC010');
 CREATE TABLE subject (
     subject_id        VARCHAR(50)      NOT NULL,
     subject_title     VARCHAR(150)     NOT NULL,
+    section           INT              NOT NULL,
     lec_hours         TIME             NOT NULL,
     lab_hours         TIME             NOT NULL,
     units             DECIMAL(4,1)     NOT NULL,
@@ -555,98 +574,309 @@ CREATE TABLE subject (
 
 -- FIRST YEAR — 1ST SEMESTER
 
-INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', '02:30:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('AAP 0007', 'Art Appreciation', '03:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('PCM 0006', 'Purposive Communications', '02:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('MMW 0001', 'Mathematics in the Modern World', '02:30:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('IPP 0010', 'Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag', '03:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0101', 'Introduction to Computing (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0101.1', 'Introduction to Computing (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0102', 'Fundamentals of Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0102.1', 'Fundamentals of Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('PATHFIT 1', 'Physical Activities towards Health and Fitness 1 (Movement Competency Training)', '01:30:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('NSTP 1', 'National Service Training Program 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', 1, '01:30:00', '00:00:00', 3, '009-WS-01', NULL);
+INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', 2, '01:30:00', '00:00:00', 3, '009-WS-02', NULL);
+INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', 3, '01:30:00', '00:00:00', 3, '010-MTh-01', NULL);
+
+INSERT INTO subject VALUES ('AAP 0007', 'Art Appreciation', 1, '03:00:00', '00:00:00', 3, '006-S-01', NULL);
+INSERT INTO subject VALUES ('AAP 0007', 'Art Appreciation', 2, '03:00:00', '00:00:00', 3, '006-S-02', NULL);
+INSERT INTO subject VALUES ('AAP 0007', 'Art Appreciation', 3, '03:00:00', '00:00:00', 3, '008-F-01', NULL);
+
+INSERT INTO subject VALUES ('PCM 0006', 'Purposive Communications', 1, '02:00:00', '00:00:00', '007-M-02', NULL);
+INSERT INTO subject VALUES ('PCM 0006', 'Purposive Communications', 2, '02:00:00', '00:00:00', '007-Th-01', NULL);
+INSERT INTO subject VALUES ('PCM 0006', 'Purposive Communications', 3, '02:00:00', '00:00:00', '005-T-02', NULL);
+
+INSERT INTO subject VALUES ('MMW 0001', 'Mathematics in the Modern World', 1, '01:30:00', '00:00:00', 3, '001-MTh-01', NULL);
+INSERT INTO subject VALUES ('MMW 0001', 'Mathematics in the Modern World', 2, '01:30:00', '00:00:00', 3, '001-MTh-02', NULL);
+INSERT INTO subject VALUES ('MMW 0001', 'Mathematics in the Modern World', 3, '01:30:00', '00:00:00', 3, '001-MTh-03', NULL);
+
+INSERT INTO subject VALUES ('IPP 0010', 'Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag', '03:00:00', '00:00:00', 3, '003-Th-01', NULL);
+INSERT INTO subject VALUES ('IPP 0010', 'Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag', '03:00:00', '00:00:00', 3, '003-Th-02', NULL);
+INSERT INTO subject VALUES ('IPP 0010', 'Interdisiplinaryong Pagbasa at Pagsulat sa mga Diskurso ng Pagpapayhayag', '03:00:00', '00:00:00', 3, '003-W-01', NULL);
+
+INSERT INTO subject VALUES ('ICC 0101', 'Introduction to Computing (lec)', 1, '02:00:00', '00:00:00', 2, '004-M-01', NULL);
+INSERT INTO subject VALUES ('ICC 0101', 'Introduction to Computing (lec)', 2, '02:00:00', '00:00:00', 2, '004-Th-02', NULL);
+INSERT INTO subject VALUES ('ICC 0101', 'Introduction to Computing (lec)', 3, '02:00:00', '00:00:00', 2, '005-T-02', NULL);
+
+INSERT INTO subject VALUES ('ICC 0101.1', 'Introduction to Computing (lab)', 1, '00:00:00', '03:00:00', 1, '004-M-02', NULL);
+INSERT INTO subject VALUES ('ICC 0101.1', 'Introduction to Computing (lab)', 2, '00:00:00', '03:00:00', 1, '004-Th-01', NULL);
+INSERT INTO subject VALUES ('ICC 0101.1', 'Introduction to Computing (lab)', 3, '00:00:00', '03:00:00', 1, '005-T-01', NULL);
+
+INSERT INTO subject VALUES ('ICC 0102', 'Fundamentals of Programming (lec)', 1, '02:00:00', '00:00:00', 2, '005-F-01', NULL);
+INSERT INTO subject VALUES ('ICC 0102', 'Fundamentals of Programming (lec)', 2, '02:00:00', '00:00:00', 2, '006-W-01', NULL);
+INSERT INTO subject VALUES ('ICC 0102', 'Fundamentals of Programming (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-02', NULL);
+
+INSERT INTO subject VALUES ('ICC 0102.1', 'Fundamentals of Programming (lab)', 1, '00:00:00', '03:00:00', 1, '005-F-02', NULL);
+INSERT INTO subject VALUES ('ICC 0102.1', 'Fundamentals of Programming (lab)', 2, '00:00:00', '03:00:00', 1, '008-T-02', NULL);
+INSERT INTO subject VALUES ('ICC 0102.1', 'Fundamentals of Programming (lab)', 3, '00:00:00', '03:00:00', 1, '008-F-01', NULL);
+
+INSERT INTO subject VALUES ('PATHFIT 1', 'Physical Activities towards Health and Fitness 1 (Movement Competency Training)', 1, '01:30:00', '00:00:00', 2, '002-TF-01', NULL);
+INSERT INTO subject VALUES ('PATHFIT 1', 'Physical Activities towards Health and Fitness 1 (Movement Competency Training)', 2, '01:30:00', '00:00:00', 2, '002-TF-03', NULL);
+INSERT INTO subject VALUES ('PATHFIT 1', 'Physical Activities towards Health and Fitness 1 (Movement Competency Training)', 3, '01:30:00', '00:00:00', 2, '002-WS-02', NULL);
+
+INSERT INTO subject VALUES ('NSTP 1', 'National Service Training Program 1', 1, '03:00:00', '00:00:00', 3, '003-W-02', NULL);
+INSERT INTO subject VALUES ('NSTP 1', 'National Service Training Program 1', 2, '03:00:00', '00:00:00', 3, '003-S-01', NULL);
+INSERT INTO subject VALUES ('NSTP 1', 'National Service Training Program 1', 3, '03:00:00', '00:00:00', 3, '003-S-02', NULL);
 
 -- FIRST YEAR — 2ND SEMESTER
 
-INSERT INTO subject VALUES ('CET 0111', 'Calculus 1', '03:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('CET 0114', 'General Chemistry (lec)', '02:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('CET 0114.1', 'General Chemistry (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0121', 'Introduction to Computer Human Interaction (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0121.1', 'Introduction to Computer Human Interaction (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0122', 'Discrete Mathematics', '02:30:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0123', 'Web Systems Technology (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0123.1', 'Web Systems Technology (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0103', 'Intermediate Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0103.1', 'Intermediate Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('GTB 121', 'Great Books', '02:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('PATHFIT 2', 'Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)', '01:30:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('NSTP 2', 'National Service Training Program 2', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0111', 'Calculus 1', 1, '03:00:00', '00:00:00', 3, '001-MTh-01', NULL);
+INSERT INTO subject VALUES ('CET 0111', 'Calculus 1', 2, '03:00:00', '00:00:00', 3, '001-MTh-02', NULL);
+INSERT INTO subject VALUES ('CET 0111', 'Calculus 1', 3, '03:00:00', '00:00:00', 3, '001-MTh-03', NULL);
+
+INSERT INTO subject VALUES ('CET 0114', 'General Chemistry (lec)', 1, '02:00:00', '00:00:00', 3, '003-M-01', NULL);
+INSERT INTO subject VALUES ('CET 0114', 'General Chemistry (lec)', 2, '02:00:00', '00:00:00', 3, '003-M-02', NULL);
+INSERT INTO subject VALUES ('CET 0114', 'General Chemistry (lec)', 3, '02:00:00', '00:00:00', 3, '003-W-01', NULL);
+
+INSERT INTO subject VALUES ('CET 0114.1', 'General Chemistry (lab)', 1, '00:00:00', '03:00:00', 1, '003-Th-01', NULL);
+INSERT INTO subject VALUES ('CET 0114.1', 'General Chemistry (lab)', 2, '00:00:00', '03:00:00', 1, '003-Th-02', NULL);
+INSERT INTO subject VALUES ('CET 0114.1', 'General Chemistry (lab)', 3, '00:00:00', '03:00:00', 1, '003-S-01', NULL);
+
+INSERT INTO subject VALUES ('EIT 0121', 'Introduction to Computer Human Interaction (lec)', 1, '02:00:00', '00:00:00', 2, '003-W-02', NULL);
+INSERT INTO subject VALUES ('EIT 0121', 'Introduction to Computer Human Interaction (lec)', 2, '02:00:00', '00:00:00', 2, '004-M-01', NULL);
+INSERT INTO subject VALUES ('EIT 0121', 'Introduction to Computer Human Interaction (lec)', 3, '02:00:00', '00:00:00', 2, '004-Th-02', NULL);
+
+INSERT INTO subject VALUES ('EIT 0121.1', 'Introduction to Computer Human Interaction (lab)', 1, '00:00:00', '03:00:00', 1, '003-S-02', NULL);
+INSERT INTO subject VALUES ('EIT 0121.1', 'Introduction to Computer Human Interaction (lab)', 2, '00:00:00', '03:00:00', 1, '004-M-02', NULL);
+INSERT INTO subject VALUES ('EIT 0121.1', 'Introduction to Computer Human Interaction (lab)', 3, '00:00:00', '03:00:00', 1, '004-Th-01', NULL);
+
+INSERT INTO subject VALUES ('EIT 0122', 'Discrete Mathematics', 1, '01:30:00', '00:00:00', 3, '001-MTh-04', NULL);
+INSERT INTO subject VALUES ('EIT 0122', 'Discrete Mathematics', 2, '01:30:00', '00:00:00', 3, '001-TF-01', NULL);
+INSERT INTO subject VALUES ('EIT 0122', 'Discrete Mathematics', 3, '01:30:00', '00:00:00', 3, '001-TF-02', NULL);
+
+INSERT INTO subject VALUES ('EIT 0123', 'Web Systems Technology (lec)', 1, '02:00:00', '00:00:00', 2, '005-T-02', NULL);
+INSERT INTO subject VALUES ('EIT 0123', 'Web Systems Technology (lec)', 2, '02:00:00', '00:00:00', 2, '005-F-01', NULL);
+INSERT INTO subject VALUES ('EIT 0123', 'Web Systems Technology (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-01', NULL);
+
+INSERT INTO subject VALUES ('EIT 0123.1', 'Web Systems Technology (lab)', 1, '00:00:00', '03:00:00', 1, '005-T-01', NULL);
+INSERT INTO subject VALUES ('EIT 0123.1', 'Web Systems Technology (lab)', 2, '00:00:00', '03:00:00', 1, '005-F-02', NULL);
+INSERT INTO subject VALUES ('EIT 0123.1', 'Web Systems Technology (lab)', 3, '00:00:00', '03:00:00', 1, '006-S-01', NULL);
+
+INSERT INTO subject VALUES ('ICC 0103', 'Intermediate Programming (lec)', 1, '02:00:00', '00:00:00', 2, '006-W-02', NULL);
+INSERT INTO subject VALUES ('ICC 0103', 'Intermediate Programming (lec)', 2, '02:00:00', '00:00:00', 2, '007-M-02', NULL);
+INSERT INTO subject VALUES ('ICC 0103', 'Intermediate Programming (lec)', 3, '02:00:00', '00:00:00', 2, '007-Th-01', NULL);
+
+INSERT INTO subject VALUES ('ICC 0103.1', 'Intermediate Programming (lab)', 1, '00:00:00', '03:00:00', 1, '006-S-02', NULL);
+INSERT INTO subject VALUES ('ICC 0103.1', 'Intermediate Programming (lab)', 2, '00:00:00', '03:00:00', 1, '007-M-01', NULL);
+INSERT INTO subject VALUES ('ICC 0103.1', 'Intermediate Programming (lab)', 3, '00:00:00', '03:00:00', 1, '007-Th-02', NULL);
+
+INSERT INTO subject VALUES ('GTB 121', 'Great Books', 1, '02:00:00', '00:00:00', 3, '008-T-01', NULL);
+INSERT INTO subject VALUES ('GTB 121', 'Great Books', 2, '02:00:00', '00:00:00', 3, '008-F-02', NULL);
+INSERT INTO subject VALUES ('GTB 121', 'Great Books', 3, '02:00:00', '00:00:00', 3, '002-TF-01', NULL);
+
+INSERT INTO subject VALUES ('PATHFIT 2', 'Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)', 1, '01:30:00', '00:00:00', 2, '002-TF-02', NULL);
+INSERT INTO subject VALUES ('PATHFIT 2', 'Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)', 2, '01:30:00', '00:00:00', 2, '002-TF-03', NULL);
+INSERT INTO subject VALUES ('PATHFIT 2', 'Physical Activities Towards Health and Fitness 2 (Exercise-based Fitness Activities)', 3, '01:30:00', '00:00:00', 2, '001-TF-02', NULL);
+
+INSERT INTO subject VALUES ('NSTP 2', 'National Service Training Program 2', 1, '03:00:00', '00:00:00', 3, '002-WS-01', NULL);
+INSERT INTO subject VALUES ('NSTP 2', 'National Service Training Program 2', 2, '03:00:00', '00:00:00', 3, '002-WS-02', NULL);
+INSERT INTO subject VALUES ('NSTP 2', 'National Service Training Program 2', 3, '03:00:00', '00:00:00', 3, '002-WS-03', NULL);
 
 -- SECOND YEAR — 1ST SEMESTER
 
-INSERT INTO subject VALUES ('CET 0121', 'Calculus 2', '03:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('CET 0225', 'Physics for IT (lec)', '02:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('CET 0225.1', 'Physics for IT (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('TCW 0005', 'The Contemporary World', '02:30:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0104', 'Data Structures (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('ICC 0104.1', 'Data Structures (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0211', 'Object Oriented Programming (lec)', '02:00:00', '00:00:00', 2, NULL, NULL);
-INSERT INTO subject VALUES ('EIT 0211.1', 'Object Oriented Programming (lab)', '00:00:00', '03:00:00', 1, NULL, NULL);
-INSERT INTO subject VALUES ('PPC 121', 'Philippine Popular Culture', '02:30:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('EIT Elective 1', 'Professional Elective 1', '03:00:00', '00:00:00', 3, NULL, NULL);
-INSERT INTO subject VALUES ('PATHFIT 3', 'PE Elective 1', '01:30:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('CET 0121', 'Calculus 2', 1, '03:00:00', '00:00:00', 3, '003-Th-01', NULL);
+INSERT INTO subject VALUES ('CET 0121', 'Calculus 2', 2, '03:00:00', '00:00:00', 3, '003-Th-02', NULL);
+INSERT INTO subject VALUES ('CET 0121', 'Calculus 2', 3, '03:00:00', '00:00:00', 3, '003-S-01', NULL);
+
+INSERT INTO subject VALUES ('CET 0225', 'Physics for IT (lec)', 1, '02:00:00', '00:00:00', 3, '004-M-01', NULL);
+INSERT INTO subject VALUES ('CET 0225', 'Physics for IT (lec)', 2, '02:00:00', '00:00:00', 3, '004-Th-02', NULL);
+INSERT INTO subject VALUES ('CET 0225', 'Physics for IT (lec)', 3, '02:00:00', '00:00:00', 3, '005-T-02', NULL);
+
+INSERT INTO subject VALUES ('CET 0225.1', 'Physics for IT (lab)', 1, '00:00:00', '03:00:00', 1, '004-M-02', NULL);
+INSERT INTO subject VALUES ('CET 0225.1', 'Physics for IT (lab)', 2, '00:00:00', '03:00:00', 1, '004-Th-01', NULL);
+INSERT INTO subject VALUES ('CET 0225.1', 'Physics for IT (lab)', 3, '00:00:00', '03:00:00', 1, '005-T-01', NULL);
+
+INSERT INTO subject VALUES ('TCW 0005', 'The Contemporary World', 1, '01:30:00', '00:00:00', 3, '001-MTh-01', NULL);
+INSERT INTO subject VALUES ('TCW 0005', 'The Contemporary World', 2, '01:30:00', '00:00:00', 3, '001-MTh-02', NULL);
+INSERT INTO subject VALUES ('TCW 0005', 'The Contemporary World', 3, '01:30:00', '00:00:00', 3, '001-MTh-03', NULL);
+
+INSERT INTO subject VALUES ('ICC 0104', 'Data Structures (lec)', 1, '02:00:00', '00:00:00', 2, '005-F-01', NULL);
+INSERT INTO subject VALUES ('ICC 0104', 'Data Structures (lec)', 2, '02:00:00', '00:00:00', 2, '006-W-01', NULL);
+INSERT INTO subject VALUES ('ICC 0104', 'Data Structures (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-02', NULL);
+
+INSERT INTO subject VALUES ('ICC 0104.1', 'Data Structures (lab)', 1, '00:00:00', '03:00:00', 1, '005-F-02', NULL);
+INSERT INTO subject VALUES ('ICC 0104.1', 'Data Structures (lab)', 2, '00:00:00', '03:00:00', 1, '006-W-01', NULL);
+INSERT INTO subject VALUES ('ICC 0104.1', 'Data Structures (lab)', 3, '00:00:00', '03:00:00', 1, '006-W-02', NULL);
+
+INSERT INTO subject VALUES ('EIT 0211', 'Object Oriented Programming (lec)', 1, '02:00:00', '00:00:00', 2, '007-M-02', NULL);
+INSERT INTO subject VALUES ('EIT 0211', 'Object Oriented Programming (lec)', 2, '02:00:00', '00:00:00', 2, '007-Th-01', NULL);
+INSERT INTO subject VALUES ('EIT 0211', 'Object Oriented Programming (lec)', 3, '02:00:00', '00:00:00', 2, '008-T-01', NULL);
+
+INSERT INTO subject VALUES ('EIT 0211.1', 'Object Oriented Programming (lab)', 1, '00:00:00', '03:00:00', 1, '007-M-01', NULL);
+INSERT INTO subject VALUES ('EIT 0211.1', 'Object Oriented Programming (lab)', 2, '00:00:00', '03:00:00', 1, '007-Th-02', NULL);
+INSERT INTO subject VALUES ('EIT 0211.1', 'Object Oriented Programming (lab)', 3, '00:00:00', '03:00:00', 1, '008-T-02', NULL);
+
+INSERT INTO subject VALUES ('PPC 121', 'Philippine Popular Culture', 1, '01:30:00', '00:00:00', 3, '002-TF-01', NULL);
+INSERT INTO subject VALUES ('PPC 121', 'Philippine Popular Culture', 2, '01:30:00', '00:00:00', 3, '002-TF-02', NULL);
+INSERT INTO subject VALUES ('PPC 121', 'Philippine Popular Culture', 3, '01:30:00', '00:00:00', 3, '002-TF-03', NULL);
+
+INSERT INTO subject VALUES ('EIT Elective 1', 'Professional Elective 1', 1, '03:00:00', '00:00:00', 3, '008-F-01', NULL);
+INSERT INTO subject VALUES ('EIT Elective 1', 'Professional Elective 1', 2, '03:00:00', '00:00:00', 3, '010-MTh-01', NULL);
+INSERT INTO subject VALUES ('EIT Elective 1', 'Professional Elective 1', 3, '03:00:00', '00:00:00', 3, '010-TF-02', NULL);
+
+INSERT INTO subject VALUES ('PATHFIT 3', 'PE Elective 1', '01:30:00', 1, '00:00:00', 2, '002-WS-01', NULL);
+INSERT INTO subject VALUES ('PATHFIT 3', 'PE Elective 1', '01:30:00', 2, '00:00:00', 2, '002-WS-02', NULL);
+INSERT INTO subject VALUES ('PATHFIT 3', 'PE Elective 1', '01:30:00', 3, '00:00:00', 2, '002-WS-03', NULL);
 
 -- SECOND YEAR — 2ND SEMESTER
 
-INSERT INTO subject VALUES ('UTS 0003', 'Understanding the Self', '02:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('RPH 0004', 'Readings in Philippine History', '02:30:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0212', 'Platform Technology', '02:30:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('ICC 0105', 'Information Management (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('ICC 0105.1', 'Information Management (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0221', 'Quantitative Methods', '02:30:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0222', 'Networking 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0222.1', 'Networking 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('GES 0013', 'Environmental Science', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('EIT Elective 2', 'Professional Elective 2', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('PATHFIT 4', 'PE Elective 2', '01:30:00', '00:00:00', 2, NULL, NULL);
+INSERT INTO subject VALUES ('UTS 0003', 'Understanding the Self', 1, '02:00:00', '00:00:00', 3, '003-M-01', NULL),
+INSERT INTO subject VALUES ('UTS 0003', 'Understanding the Self', 2, '02:00:00', '00:00:00', 3, '003-M-02', NULL),
+INSERT INTO subject VALUES ('UTS 0003', 'Understanding the Self', 3, '02:00:00', '00:00:00', 3, '003-W-01', NULL),
+
+INSERT INTO subject VALUES ('RPH 0004', 'Readings in Philippine History', 1, '01:30:00', '00:00:00', 3, '001-MTh-01', NULL),
+INSERT INTO subject VALUES ('RPH 0004', 'Readings in Philippine History', 2, '01:30:00', '00:00:00', 3, '001-MTh-02', NULL),
+INSERT INTO subject VALUES ('RPH 0004', 'Readings in Philippine History', 3, '01:30:00', '00:00:00', 3, '001-MTh-03', NULL),
+
+INSERT INTO subject VALUES ('EIT 0212', 'Platform Technology', 1, '02:00:00', '00:00:00', 3, '003-W-02', NULL),
+INSERT INTO subject VALUES ('EIT 0212', 'Platform Technology', 2, '02:00:00', '00:00:00', 3, '004-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0212', 'Platform Technology', 3, '02:00:00', '00:00:00', 3, '004-Th-02', NULL),
+
+INSERT INTO subject VALUES ('ICC 0105', 'Information Management (lec)', 1, '02:00:00', '00:00:00', 2, '005-T-02', NULL),
+INSERT INTO subject VALUES ('ICC 0105', 'Information Management (lec)', 2, '02:00:00', '00:00:00', 2, '005-F-01', NULL),
+INSERT INTO subject VALUES ('ICC 0105', 'Information Management (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-01', NULL),
+
+INSERT INTO subject VALUES ('ICC 0105.1', 'Information Management (lab)', 1, '00:00:00', '03:00:00', 1, '005-T-01', NULL),
+INSERT INTO subject VALUES ('ICC 0105.1', 'Information Management (lab)', 2, '00:00:00', '03:00:00', 1, '005-F-02', NULL),
+INSERT INTO subject VALUES ('ICC 0105.1', 'Information Management (lab)', 3, '00:00:00', '03:00:00', 1, '006-S-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0221', 'Quantitative Methods', 1, '01:30:00', '00:00:00', 3, '001-TF-01', NULL),
+INSERT INTO subject VALUES ('EIT 0221', 'Quantitative Methods', 2, '01:30:00', '00:00:00', 3, '001-TF-02', NULL),
+INSERT INTO subject VALUES ('EIT 0221', 'Quantitative Methods', 3, '01:30:00', '00:00:00', 3, '001-TF-03', NULL),
+
+INSERT INTO subject VALUES ('EIT 0222', 'Networking 1 (lec)', 1, '02:00:00', '00:00:00', 2, '006-W-02', NULL),
+INSERT INTO subject VALUES ('EIT 0222', 'Networking 1 (lec)', 2, '02:00:00', '00:00:00', 2, '007-M-02', NULL),
+INSERT INTO subject VALUES ('EIT 0222', 'Networking 1 (lec)', 3, '02:00:00', '00:00:00', 2, '007-Th-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0222.1', 'Networking 1 (lab)', 1, '00:00:00', '03:00:00', 1, '006-S-02', NULL),
+INSERT INTO subject VALUES ('EIT 0222.1', 'Networking 1 (lab)', 2, '00:00:00', '03:00:00', 1, '007-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0222.1', 'Networking 1 (lab)', 3, '00:00:00', '03:00:00', 1, '007-Th-02', NULL),
+
+INSERT INTO subject VALUES ('GES 0013', 'Environmental Science', 1, '03:00:00', '00:00:00', 3, '002-TF-01', NULL),
+INSERT INTO subject VALUES ('GES 0013', 'Environmental Science', 2, '03:00:00', '00:00:00', 3, '002-TF-02', NULL),
+INSERT INTO subject VALUES ('GES 0013', 'Environmental Science', 3, '03:00:00', '00:00:00', 3, '002-TF-03', NULL),
+
+INSERT INTO subject VALUES ('EIT Elective 2', 'Professional Elective 2', 1, '03:00:00', '00:00:00', 3, '002-WS-01', NULL),
+INSERT INTO subject VALUES ('EIT Elective 2', 'Professional Elective 2', 2, '03:00:00', '00:00:00', 3, '002-WS-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 2', 'Professional Elective 2', 3, '03:00:00', '00:00:00', 3, '002-WS-03', NULL),
+
+INSERT INTO subject VALUES ('PATHFIT 4', 'PE Elective 2', 1, '01:30:00', '00:00:00', 2, '010-MTh-01', NULL);
+INSERT INTO subject VALUES ('PATHFIT 4', 'PE Elective 2', 2, '01:30:00', '00:00:00', 2, '010-WS-02', NULL);
+INSERT INTO subject VALUES ('PATHFIT 4', 'PE Elective 2', 3, '01:30:00', '00:00:00', 2, '010-WS-01', NULL);
 
 -- THIRD YEAR — 1ST SEMESTER
 
-INSERT INTO subject VALUES ('ICC 0335', 'Application and Emerging Technologies (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('ICC 0335.1', 'Application and Emerging Technologies (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0311', 'Advanced Database Systems (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0311.1', 'Advanced Database Systems (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0312', 'Networking 2 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0312.1', 'Networking 2 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT Elective 3', 'Professional Elective 3', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('LWR 0009', 'Life and Works of Rizal', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('ICC 0335', 'Application and Emerging Technologies (lec)', 1, '02:00:00', '00:00:00', 2, '003-M-01', NULL),
+INSERT INTO subject VALUES ('ICC 0335', 'Application and Emerging Technologies (lec)', 2, '02:00:00', '00:00:00', 2, '003-M-02', NULL),
+INSERT INTO subject VALUES ('ICC 0335', 'Application and Emerging Technologies (lec)', 3, '02:00:00', '00:00:00', 2, '003-W-01', NULL),
+
+INSERT INTO subject VALUES ('ICC 0335.1', 'Application and Emerging Technologies (lab)', 1, '00:00:00', '03:00:00', 1, '003-Th-01', NULL),
+INSERT INTO subject VALUES ('ICC 0335.1', 'Application and Emerging Technologies (lab)', 2, '00:00:00', '03:00:00', 1, '003-Th-02', NULL),
+INSERT INTO subject VALUES ('ICC 0335.1', 'Application and Emerging Technologies (lab)', 3, '00:00:00', '03:00:00', 1, '003-S-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0311', 'Advanced Database Systems (lec)', 1, '02:00:00', '00:00:00', 2, '003-W-02', NULL),
+INSERT INTO subject VALUES ('EIT 0311', 'Advanced Database Systems (lec)', 2, '02:00:00', '00:00:00', 2, '004-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0311', 'Advanced Database Systems (lec)', 3, '02:00:00', '00:00:00', 2, '004-Th-02', NULL),
+
+INSERT INTO subject VALUES ('EIT 0311.1', 'Advanced Database Systems (lab)', 1, '00:00:00', '03:00:00', 1, '003-S-02', NULL),
+INSERT INTO subject VALUES ('EIT 0311.1', 'Advanced Database Systems (lab)', 2, '00:00:00', '03:00:00', 1, '004-M-02', NULL),
+INSERT INTO subject VALUES ('EIT 0311.1', 'Advanced Database Systems (lab)', 3, '00:00:00', '03:00:00', 1, '004-Th-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0312', 'Networking 2 (lec)', 1, '02:00:00', '00:00:00', 2, '005-T-02', NULL),
+INSERT INTO subject VALUES ('EIT 0312', 'Networking 2 (lec)', 2, '02:00:00', '00:00:00', 2, '005-F-01', NULL),
+INSERT INTO subject VALUES ('EIT 0312', 'Networking 2 (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0312.1', 'Networking 2 (lab)', 1, '00:00:00', '03:00:00', 1, '005-T-01', NULL),
+INSERT INTO subject VALUES ('EIT 0312.1', 'Networking 2 (lab)', 2, '00:00:00', '03:00:00', 1, '005-F-02', NULL),
+INSERT INTO subject VALUES ('EIT 0312.1', 'Networking 2 (lab)', 3, '00:00:00', '03:00:00', 1, '006-S-01', NULL),
+
+INSERT INTO subject VALUES ('EIT Elective 3', 'Professional Elective 3', 1, '03:00:00', '00:00:00', 3, '006-S-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 3', 'Professional Elective 3', 2, '03:00:00', '00:00:00', 3, '007-M-01', NULL),
+INSERT INTO subject VALUES ('EIT Elective 3', 'Professional Elective 3', 3, '03:00:00', '00:00:00', 3, '007-Th-02', NULL),
+
+INSERT INTO subject VALUES ('LWR 0009', 'Life and Works of Rizal', 1, '03:00:00', '00:00:00', 3, '010-MTh-01', NULL);
+INSERT INTO subject VALUES ('LWR 0009', 'Life and Works of Rizal', 2, '03:00:00', '00:00:00', 3, '010-TF-02', NULL);
+INSERT INTO subject VALUES ('LWR 0009', 'Life and Works of Rizal', 3, '03:00:00', '00:00:00', 3, '010-WS-01', NULL);
 
 -- THIRD YEAR — 2ND SEMESTER
 
-INSERT INTO subject VALUES ('EIT 0321', 'Information Assurance and Security 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0321.1', 'Information Assurance and Security 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0322', 'System Integration and Architecture 1 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0322.1', 'System Integration and Architecture 1 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0323', 'Integrative Programming and Technologies (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0323.1', 'Integrative Programming and Technologies (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('ETH 0008', 'Ethics', '02:30:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0321', 'Information Assurance and Security 1 (lec)', 1, '02:00:00', '00:00:00', 2, '003-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0321', 'Information Assurance and Security 1 (lec)', 2, '02:00:00', '00:00:00', 2, '003-M-02', NULL),
+INSERT INTO subject VALUES ('EIT 0321', 'Information Assurance and Security 1 (lec)', 3, '02:00:00', '00:00:00', 2, '003-W-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0321.1', 'Information Assurance and Security 1 (lab)', 1, '00:00:00', '03:00:00', 1, '003-Th-01', NULL),
+INSERT INTO subject VALUES ('EIT 0321.1', 'Information Assurance and Security 1 (lab)', 2, '00:00:00', '03:00:00', 1, '003-Th-02', NULL),
+INSERT INTO subject VALUES ('EIT 0321.1', 'Information Assurance and Security 1 (lab)', 3, '00:00:00', '03:00:00', 1, '003-S-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0322', 'System Integration and Architecture 1 (lec)', 1, '02:00:00', '00:00:00', 2, '003-W-02', NULL),
+INSERT INTO subject VALUES ('EIT 0322', 'System Integration and Architecture 1 (lec)', 2, '02:00:00', '00:00:00', 2, '004-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0322', 'System Integration and Architecture 1 (lec)', 3, '02:00:00', '00:00:00', 2, '004-Th-02', NULL),
+
+INSERT INTO subject VALUES ('EIT 0322.1', 'System Integration and Architecture 1 (lab)', 1, '00:00:00', '03:00:00', 1, '003-S-02', NULL),
+INSERT INTO subject VALUES ('EIT 0322.1', 'System Integration and Architecture 1 (lab)', 2, '00:00:00', '03:00:00', 1, '004-M-02', NULL),
+INSERT INTO subject VALUES ('EIT 0322.1', 'System Integration and Architecture 1 (lab)', 3, '00:00:00', '03:00:00', 1, '004-Th-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0323', 'Integrative Programming and Technologies (lec)', 1, '02:00:00', '00:00:00', 2, '005-T-02', NULL),
+INSERT INTO subject VALUES ('EIT 0323', 'Integrative Programming and Technologies (lec)', 2, '02:00:00', '00:00:00', 2, '005-F-01', NULL),
+INSERT INTO subject VALUES ('EIT 0323', 'Integrative Programming and Technologies (lec)', 3, '02:00:00', '00:00:00', 2, '006-W-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0323.1', 'Integrative Programming and Technologies (lab)', 1, '00:00:00', '03:00:00', 1, '005-T-01', NULL),
+INSERT INTO subject VALUES ('EIT 0323.1', 'Integrative Programming and Technologies (lab)', 2, '00:00:00', '03:00:00', 1, '005-F-02', NULL),
+INSERT INTO subject VALUES ('EIT 0323.1', 'Integrative Programming and Technologies (lab)', 3, '00:00:00', '03:00:00', 1, '006-S-01', NULL),
+
+INSERT INTO subject VALUES ('ETH 0008', 'Ethics', 1, '01:30:00', '00:00:00', 3, '001-MTh-01', NULL);
+INSERT INTO subject VALUES ('ETH 0008', 'Ethics', 2, '01:30:00', '00:00:00', 3, '001-MTh-02', NULL);
+INSERT INTO subject VALUES ('ETH 0008', 'Ethics', 3, '01:30:00', '00:00:00', 3, '001-MTh-03', NULL);
 
 -- THIRD YEAR — SUMMER=
 
-INSERT INTO subject VALUES ('EIT 0331', 'System Integration and Architecture 2 (lec)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('EIT 0331.1', 'System Integration and Architecture 2 (lab)', '00:00:00', '03:00:00', 1, NULL, NULL),
-INSERT INTO subject VALUES ('CAP 0101', 'Capstone Project 1', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('EIT 0331', 'System Integration and Architecture 2 (lec)', 1, '02:00:00', '00:00:00', 2, '003-M-01', NULL),
+INSERT INTO subject VALUES ('EIT 0331', 'System Integration and Architecture 2 (lec)', 2, '02:00:00', '00:00:00', 2, '003-M-02', NULL),
+INSERT INTO subject VALUES ('EIT 0331', 'System Integration and Architecture 2 (lec)', 3, '02:00:00', '00:00:00', 2, '003-W-01', NULL),
+
+INSERT INTO subject VALUES ('EIT 0331.1', 'System Integration and Architecture 2 (lab)', 1, '00:00:00', '03:00:00', 1, '003-Th-01', NULL),
+INSERT INTO subject VALUES ('EIT 0331.1', 'System Integration and Architecture 2 (lab)', 2, '00:00:00', '03:00:00', 1, '003-Th-02', NULL),
+INSERT INTO subject VALUES ('EIT 0331.1', 'System Integration and Architecture 2 (lab)', 3, '00:00:00', '03:00:00', 1, '003-S-01', NULL),
+
+INSERT INTO subject VALUES ('CAP 0101', 'Capstone Project 1', 1, '03:00:00', '00:00:00', 3, '003-S-02', NULL);
+INSERT INTO subject VALUES ('CAP 0101', 'Capstone Project 1', 2, '03:00:00', '00:00:00', 3, '004-M-02', NULL);
+INSERT INTO subject VALUES ('CAP 0101', 'Capstone Project 1', 3, '03:00:00', '00:00:00', 3, '004-Th-01', NULL);
 
 -- FOURTH YEAR — 1ST SEMESTER
 
-INSERT INTO subject VALUES ('EIT Elective 4', 'Professional Elective 4', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('EIT Elective 5', 'Professional Elective 5', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('EIT Elective 6', 'Professional Elective 6', '03:00:00', '00:00:00', 3, NULL, NULL),
-INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', '03:00:00', '00:00:00', 3, NULL, NULL);
+INSERT INTO subject VALUES ('EIT Elective 4', 'Professional Elective 4', 1, '03:00:00', '00:00:00', 3, '003-Th-01', NULL),
+INSERT INTO subject VALUES ('EIT Elective 4', 'Professional Elective 4', 2, '03:00:00', '00:00:00', 3, '003-Th-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 4', 'Professional Elective 4', 3, '03:00:00', '00:00:00', 3, '003-S-01', NULL),
+
+INSERT INTO subject VALUES ('EIT Elective 5', 'Professional Elective 5', 1, '03:00:00', '00:00:00', 3, '003-S-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 5', 'Professional Elective 5', 2, '03:00:00', '00:00:00', 3, '004-M-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 5', 'Professional Elective 5', 3, '03:00:00', '00:00:00', 3, '004-Th-01', NULL),
+
+INSERT INTO subject VALUES ('EIT Elective 6', 'Professional Elective 6', 1, '03:00:00', '00:00:00', 3, '005-T-01', NULL),
+INSERT INTO subject VALUES ('EIT Elective 6', 'Professional Elective 6', 2, '03:00:00', '00:00:00', 3, '005-F-02', NULL),
+INSERT INTO subject VALUES ('EIT Elective 6', 'Professional Elective 6', 3, '03:00:00', '00:00:00', 3, '006-S-01', NULL),
+
+INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', 1, '03:00:00', '00:00:00', 3, '006-S-02', NULL);
+INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', 2, '03:00:00', '00:00:00', 3, '007-M-01', NULL);
+INSERT INTO subject VALUES ('CAP 0102', 'Capstone Project 2', 3, '03:00:00', '00:00:00', 3, '007-Th-02', NULL);
 
 -- FOURTH YEAR — 2ND SEMESTER
 
-INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', '02:00:00', '00:00:00', 2, NULL, NULL),
-INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', '03:00:00', '00:00:00', 4, NULL, NULL);
+INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', 1, '02:00:00', '00:00:00', 2, '008-T-01', NULL),
+INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', 1, '02:00:00', '00:00:00', 2, '008-F-02', NULL),
+INSERT INTO subject VALUES ('IIP 0101', 'Practicum (Lecture)', 1, '02:00:00', '00:00:00', 2, '007-M-02', NULL),
 
+INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', 1, '03:00:00', '00:00:00', 4, '008-T-02', NULL);
+INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', 1, '03:00:00', '00:00:00', 4, '008-F-01', NULL);
+INSERT INTO subject VALUES ('IIP 0102', 'Practicum (Immersion)', 1, '03:00:00', '00:00:00', 4, '007-M-01', NULL);
+
+
+--- STUDENT-SUBJECT ENROLLMENT
+    student_id            VARCHAR(15)
+  , subject_id            VARCHAR(15)
+  , section               INT
+  , CONSTRAINT enroll_pk PRIMARY KEY(student_id, subject_id)
+  , CONSTRAINT enstud_fk FOREIGN KEY (student_id) REFERENCES student(student_id)
+  , CONSTRAINT ensubj_fk FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
+  , CONSTRAINT ensubsec_fk FOREIGN KEY (section) REFERENCES subject(section)
+);
