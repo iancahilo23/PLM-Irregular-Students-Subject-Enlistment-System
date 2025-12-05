@@ -1,3 +1,184 @@
+--STATUS TABLES
+
+CREATE TABLE student_type (
+    type_id           VARCHAR(3)
+  , type_title        VARCHAR(5)
+  , CONSTRAINT stype_pk PRIMARY KEY(type_id)
+);
+
+INSERT INTO student_type VALUES ('N', 'New');
+INSERT INTO student_type VALUES ('O', 'Old');
+
+-- REGISTRATION_STATUS TABLE
+
+CREATE TABLE registration_status (
+    registration_id           VARCHAR(5)
+  , registration_title        VARCHAR(15)
+  , CONSTRAINT rstatus_pk PRIMARY KEY(registration_id)
+);
+
+INSERT INTO registration_status VALUES ('REG', 'Regular');
+INSERT INTO registration_status VALUES ('IRR', 'Irregular');
+
+-- ENROLLMENT_STATUS TABLE
+
+CREATE TABLE enrollment_status (
+    enroll_id           VARCHAR(5)
+  , enroll_title        VARCHAR(15)
+  , CONSTRAINT estatus_pk PRIMARY KEY(enroll_id)
+);
+
+INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
+INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
+
+
+
+
+
+--COLLEGE TABLE
+
+CREATE TABLE COLLEGE(
+    college_id          VARCHAR(5)    NOT NULL
+    , college_title     VARCHAR(75)   DEFAULT ' '
+    , CONSTRAINT        pk_college_id        PRIMARY KEY (college_id)
+);
+
+INSERT INTO college VALUES ('CISTM', 'College of Information Systems and Technology Management');
+INSERT INTO college VALUES ('CA', 'College of Accountancy');
+INSERT INTO college VALUES ('CASBE', 'College of Architecture and Sustainable Built Environments');
+INSERT INTO college VALUES ('CBA', 'College of Business Admininstration');
+INSERT INTO college VALUES ('CE', 'College of Engineering');
+INSERT INTO college VALUES ('CED', 'College of Education');
+INSERT INTO college VALUES ('CHASS', 'College of Humanities, Art and Social Sciences');
+INSERT INTO college VALUES ('CL', 'College of Law');
+INSERT INTO college VALUES ('CM', 'College of Medicine');
+INSERT INTO college VALUES ('CN', 'College of Nursing');    
+INSERT INTO college VALUES ('CPT', 'College of Physical Therapy');
+INSERT INTO college VALUES ('CLPA', 'College of Public Administration');
+INSERT INTO college VALUES ('CS', 'College of Science');
+INSERT INTO college VALUES ('CTHM', 'College of Tourism and Hospitality Management');
+INSERT INTO college VALUES ('GSL', 'Graduate School of Law');
+
+--COURSE TYPE TABLE 
+
+CREATE TABLE course_type(
+    course_type_id          VARCHAR(5)           NOT NULL
+    , course_type_title     VARCHAR(75)          DEFAULT ' '
+    , CONSTRAINT            pk_course_type_id    PRIMARY KEY (course_type_id)
+);
+
+INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
+INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
+
+--COURSE TABLE (BSIT, BSCS, etc.)
+
+CREATE TABLE COURSE(
+    course_id           VARCHAR(15)       NOT NULL
+    , course_title      VARCHAR(100)      DEFAULT ' '
+    , course_type_id    VARCHAR(5)        DEFAULT ' '
+    , college_id        VARCHAR(5)        NOT NULL
+    , CONSTRAINT        pk_course_id      PRIAMRY KEY (course_id)
+    , CONSTRAINT        fk_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id)
+    , CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
+);
+
+INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
+INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
+INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
+INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
+INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
+INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA FM', 'Bachelor of Science in Business Administration Major in Financial Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA HRM', 'Bachelor of Science in Business Administration Major in Human Resource Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSBA MM', 'Bachelor of Science in Business Administration Major in Marketing Management', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSE', 'Bachelor of Science in Entrepreneurship', 'UNDER', 'CBA');
+INSERT INTO course VALUES ('BSREM', 'Bachelor of Science in Real Estate Management', 'UNDER', 'CBA');
+
+
+
+
+
+--STUDENT TABLE
+
+CREATE TABLE STUDENT (
+    student_id           VARCHAR(50)         NOT NULL
+    , lastname           VARCHAR(100)        DEFAULT ' '
+    , firstname          VARCHAR(100)        DEFAULT ' '
+    , middlename         VARCHAR(100)        DEFAULT ' '
+    , birthdate          DATE                NOT NULL
+    , course_id          VARCHAR(50)         NOT NULL
+    , year_level         INT                 NOT NULL
+    , section            INT                 NOT NULL
+    , semester           VARCHAR(50)         NOT NULL
+    , school_year        VARCHAR(50)         NOT NULL
+    , date_enrolled      DATE                DEFAULT NULL
+    , type_id            VARCHAR(50)
+    , registration_id    VARCHAR(50)
+    , CONSTRAINT pk_student_id PRIMARY KEY (student_id)
+    , CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id)
+    , CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
+);
+
+INSERT INTO STUDENT VALUES
+('2025-00001', 'Garcia', 'Jose', 'P', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00002', 'Santos', 'Maria', 'L', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00003', 'Reyes', 'Mark', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00004', 'Dizon', 'Anne', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00005', 'Tan', 'Kevin', 'S', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00006', 'Lim', 'Christine', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00007', 'Yap', 'Michael', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00008', 'Torres', 'Jane', 'V', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00009', 'Mendoza', 'Paul', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00010', 'Cruz', 'Sarah', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+
+('2025-00011', 'Salazar', 'Ashley Allan', 'Q', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00012', 'Verano', 'Brahm Daniel', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00013', 'Jarlego', 'Jamie', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00014', 'Jacinto', 'Ken Jeremiah', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00015', 'Dulay', 'Earl Stephen', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00016', 'Solidor', 'Prinze Jude', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00017', 'Dela Guardia', 'Neil Gabriel', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00018', 'Capco', 'Cedrix', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00019', 'Cahilo', 'Ian Carlo', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00020', 'Cruz', 'Jenizon', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+
+('2025-00021', 'Ligon', 'Justine', 'Y', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00022', 'Sarte', 'Nathaniel Chaz', 'N', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00023', 'Voluntad', 'Sherelyn Joy', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00024', 'Dela Cruz', 'Juan', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00025', 'de los Santos', 'Maria Clara', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00026', 'Ibarra', 'Crisostomo', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00027', 'Verdolagas', 'Damaso', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00028', 'Villamor', 'Isagani', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00029', 'Doe', 'John', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00030', 'Perez', 'Juanito', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+
+('2025-00031', 'Stark', 'Anthony', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00032', 'Talis', 'Jayce', 'G', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00033', 'Caspar', 'Navia', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00034', 'Yang', 'Welt', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00035', 'Howard', 'Grace', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00036', 'Dist', 'Andrew', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00037', 'Bayani', 'Himmel', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00038', 'Cain', 'Viktor', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00039', 'White', 'Walter', 'H', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00040', 'Asistido', 'Yasmin', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+
+('2025-00041', 'Portgas', 'Ace', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00042', 'Allen', 'Bartholomew', 'H', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00043', 'Zon', 'Jenny', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00044', 'Star', 'Patrick', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00045', 'Petti', 'Chet', 'G', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00046', 'James', 'Lebron', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00047', 'Tachyon', 'Agnes', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00048', 'Co', 'Elizaldy', 'S', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00049', 'Mario', 'Mario', 'S', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00050', 'Sy', 'Jexhee', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR');
+
 --LOGIN TABLE
 CREATE TABLE login (
     student_id       VARCHAR(50)       NOT NULL
@@ -46,168 +227,18 @@ INSERT INTO login (student_id) VALUES ('2023-00037');
 INSERT INTO login (student_id) VALUES ('2022-00038');
 INSERT INTO login (student_id) VALUES ('2022-00039');
 INSERT INTO login (student_id) VALUES ('2025-00040');
+INSERT INTO login (student_id) VALUES ('2025-00041');
+INSERT INTO login (student_id) VALUES ('2025-00042');
+INSERT INTO login (student_id) VALUES ('2025-00043');
+INSERT INTO login (student_id) VALUES ('2024-00044');
+INSERT INTO login (student_id) VALUES ('2024-00045');
+INSERT INTO login (student_id) VALUES ('2023-00046');
+INSERT INTO login (student_id) VALUES ('2023-00047');
+INSERT INTO login (student_id) VALUES ('2022-00048');
+INSERT INTO login (student_id) VALUES ('2022-00049');
+INSERT INTO login (student_id) VALUES ('2025-00050');
 
---STATUS TABLES
 
-CREATE TABLE student_type (
-    type_id           VARCHAR(3)
-  , type_title        VARCHAR(5)
-  , CONSTRAINT stype_pk PRIMARY KEY(type_id)
-);
-
-INSERT INTO student_type VALUES ('N', 'New');
-INSERT INTO student_type VALUES ('O', 'Old');
-
--- REGISTRATION_STATUS TABLE
-
-CREATE TABLE registration_status (
-    registration_id           VARCHAR(5)
-  , registration_title        VARCHAR(15)
-  , CONSTRAINT rstatus_pk PRIMARY KEY(registration_id)
-);
-
-INSERT INTO registration_status VALUES ('REG', 'Regular');
-INSERT INTO registration_status VALUES ('IRR', 'Irregular');
-
--- ENROLLMENT_STATUS TABLE
-
-CREATE TABLE enrollment_status (
-    enroll_id           VARCHAR(5)
-  , enroll_title        VARCHAR(15)
-  , CONSTRAINT estatus_pk PRIMARY KEY(enroll_id)
-);
-
-INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
-INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
-
---COLLEGE TABLE
-
-CREATE TABLE COLLEGE(
-    college_id          VARCHAR(5)    NOT NULL
-    , college_title     VARCHAR(75)   DEFAULT ' '
-    , CONSTRAINT        pk_college_id        PRIMARY KEY (college_id)
-);
-
-INSERT INTO college VALUES ('CISTM', 'College of Information Systems and Technology Management');
-INSERT INTO college VALUES ('CA', 'College of Accountancy');
-INSERT INTO college VALUES ('CASBE', 'College of Architecture and Sustainable Built Environments');
-INSERT INTO college VALUES ('CBA', 'College of Business Admininstration');
-INSERT INTO college VALUES ('CE', 'College of Engineering');
-INSERT INTO college VALUES ('CED', 'College of Education');
-INSERT INTO college VALUES ('CHASS', 'College of Humanities, Art and Social Sciences');
-INSERT INTO college VALUES ('CL', 'College of Law');
-INSERT INTO college VALUES ('CM', 'College of Medicine');
-INSERT INTO college VALUES ('CN', 'College of Nursing');    
-INSERT INTO college VALUES ('CPT', 'College of Physical Therapy');
-INSERT INTO college VALUES ('CLPA', 'College of Public Administration');
-INSERT INTO college VALUES ('CS', 'College of Science');
-INSERT INTO college VALUES ('CTHM', 'College of Tourism and Hospitality Management');
-INSERT INTO college VALUES ('GSL', 'Graduate School of Law');
-
---COURSE TABLE (BSIT, BSCS, etc.)
-
-CREATE TABLE COURSE(
-    course_id           VARCHAR(15)       NOT NULL
-    , course_title      VARCHAR(100)      DEFAULT ' '
-    , course_type_id    VARCHAR(5)        DEFAULT ' '
-    , college_id        VARCHAR(5)        NOT NULL
-    , CONSTRAINT        pk_course_id      PRIAMRY KEY (course_id)
-    , CONSTRAINT        fk_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id)
-    , CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
-);
-
-INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
-INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
-INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
-INSERT INTO course VALUES ('BSA', 'Bachelor of Science in Accountancy', 'UNDER', 'CA');
-INSERT INTO course VALUES ('BS Arch', 'Bachelor of Science in Architecture', 'UNDER', 'CASBE');
-INSERT INTO course VALUES ('BSBA BE', 'Bachelor of Science in Business Administration Major in Business Economics', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSBA FM', 'Bachelor of Science in Business Administration Major in Financial Management', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSBA HRM', 'Bachelor of Science in Business Administration Major in Human Resource Management', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSBA MM', 'Bachelor of Science in Business Administration Major in Marketing Management', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSE', 'Bachelor of Science in Entrepreneurship', 'UNDER', 'CBA');
-INSERT INTO course VALUES ('BSREM', 'Bachelor of Science in Real Estate Management', 'UNDER', 'CBA');
-
---COURSE TYPE TABLE 
-
-CREATE TABLE course_type(
-    course_type_id          VARCHAR(5)           NOT NULL
-    , course_type_title     VARCHAR(75)          DEFAULT ' '
-    , CONSTRAINT            pk_course_type_id    PRIMARY KEY (course_type_id)
-);
-
-INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
-INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
-
---STUDENT TABLE
-
-CREATE TABLE STUDENT (
-    student_id           VARCHAR(50)         NOT NULL
-    , lastname           VARCHAR(100)        DEFAULT ' '
-    , firstname          VARCHAR(100)        DEFAULT ' '
-    , middlename         VARCHAR(100)        DEFAULT ' '
-    , birthdate          DATE                NOT NULL
-    , course_id          VARCHAR(50)         NOT NULL
-    , year_level         INT                 NOT NULL
-    , section            INT                 NOT NULL
-    , semester           VARCHAR(50)         NOT NULL
-    , school_year        VARCHAR(50)         NOT NULL
-    , date_enrolled      DATE                DEFAULT NULL
-    , type_id            VARCHAR(50)
-    , registration_id    VARCHAR(50)
-    , CONSTRAINT pk_student_id PRIMARY KEY (student_id)
-    , CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id)
-    , CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
-);
-
-INSERT INTO STUDENT VALUES
-('2025-00001', 'Garcia', 'Jose', 'P', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00002', 'Santos', 'Maria', 'L', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00003', 'Reyes', 'Mark', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00004', 'Dizon', 'Anne', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00005', 'Tan', 'Kevin', 'S', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00006', 'Lim', 'Christine', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00007', 'Yap', 'Michael', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00008', 'Torres', 'Jane', 'V', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00009', 'Mendoza', 'Paul', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00010', 'Cruz', 'Sarah', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
-
-('2025-00011', 'Salazar', 'Ashley Allan', 'Q', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00012', 'Verano', 'Brahm Daniel', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00013', 'Jarlego', 'Jamie', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00014', 'Jacinto', 'Ken Jeremiah', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00015', 'Dulay', 'Earl Stephen', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00016', 'Solidor', 'Prinze Jude', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00017', 'Dela Guardia', 'Neil Gabriel', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00018', 'Capco', 'Cedrix', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00019', 'Cahilo', 'Ian Carlo', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00020', 'Cruz', 'Jenizon', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
-
-('2025-00021', 'Ligon', 'Justine', 'Y', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00022', 'Sarte', 'Nathaniel Chaz', 'N', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00023', 'Voluntad', 'Sherelyn Joy', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00024', 'Dela Cruz', 'Juan', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00025', 'de los Santos', 'Maria Clara', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00026', 'Ibarra', 'Crisostomo', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00027', 'Verdolagas', 'Damaso', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00028', 'Villamor', 'Isagani', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00029', 'Doe', 'John', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00030', 'Perez', 'Juanito', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR')
-
-('2025-00031', 'Stark', 'Anthony', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00032', 'Talis', 'Jayce', 'G', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00033', 'Caspar', 'Navia', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00034', 'Yang', 'Welt', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00035', 'Howard', 'Grace', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00036', 'Dist', 'Andrew', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00037', 'Bayani', 'Himmel', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00038', 'Cain', 'Viktor', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00039', 'White', 'Walter', 'H', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00040', 'Asistido', 'Yasmin', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR');
 
 
 
@@ -232,6 +263,8 @@ INSERT INTO FACULTY VALUES('FAC007','Centeno','Criselle','CISTM');
 INSERT INTO FACULTY VALUES('FAC008','Sison','Ariel','CISTM');
 INSERT INTO FACULTY VALUES('FAC009','Atienza','Francis','CISTM');
 INSERT INTO FACULTY VALUES('FAC010','Ramos','Jay Ryan','CISTM');
+
+
 
 
 
