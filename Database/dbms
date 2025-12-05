@@ -1,3 +1,52 @@
+--LOGIN TABLE
+CREATE TABLE login (
+    student_id       VARCHAR(50)       NOT NULL
+    , password       VARCHAR2(50)      DEFAULT '1234' NOT NULL
+    , CONSTRAINT     pk_student_login  PRIMARY KEY (student_id)
+    , CONSTRAINT     fk_student_login  FOREIGN KEY (student_id) REFERENCES STUDENT (student_id) ON DELETE CASCADE
+);
+
+INSERT INTO login (student_id) VALUES ('2025-00001');
+INSERT INTO login (student_id) VALUES ('2025-00002');
+INSERT INTO login (student_id) VALUES ('2025-00003');
+INSERT INTO login (student_id) VALUES ('2024-00004');
+INSERT INTO login (student_id) VALUES ('2024-00005');
+INSERT INTO login (student_id) VALUES ('2023-00006');
+INSERT INTO login (student_id) VALUES ('2023-00007');
+INSERT INTO login (student_id) VALUES ('2022-00008');
+INSERT INTO login (student_id) VALUES ('2022-00009');
+INSERT INTO login (student_id) VALUES ('2025-00010');
+INSERT INTO login (student_id) VALUES ('2025-00011');
+INSERT INTO login (student_id) VALUES ('2025-00012');
+INSERT INTO login (student_id) VALUES ('2025-00013');
+INSERT INTO login (student_id) VALUES ('2024-00014');
+INSERT INTO login (student_id) VALUES ('2024-00015');
+INSERT INTO login (student_id) VALUES ('2023-00016');
+INSERT INTO login (student_id) VALUES ('2023-00017');
+INSERT INTO login (student_id) VALUES ('2022-00018');
+INSERT INTO login (student_id) VALUES ('2022-00019');
+INSERT INTO login (student_id) VALUES ('2025-00020');
+INSERT INTO login (student_id) VALUES ('2025-00021');
+INSERT INTO login (student_id) VALUES ('2025-00022');
+INSERT INTO login (student_id) VALUES ('2025-00023');
+INSERT INTO login (student_id) VALUES ('2024-00024');
+INSERT INTO login (student_id) VALUES ('2024-00025');
+INSERT INTO login (student_id) VALUES ('2023-00026');
+INSERT INTO login (student_id) VALUES ('2023-00027');
+INSERT INTO login (student_id) VALUES ('2022-00028');
+INSERT INTO login (student_id) VALUES ('2022-00029');
+INSERT INTO login (student_id) VALUES ('2025-00030');
+INSERT INTO login (student_id) VALUES ('2025-00031');
+INSERT INTO login (student_id) VALUES ('2025-00032');
+INSERT INTO login (student_id) VALUES ('2025-00033');
+INSERT INTO login (student_id) VALUES ('2024-00034');
+INSERT INTO login (student_id) VALUES ('2024-00035');
+INSERT INTO login (student_id) VALUES ('2023-00036');
+INSERT INTO login (student_id) VALUES ('2023-00037');
+INSERT INTO login (student_id) VALUES ('2022-00038');
+INSERT INTO login (student_id) VALUES ('2022-00039');
+INSERT INTO login (student_id) VALUES ('2025-00040');
+
 --STATUS TABLES
 
 CREATE TABLE student_type (
@@ -90,7 +139,6 @@ CREATE TABLE course_type(
 INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
 INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
 
-
 --STUDENT TABLE
 
 CREATE TABLE STUDENT (
@@ -98,6 +146,7 @@ CREATE TABLE STUDENT (
     , lastname           VARCHAR(100)        DEFAULT ' '
     , firstname          VARCHAR(100)        DEFAULT ' '
     , middlename         VARCHAR(100)        DEFAULT ' '
+    , birthdate          DATE                NOT NULL
     , course_id          VARCHAR(50)         NOT NULL
     , year_level         INT                 NOT NULL
     , section            INT                 NOT NULL
@@ -109,53 +158,52 @@ CREATE TABLE STUDENT (
     , CONSTRAINT pk_student_id PRIMARY KEY (student_id)
     , CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id)
     , CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
-      
 );
 
 INSERT INTO STUDENT VALUES
-('2025-00001', 'Garcia', 'Jose', 'P', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00002', 'Santos', 'Maria', 'L', 'BSIT', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00003', 'Reyes', 'Mark', 'D', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00004', 'Dizon', 'Anne', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00005', 'Tan', 'Kevin', 'S', 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00006', 'Lim', 'Christine', 'M', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00007', 'Yap', 'Michael', 'R', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00008', 'Torres', 'Jane', 'V', 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00009', 'Mendoza', 'Paul', 'B', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00010', 'Cruz', 'Sarah', 'J', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
+('2025-00001', 'Garcia', 'Jose', 'P', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00002', 'Santos', 'Maria', 'L', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00003', 'Reyes', 'Mark', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00004', 'Dizon', 'Anne', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00005', 'Tan', 'Kevin', 'S', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00006', 'Lim', 'Christine', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00007', 'Yap', 'Michael', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00008', 'Torres', 'Jane', 'V', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00009', 'Mendoza', 'Paul', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00010', 'Cruz', 'Sarah', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
 
-('2025-00011', 'Salazar', 'Ashley Allan', 'Q', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00012', 'Verano', 'Brahm Daniel', 'T', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00013', 'Jarlego', 'Jamie', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00014', 'Jacinto', 'Ken Jeremiah', '', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00015', 'Dulay', 'Earl Stephen', 'E', 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00016', 'Solidor', 'Prinze Jude', 'R', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00017', 'Dela Guardia', 'Neil Gabriel', 'D', 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00018', 'Capco', 'Cedrix', 'C', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00019', 'Cahilo', 'Ian Carlo', 'T', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00020', 'Cruz', 'Jenizon', '', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
+('2025-00011', 'Salazar', 'Ashley Allan', 'Q', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00012', 'Verano', 'Brahm Daniel', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00013', 'Jarlego', 'Jamie', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00014', 'Jacinto', 'Ken Jeremiah', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00015', 'Dulay', 'Earl Stephen', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00016', 'Solidor', 'Prinze Jude', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00017', 'Dela Guardia', 'Neil Gabriel', 'D', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00018', 'Capco', 'Cedrix', 'C', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00019', 'Cahilo', 'Ian Carlo', 'T', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00020', 'Cruz', 'Jenizon', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR')
 
-('2025-00021', 'Ligon', 'Justine', 'Y', 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00022', 'Sarte', 'Nathaniel Chaz', 'N', 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00023', 'Voluntad', 'Sherelyn Joy', 'F', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00024', 'Dela Cruz', 'Juan', 'A', 'BSCS', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00025', 'de los Santos', 'Maria Clara', 'A', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00026', 'Ibarra', 'Crisostomo', 'M', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00027', 'Verdolagas', 'Damaso', '', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00028', 'Villamor', 'Isagani', '', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00029', 'Doe', 'John', 'F', 'BSCS', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00030', 'Perez', 'Juanito', 'B', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR')
+('2025-00021', 'Ligon', 'Justine', 'Y', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00022', 'Sarte', 'Nathaniel Chaz', 'N', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00023', 'Voluntad', 'Sherelyn Joy', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00024', 'Dela Cruz', 'Juan', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00025', 'de los Santos', 'Maria Clara', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00026', 'Ibarra', 'Crisostomo', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00027', 'Verdolagas', 'Damaso', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00028', 'Villamor', 'Isagani', '', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00029', 'Doe', 'John', 'F', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00030', 'Perez', 'Juanito', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR')
 
-('2025-00031', 'Stark', 'Anthony', 'E', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00032', 'Talis', 'Jayce', 'G', 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00033', 'Caspar', 'Navia', 'O', 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00034', 'Yang', 'Welt', 'J', 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2024-00035', 'Howard', 'Grace', 'B', 'BSCS', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00036', 'Dist', 'Andrew', 'O', 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2023-00037', 'Bayani', 'Himmel', 'A', 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00038', 'Cain', 'Viktor', 'R', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2022-00039', 'White', 'Walter', 'H', 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
-('2025-00040', 'Asistido', 'Yasmin', 'M', 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR');
+('2025-00031', 'Stark', 'Anthony', 'E', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00032', 'Talis', 'Jayce', 'G', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00033', 'Caspar', 'Navia', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00034', 'Yang', 'Welt', 'J', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2024-00035', 'Howard', 'Grace', 'B', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 3, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00036', 'Dist', 'Andrew', 'O', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 3, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2023-00037', 'Bayani', 'Himmel', 'A', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 3, 2, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00038', 'Cain', 'Viktor', 'R', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2022-00039', 'White', 'Walter', 'H', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSCS', 4, 1, '2nd', '2025-2026', , 'O', 'IRR'),
+('2025-00040', 'Asistido', 'Yasmin', 'M', TO_DATE('2000-01-01', 'YYYY-MM-DD'), 'BSIT', 2, 3, '2nd', '2025-2026', , 'O', 'IRR');
 
 
 
