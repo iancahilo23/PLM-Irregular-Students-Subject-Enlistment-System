@@ -1,132 +1,254 @@
-// --- MOCK DATA (Global Scope for access) ---
-const subjects = [
-    {
-        id: 1,
-        code: "CAP 0102",
-        units: 3,
-        description: "Capstone Project 2",
-        schedule: "M 10:30AM - 1:30PM",
-        room: "FIELD",
-        slots: "34/40 slots",
-        section: "1"
-    },
-    {
-        id: 2,
-        code: "EIT ELECTIVE",
-        units: 3,
-        description: "Professional Elective",
-        schedule: "M 7:00AM - 10:30AM",
-        room: "GCA 309",
-        slots: "35/40 slots",
-        section: "1"
-    },
-    {
-        id: 3,
-        code: "NET 0101",
-        units: 3,
-        description: "Networking 1",
-        schedule: "T 1:00PM - 4:00PM",
-        room: "COMP LAB 2",
-        slots: "20/40 slots",
-        section: "1"
-    },
-    {
-        id: 4,
-        code: "IAS 0101",
-        units: 3,
-        description: "Information Assurance",
-        schedule: "W 9:00AM - 12:00PM",
-        room: "GV 305",
-        slots: "10/40 slots",
-        section: "1"
-    }
-];
+// --- Global Scope for access ---
+let subjects = []; // All subjects from the database
+let enlistedSubjects = []; // Stores UNIQUE IDs of selected subjects (e.g., 'ICC 0101-1')
 
-let enlistedSubjects = []; // Stores IDs of selected subjects
+let currentSearchTerm = '';
+let currentDepartmentFilter = 'All departments';
+let showOnlyAvailableSlots = false;
+
+
+const subjectsAlreadyTaken = [];
+
 
 // --- INITIALIZE ---
 document.addEventListener("DOMContentLoaded", () => {
-    fetchStudentProfile(); // Load Student Info
-    renderSubjects();      // Load Subject Cards
-    updateSummary();       // Reset Counts
+    fetchStudentProfile();
+    fetchSubjects();
+    updateSummary();
+    setupEventListeners();
 });
 
-// --- 1. PROFILE DATA SIMULATION ---
-function fetchStudentProfile() {
-    // Simulating a database fetch
-    const studentData = {
-        name: "VERANO, BRAHM DANIEL",
-        program: "BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY",
-        studentId: "2023-36053",
-        yearLevel: "Third Year",
-        semester: "First Semester",
-        status: "Irregular"
-    };
 
-    // Inject into HTML
-    const set = (id, val) => {
-        const el = document.getElementById(id);
-        if(el) el.innerText = val;
-    };
+// --- 1. STUDENT PROFILE (Working) ---
+async function fetchStudentProfile() {
+    const studentNameEl = document.getElementById('student-name');
+    const studentProgramEl = document.getElementById('student-program');
+    const studentIdEl = document.getElementById('student-id');
+    const studentYearEl = document.getElementById('student-year');
+    const currentSemesterEl = document.getElementById('current-semester');
+    const studentStatusEl = document.getElementById('student-status');
 
-    set('student-name', studentData.name);
-    set('student-program', studentData.program);
-    set('student-id', studentData.studentId);
-    set('student-year', studentData.yearLevel);
-    set('current-semester', studentData.semester);
-    set('student-status', studentData.status);
+    const loggedInStudentId = localStorage.getItem('plm_student_name');
+
+    if (!loggedInStudentId) {
+        studentNameEl.innerText = 'Login Required';
+        studentStatusEl.innerText = 'Redirecting...';
+        return;
+    }
+
+    [studentNameEl, studentProgramEl, studentIdEl, studentYearEl, currentSemesterEl, studentStatusEl]
+        .forEach(el => el.innerText = 'Loading...');
+
+    try {
+        const response = await fetch(`student_profile.php?student_id=${loggedInStudentId}`);
+        const data = await response.json();
+
+        if (data.success) {
+            studentNameEl.innerText = data.full_name;
+            studentProgramEl.innerText = data.program;
+            studentIdEl.innerText = data.student_id;
+            studentYearEl.innerText = data.year_level;
+            currentSemesterEl.innerText = data.semester_sy;
+
+            studentStatusEl.innerText = data.status;
+            studentStatusEl.classList.add('status-tag');
+        } else {
+            console.error("Failed to fetch student profile:", data.message);
+            studentNameEl.innerText = `Error: ${data.message}`;
+            studentIdEl.innerText = loggedInStudentId;
+        }
+    } catch (error) {
+        console.error("Network or parsing error fetching profile:", error);
+        studentNameEl.innerText = 'Network Error';
+    }
 }
 
-// --- 2. RENDER FUNCTIONS ---
-function renderSubjects() {
-    const container = document.getElementById("subject-list");
-    document.getElementById("subject-count").innerText = subjects.length;
-    
-    container.innerHTML = ""; 
 
-    subjects.forEach(sub => {
-        const isEnlisted = enlistedSubjects.includes(sub.id);
-        
+// --- 2. FETCH SUBJECTS (Working) ---
+async function fetchSubjects() {
+    try {
+        const response = await fetch('enlistment.php');
+        const data = await response.json();
+
+        if (data.success) {
+            subjects = data.subjects;
+            applyFilters(); // Calls render
+        } else {
+            console.error("Failed to fetch subjects:", data.message);
+            const container = document.getElementById("subject-list");
+            container.innerHTML = `<p class="subtitle">Error loading subjects: ${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error("Network or parsing error:", error);
+        const container = document.getElementById("subject-list");
+        container.innerHTML = `<p class="subtitle">A network error occurred while fetching subjects.</p>`;
+    }
+}
+
+
+// --- 3. SEARCH AND FILTER LOGIC (Updated to show 'Already Taken' subjects for warnings) ---
+
+function applyFilters() {
+    let filteredList = subjects;
+
+    const departmentToCourseMap = {
+        'All departments': 'ALL',
+        'Information Technology': 'BSIT',
+        'Computer Science': 'BSCS'
+    };
+    const targetCourseId = departmentToCourseMap[currentDepartmentFilter];
+
+    if (targetCourseId && targetCourseId !== 'ALL') {
+        filteredList = filteredList.filter(sub => {
+            // Note: PHP output column names are lowercase: sub.course_id
+            return sub.course_id.toUpperCase() === targetCourseId;
+        });
+    }
+
+    if (currentSearchTerm) {
+        const lowerSearchTerm = currentSearchTerm.toLowerCase();
+        filteredList = filteredList.filter(sub => {
+            const codeMatch = sub.code.toLowerCase().includes(lowerSearchTerm);
+            const descMatch = sub.description.toLowerCase().includes(lowerSearchTerm);
+            return codeMatch || descMatch;
+        });
+    }
+
+    if (showOnlyAvailableSlots) {
+        filteredList = filteredList.filter(sub => {
+            const parts = sub.slots.split('/');
+            const currentSlots = parseInt(parts[0], 10);
+            return currentSlots > 0;
+        });
+    }
+
+    // IMPORTANT: We no longer filter out 'subjectsAlreadyTaken' here; we just render them
+    // with a disabled state and warning in renderSubjects().
+
+    renderSubjects(filteredList);
+}
+
+// --- 4. RENDER SUBJECTS (UPDATED to show visual warnings) ---
+function renderSubjects(list = subjects) {
+    const container = document.getElementById("subject-list");
+    document.getElementById("subject-count").innerText = list.length;
+
+    container.innerHTML = "";
+
+    if (list.length === 0) {
+        container.innerHTML = `<p class="subtitle">No subjects found matching the current search and filters.</p>`;
+        return;
+    }
+
+    list.forEach(sub => {
+        const uniqueId = sub.code + '-' + sub.section;
+        const isEnlisted = enlistedSubjects.includes(uniqueId);
+        const subjectCodeOnly = sub.code;
+
+        const scheduleLine = sub.schedule;
+        const facultyLine = sub.faculty && sub.faculty !== ', ' ? `| Instructor: ${sub.faculty}` : '';
+        const slotsLine = `Slots: ${sub.slots} | Room: ${sub.room}`;
+
+        // ★ NEW LOGIC: Determine statuses and messages
+        const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
+        const isAlreadyTaken = subjectsAlreadyTaken.includes(subjectCodeOnly);
+
+        let isDisabled = false;
+        let warningMessage = '';
+        let cardClass = '';
+
+        if (isAlreadyTaken) {
+            // Priority 1: Already Taken
+            isDisabled = true;
+            warningMessage = '⚠️ Subject already taken/credited.';
+            cardClass = 'taken-subject';
+        } else if (isSubjectCodeEnlisted && !isEnlisted) {
+            // Priority 2: Another section is already enlisted (Conflict)
+            isDisabled = true;
+            warningMessage = `⚠️ Cannot enlist. Section ${enlistedSubjects.find(id => id.startsWith(subjectCodeOnly + '-')).split('-')[1]} is already selected.`;
+            cardClass = 'disabled-card';
+        }
+
+        const buttonText = isEnlisted ? '✓ Enlisted' : 'Enlist';
+
         const card = document.createElement("div");
-        card.className = "subject-card";
-        
+        card.className = `subject-card ${cardClass}`;
+
         card.innerHTML = `
             <div class="subject-info">
-                <h4>${sub.code} (${sub.units} units)</h4>
+                <h4>${sub.code} (${sub.units} units) - Section ${sub.section}</h4>
                 <p class="subject-desc">${sub.description}</p>
                 <div class="subject-meta">
-                    <span>🕒 ${sub.schedule}</span>
-                    <span>📍 ${sub.room}</span>
-                    <span>👥 ${sub.slots}</span>
+                    <span>🕒 Schedule: ${scheduleLine} ${facultyLine}</span>
+                    <span>${slotsLine}</span>
+                    ${warningMessage ? `<p class="subject-warning">${warningMessage}</p>` : ''}
                 </div>
             </div>
-            <button 
-                class="btn-enlist ${isEnlisted ? 'enlisted' : ''}" 
-                onclick="toggleEnlist(${sub.id})">
-                ${isEnlisted ? '✓ Enlisted' : 'Enlist'}
+            <button
+                class="btn-enlist ${isEnlisted ? 'enlisted' : ''}"
+                onclick="toggleEnlist('${uniqueId}', event)"
+                ${isDisabled ? 'disabled' : ''}>
+                ${buttonText}
             </button>
         `;
-        
+
         container.appendChild(card);
     });
 }
 
-// --- 3. ACTIONS (Enlist/Unenlist) ---
-function toggleEnlist(id) {
-    if (enlistedSubjects.includes(id)) {
-        enlistedSubjects = enlistedSubjects.filter(subId => subId !== id);
-    } else {
-        enlistedSubjects.push(id);
+
+// --- 5. ACTIONS (Enlist/Unenlist) - CRITICALLY UPDATED (Alert only needed for 'Already Taken') ---
+
+function toggleEnlist(uniqueId, event) {
+    const subjectCodeOnly = uniqueId.split('-')[0];
+
+    // Check if the subject is marked as already taken in the master list
+    if (subjectsAlreadyTaken.includes(subjectCodeOnly)) {
+        alert(`Error: ${subjectCodeOnly} is already taken or credited.`);
+        if(event) event.preventDefault();
+        return;
     }
-    renderSubjects();
+
+    // Check if the button is disabled due to a conflict (shouldn't happen, but good to check)
+    if (event && event.target.disabled) {
+        return;
+    }
+
+    if (enlistedSubjects.includes(uniqueId)) {
+        // UNENLIST: Always allowed
+        enlistedSubjects = enlistedSubjects.filter(id => id !== uniqueId);
+    } else {
+        // ENLIST: Check for subject code conflict (The visual warning prevents this, but alert is a fallback)
+        const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
+
+        if (isSubjectCodeEnlisted) {
+            // This should ideally not be reachable if the button is correctly disabled in renderSubjects
+            alert(`You have already enlisted a section of ${subjectCodeOnly}. Please remove it first.`);
+            return;
+        }
+
+        // Proceed with enlistment
+        enlistedSubjects.push(uniqueId);
+    }
+
+    applyFilters();
     updateSummary();
 }
 
+
+// --- 6. SUMMARY & SUBMISSION (Existing Code) ---
+
 function updateSummary() {
     const totalSubjects = enlistedSubjects.length;
-    const totalUnits = enlistedSubjects.reduce((acc, id) => {
-        const sub = subjects.find(s => s.id === id);
-        return acc + sub.units;
+
+    const totalUnits = enlistedSubjects.reduce((acc, uniqueId) => {
+        const parts = uniqueId.split('-');
+        const subjectCode = parts[0];
+        const section = parseInt(parts[1]);
+
+        const sub = subjects.find(s => s.code === subjectCode && s.section == section);
+
+        return acc + (sub ? sub.units : 0);
     }, 0);
 
     document.getElementById("total-units").innerText = `${totalUnits}/24`;
@@ -135,21 +257,21 @@ function updateSummary() {
 
 function clearAll() {
     enlistedSubjects = [];
-    renderSubjects();
+    applyFilters();
     updateSummary();
 }
 
-// --- 4. SUBMIT ENLISTMENT (Bridge to Registration Form) ---
 function submitEnlistment() {
     if (enlistedSubjects.length === 0) {
-        alert("Please enlist at least one subject.");
+        alert("Please enlist at least one subject before submitting.");
         return;
     }
 
-    // Filter the full subject details based on selected IDs
-    const finalSelection = subjects.filter(sub => enlistedSubjects.includes(sub.id));
+    const finalSelection = subjects.filter(sub => {
+        const uniqueId = sub.code + '-' + sub.section;
+        return enlistedSubjects.includes(uniqueId);
+    });
 
-    // Scrape student info from the DOM (since we populated it earlier)
     const registrationData = {
         student: {
             name: document.getElementById('student-name').innerText,
@@ -161,14 +283,41 @@ function submitEnlistment() {
         date: new Date().toLocaleDateString()
     };
 
-    // Save to Browser Memory
     localStorage.setItem("PLM_Enlistment_Data", JSON.stringify(registrationData));
 
-    // Open Registration Form
+    alert("Enlistment successful! Preparing registration form for printing.");
     window.open("RegistrationForm.html", "_blank");
 }
 
-// --- 5. CUSTOM DROPDOWN LOGIC ---
+
+// --- 7. EVENT LISTENERS & DROPDOWN (Existing Code) ---
+
+function setupEventListeners() {
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        currentSearchTerm = e.target.value;
+        applyFilters();
+    });
+
+    document.getElementById('slots').addEventListener('change', (e) => {
+        showOnlyAvailableSlots = e.target.checked;
+        applyFilters();
+    });
+
+    document.querySelector('.sidebar-right .btn-secondary').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        currentSearchTerm = '';
+        currentDepartmentFilter = 'All departments';
+        showOnlyAvailableSlots = false;
+
+        document.getElementById('searchInput').value = '';
+        document.getElementById('selected-text').innerText = 'All departments';
+        document.getElementById('slots').checked = false;
+
+        applyFilters();
+    });
+}
+
 function toggleDropdown() {
     const options = document.getElementById("dropdown-options");
     options.classList.toggle("show");
@@ -177,10 +326,11 @@ function toggleDropdown() {
 function selectOption(value) {
     document.getElementById("selected-text").innerText = value;
     document.getElementById("dropdown-options").classList.remove("show");
-    console.log("Selected Department:", value);
+
+    currentDepartmentFilter = value;
+    applyFilters();
 }
 
-// Close dropdown when clicking outside
 window.onclick = function(event) {
     if (!event.target.closest('.custom-dropdown')) {
         const dropdowns = document.getElementsByClassName("dropdown-options");
@@ -193,7 +343,7 @@ window.onclick = function(event) {
     }
 }
 
-// --- 6. SCROLL SHADOW LOGIC ---
+// --- 8. SCROLL SHADOW LOGIC (Existing Code) ---
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (window.scrollY > 10) {
