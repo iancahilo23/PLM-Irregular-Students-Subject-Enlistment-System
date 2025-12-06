@@ -4,7 +4,7 @@ CREATE TABLE student_type (
     type_id VARCHAR(3),
     type_title VARCHAR(5),
     CONSTRAINT stype_pk PRIMARY KEY(type_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO student_type VALUES ('N', 'New');
 INSERT INTO student_type VALUES ('O', 'Old');
@@ -15,7 +15,7 @@ CREATE TABLE registration_status (
     registration_id VARCHAR(5),
     registration_title VARCHAR(15),
     CONSTRAINT rstatus_pk PRIMARY KEY(registration_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO registration_status VALUES ('REG', 'Regular');
 INSERT INTO registration_status VALUES ('IRR', 'Irregular');
@@ -26,7 +26,7 @@ CREATE TABLE enrollment_status (
     enroll_id VARCHAR(5),
     enroll_title VARCHAR(15),
     CONSTRAINT estatus_pk PRIMARY KEY(enroll_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO enrollment_status VALUES ('ENR', 'Enrolled');
 INSERT INTO enrollment_status VALUES ('PEN', 'Pending');
@@ -37,7 +37,7 @@ CREATE TABLE COLLEGE(
     college_id VARCHAR(5) NOT NULL,
     college_title VARCHAR(75) DEFAULT ' ',
     CONSTRAINT pk_college_id PRIMARY KEY (college_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO college VALUES ('CISTM', 'College of Information Systems and Technology Management');
 INSERT INTO college VALUES ('CA', 'College of Accountancy');
@@ -61,7 +61,7 @@ CREATE TABLE course_type(
     course_type_id          VARCHAR(5)           NOT NULL,
     course_type_title     VARCHAR(75)          DEFAULT ' ',
     CONSTRAINT            pk_course_type_id    PRIMARY KEY (course_type_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO course_type VALUES ('UNDER', 'Undergraduate Programs');
 INSERT INTO course_type VALUES ('GRAD', 'Graduate Programs');
@@ -76,7 +76,7 @@ CREATE TABLE COURSE(
     CONSTRAINT        pk_course_id      PRIMARY KEY (course_id),
     CONSTRAINT        fk_college_id     FOREIGN KEY (college_id)     REFERENCES COLLEGE (college_id),
     CONSTRAINT        fk_course_type_id FOREIGN KEY (course_type_id) REFERENCES COURSE_TYPE (course_type_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO course VALUES ('BSIT', 'Bachelor of Science in Information Technology', 'UNDER', 'CISTM');
 INSERT INTO course VALUES ('BSCS', 'Bachelor of Science in Computer Science', 'UNDER', 'CISTM');
@@ -108,7 +108,7 @@ CREATE TABLE STUDENT (
     CONSTRAINT pk_student_id PRIMARY KEY (student_id),
     CONSTRAINT fk_student_type_id FOREIGN KEY (type_id) REFERENCES STUDENT_TYPE(type_id),
     CONSTRAINT fk_student_registration_id FOREIGN KEY (registration_id) REFERENCES REGISTRATION_STATUS(registration_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO STUDENT VALUES
 ('2025-00001', 'Garcia', 'Jose', 'P', '2000-Jan-01', 'BSIT', 2, 1, '2nd', '2025-2026', NULL, 'O', 'IRR'),
@@ -172,7 +172,7 @@ CREATE TABLE login (
     password       VARCHAR(50)      DEFAULT '1234' NOT NULL,
     CONSTRAINT     pk_student_login  PRIMARY KEY (student_id),
     CONSTRAINT     fk_student_login  FOREIGN KEY (student_id) REFERENCES STUDENT (student_id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO login (student_id) VALUES ('2025-00001');
 INSERT INTO login (student_id) VALUES ('2025-00002');
@@ -234,7 +234,7 @@ CREATE TABLE FACULTY (
     college_id           VARCHAR(50),
     CONSTRAINT pk_faculty_id PRIMARY KEY(faculty_id),
     CONSTRAINT fk_college_id FOREIGN KEY(college_id) REFERENCES COLLEGE(college_id)
-) ENGINE=InnoDB;
+) 
 
 INSERT INTO FACULTY VALUES('FAC001','Lee','Johnry','CISTM');
 INSERT INTO FACULTY VALUES('FAC002','Maupay','Ann Camille','CISTM');
@@ -255,7 +255,7 @@ CREATE TABLE schedule (
     time_start          VARCHAR(15)    NOT NULL,
     time_end            VARCHAR(15)    NOT NULL,
     CONSTRAINT sched_pk PRIMARY KEY(sched_id)
-) ENGINE=InnoDB;
+) 
 
 CREATE TABLE schedule_option (
     sched_option_id           VARCHAR(15),
@@ -264,7 +264,7 @@ CREATE TABLE schedule_option (
     CONSTRAINT schedopt_pk PRIMARY KEY(sched_option_id, sched_id),
     CONSTRAINT sosched_fk FOREIGN KEY (sched_id) REFERENCES schedule(sched_id),
     CONSTRAINT sofaculty_fk FOREIGN KEY (faculty_id) REFERENCES faculty(faculty_id)
-) ENGINE=InnoDB;
+) 
 
 -- Insert schedules (shortened for brevity - includes all days)
 INSERT INTO schedule VALUES ('M130-0700', 'M', '07:00:00', '08:30:00');
@@ -565,7 +565,7 @@ CREATE TABLE subject (
     CONSTRAINT subject_id_pk              PRIMARY KEY (subject_id, section),
     CONSTRAINT subject_sched_option_id_fk FOREIGN KEY (sched_option_id) REFERENCES schedule_option(sched_option_id),
     CONSTRAINT subject_enroll_id_fk       FOREIGN KEY (enroll_id)       REFERENCES enrollment_status(enroll_id)
-) ENGINE=InnoDB;
+) 
 
 -- FIRST YEAR — 1ST SEMESTER
 INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', 1, '01:30:00', '00:00:00', 3, '009-WS-01', NULL);
@@ -1270,7 +1270,7 @@ CREATE TABLE student_enlistment (
     CONSTRAINT fk_se_student FOREIGN KEY (student_id)          REFERENCES STUDENT(student_id) ON DELETE CASCADE,
     CONSTRAINT fk_se_subject FOREIGN KEY (subject_id, section) REFERENCES subject(subject_id, section) ON DELETE CASCADE,
     CONSTRAINT fk_se_enroll  FOREIGN KEY (enroll_id)           REFERENCES enrollment_status(enroll_id)
-) ENGINE=InnoDB;
+) 
 
 -- SAMPLE: move a subject to enrolled for demonstration (uncomment/adjust as needed)
 -- INSERT INTO student_enlistment (student_id, subject_id, section, semester, school_year, enroll_id) VALUES ('2025-00001', 'ICC 0101', 1, '2nd', '2025-2026', 'ENR');
