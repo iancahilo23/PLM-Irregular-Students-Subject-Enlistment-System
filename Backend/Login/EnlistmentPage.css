@@ -9,14 +9,14 @@ html {
 
 :root {
     /* PALETTE */
-    --primary-blue: #3a40a2;       
-    --primary-gray: #505050;       
-    --light-blue-bg: #e3e4f3;      
-    --notsowhite: #f3f3f3;         
-    
+    --primary-blue: #3a40a2;
+    --primary-gray: #505050;
+    --light-blue-bg: #e3e4f3;
+    --notsowhite: #f3f3f3;
+
     /* FUNCTIONAL */
     --white: #ffffff;
-    --border-color: #d1d1e0;       
+    --border-color: #d1d1e0;
     --text-muted: #888888;
 }
 
@@ -29,7 +29,7 @@ body {
 
 /* --- Header --- */
 .navbar {
-    position: sticky; 
+    position: sticky;
     top: 0;
     z-index: 1000;
     background: var(--notsowhite);
@@ -100,13 +100,12 @@ body {
 }
 
 /* --- HEADERS (Unified Style for All Sections) --- */
-/* This now applies the underline to "Student Registration", "Subjects", and "Filters" automatically */
 h3 {
     font-size: 18px;
     color: var(--primary-blue);
     font-weight: 700;
     margin-bottom: 15px;
-    
+
     /* The Underline Logic */
     display: inline-block;
     position: relative;
@@ -254,16 +253,16 @@ h3::after {
 .arrow { font-size: 10px; color: var(--primary-blue); }
 
 .dropdown-options {
-    display: none; 
+    display: none;
     position: absolute;
-    top: 110%; 
+    top: 110%;
     left: 0;
     width: 100%;
     background: var(--white);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 100; 
+    z-index: 100;
     overflow: hidden;
 }
 
@@ -310,7 +309,7 @@ h3::after {
 .summary-card h2 {
     margin: 0;
     font-size: 28px;
-    color: #555; 
+    color: #555;
     font-weight: 700;
 }
 
@@ -372,3 +371,47 @@ h3::after {
 }
 
 .btn-secondary:hover { background: #d4d6e8; }
+
+/* --- NEW STYLES FOR WARNINGS AND DISABLED CARDS --- */
+
+/* Style for subjects already taken (Requirement 2) */
+.subject-card.taken-subject {
+    background-color: #fff8f8; /* Very light red */
+    border: 1px solid #f99;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.subject-card.taken-subject:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Style for conflicting subjects (Requirement 4) */
+.subject-card.disabled-card {
+    background-color: #f0f0f5; /* Light grey background */
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.subject-card.disabled-card:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-color);
+}
+
+/* Red warning text inside the card */
+.subject-warning {
+    color: #dc2626; /* Red */
+    font-weight: 600;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Ensure disabled buttons look disabled */
+.btn-enlist[disabled] {
+    background-color: #a0a0a0 !important;
+    cursor: not-allowed;
+    color: #f3f3f3 !important;
+    border: none !important;
+}
