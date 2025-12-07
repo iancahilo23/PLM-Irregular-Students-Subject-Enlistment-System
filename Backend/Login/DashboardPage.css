@@ -1,0 +1,442 @@
+/* --- UNIVERSAL VARIABLES & RESET --- */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+:root {
+    /* PALETTE (Consistent with Enlistment System) */
+    --primary-blue: #3a40a2;       
+    --primary-gray: #505050;       
+    --light-blue-bg: #e3e4f3;      
+    --notsowhite: #f3f3f3;         
+    
+    /* FUNCTIONAL */
+    --white: #ffffff;
+    --border-color: #d1d1e0;       
+    --text-muted: #888888;
+    --gold: #fbbf24;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #fafff8;
+    margin: 0;
+    color: var(--primary-gray);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ANIMATIONS --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-container {
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- SPLASH SCREEN --- */
+.splash-container {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.1); 
+    backdrop-filter: blur(5px);          
+    -webkit-backdrop-filter: blur(20px); 
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); 
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flame-logo {
+    width: 180px; 
+    height: auto;
+    animation: fadeIn 1s ease-in-out infinite alternate;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2)); 
+}
+
+/* --- Header --- */
+.navbar {
+    position: sticky; 
+    top: 0;
+    z-index: 1000;
+    background: var(--notsowhite);
+    padding: 15px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: none; /* Hidden by default */
+    transition: box-shadow 0.3s ease;
+}
+
+/* Class added via JS on scroll */
+.navbar.scrolled {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.logo { height: 50px; }
+
+.brand-divider {
+    height: 40px;              /* Controls how tall the line is */
+    width: 2px;                /* Controls thickness */
+    background-color: #505050; /* Dark grey color */
+    opacity: 0.5;              /* Makes it slightly see-through (optional) */
+    margin: 0 7px 0 6px;            /* Adds space on the left and right */
+}
+
+.brand-text h1 {
+    font-size: 16px;
+    margin: 0;
+    color: var(--primary-gray);
+    font-weight: 700;
+}
+
+.brand-text p {
+    font-size: 12px;
+    margin: 0;
+    color: var(--primary-gray);
+    opacity: 0.8;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--primary-gray);
+    font-weight: 700;
+    margin-left: 50px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-links a.active, .nav-links a:hover {
+    color: var(--primary-blue);
+}
+
+/* --- MAIN LAYOUT --- */
+.main-content {
+    padding: 33px 40px;
+    display: grid;
+    /* Grid layout matching image_83176b.png: Wide Left, Narrow Right */
+    grid-template-columns: 1fr 380px; 
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- TITLES (Short Underline Style) --- */
+.section-title {
+    color: var(--primary-blue);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: inline-block;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 30px; 
+    height: 1.5px;
+    background-color: #9e9e9e; 
+}
+
+/* --- CARDS --- */
+.card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 6px rgba(58, 64, 162, 0.03);
+    height: 100%; /* Fills the grid cell */
+}
+
+/* --- STUDENT INFO GRID (Left Side) --- */
+.student-info-grid {
+    display: grid;
+    grid-template-columns: 1fr auto; /* Content | Photo */
+    gap: 2rem;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Groups for the info layout */
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* First row is implicitly handled by the HTML structure, 
+   but we can style the specific sub-grids if they exist in future */
+.info-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+}
+
+.info-row-2 {
+    display: grid;
+    grid-template-columns: auto 1fr; /* Section | Enrollment Status */
+    gap: 20px;
+    align-items: center;
+}
+
+/* Typography for Info */
+.info-label {
+    color: var(--primary-blue); /* Matching Profile Sidebar style */
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.info-value {
+    color: var(--primary-gray);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.info-value.name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-gray);
+}
+
+.info-value.program-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--primary-gray);
+    text-transform: uppercase;
+}
+
+.enrollment-highlight {
+    color: var(--primary-blue);
+    font-weight: 700;
+}
+
+/* --- AVATAR & CSS ART --- */
+.student-photo-placeholder {
+    width: 140px;
+    height: 180px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #e3e4f3 0%, #d1d1e0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+/* Head/Shoulders Silhouette */
+.student-photo-placeholder::before {
+    content: ''; position: absolute; width: 60px; height: 60px;
+    background-color: #9ca3af; border-radius: 50%; top: 40px; z-index: 1;
+}
+
+.student-photo-placeholder::after {
+    content: ''; position: absolute; width: 120px; height: 120px;
+    background-color: #9ca3af; border-radius: 50%; top: 105px;
+}
+
+/* Graduation Cap Art */
+.graduation-cap {
+    position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 2;
+}
+
+.cap-top {
+    width: 70px; height: 4px; background-color: var(--primary-gray);
+    border-radius: 1px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cap-base {
+    width: 40px; height: 10px; background-color: var(--primary-gray);
+    border-radius: 2px; margin: 0 auto; margin-top: -1px;
+}
+
+.cap-tassel {
+    width: 2px; height: 18px; background-color: var(--gold);
+    position: absolute; right: 5px; top: 0;
+}
+
+.cap-tassel::after {
+    content: ''; width: 4px; height: 4px; background-color: var(--gold);
+    border-radius: 50%; position: absolute; bottom: -2px; left: -1px;
+}
+
+/* --- PROGRESS CARD (Right Side) --- */
+.progress-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.progress-percentage {
+    color: var(--primary-blue);
+    font-size: 60px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.progress-description {
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 5px 0 0 0;
+}
+
+.progress-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-value {
+    color: var(--primary-gray);
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* --- FLOATING SETTINGS BUTTON --- */
+.fab-container {
+    position: fixed;
+    bottom: 30px; 
+    right: 30px;   
+    z-index: 9999; 
+    
+    /* FLEX-DIRECTION: COLUMN-REVERSE 
+       This forces the first item (Menu) to sit ABOVE the second item (Button) */
+    display: flex;
+    flex-direction: column; 
+    align-items: flex-end; /* Aligns items to the right */
+    gap: 15px; /* Adds space between the button and the menu */
+}
+
+/* --- MAIN CIRCLE BUTTON --- */
+.fab-main-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(58, 64, 162, 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background-color 0.2s;
+    /* Ensure button is on top of stack */
+    position: relative;
+    z-index: 2; 
+}
+
+.fab-main-btn:hover {
+    transform: scale(1.1);
+    background-color: #2c3185;
+}
+
+/* --- THE LOGOUT MENU --- */
+.fab-menu {
+    /* Hidden state */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px); /* Starts slightly lower */
+    
+    background: white;
+    padding: 8px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    border: 1px solid #e5e7eb;
+    
+    /* Animation settings */
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    z-index: 1;
+}
+
+/* ACTIVE STATE (When clicked) */
+.fab-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0); /* Moves UP into place */
+}
+
+/* LOGOUT BUTTON STYLE */
+.logout-option {
+    background: #fee2e2;
+    border: none;
+    color: #dc2626;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.logout-option:hover {
+    background: #fecaca;
+}
