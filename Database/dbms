@@ -1310,6 +1310,52 @@ CREATE TABLE student_enlistment (
 -- SAMPLE: move a subject to enrolled for demonstration (uncomment/adjust as needed)
 -- INSERT INTO student_enlistment (student_id, section_id, subject_id, semester, school_year, enroll_id) VALUES ('2025-00001', 1, 'ICC 0101', '2nd', '2025-2026', 'ENR');
 
+CREATE OR REPLACE PROCEDURE GET_STUDENT_DASHBOARD (
+    p_student_id IN VARCHAR2,
+    p_cursor     OUT SYS_REFCURSOR
+) AS
+BEGIN
+    OPEN p_cursor FOR
+        SELECT s.student_id,
+               s.lastname,
+               s.firstname,
+               s.middlename,
+               s.year_level,
+               s.semester,
+               s.school_year,
+               s.section,
+               
+               c.COURSE_TITLE,
+               
+               L(col.COLLEGE_TITLE, 'No College Assigned') AS COLLEGE_TITLE,   -- Standard Uppercase
+               
+               r.REGISTRATION_TITLE,
+
+               -- Non-Academic Units
+               (SELECT NVL(SUM(sub.units), 0)
+                FROM student_enlistment se
+                JOIN subject sub ON se.subject_id = sub.subject_id AND se.section = sub.section
+                WHERE se.student_id = s.student_id
+                  AND REGEXP_LIKE(sub.subject_id, '^(NSTP|PATHFIT)', 'i')
+                ) AS NON_ACADEMIC_UNITS,
+
+               -- Academic Units
+               (SELECT NVL(SUM(sub.units), 0)
+                FROM student_enlistment se
+                JOIN subject sub ON se.subject_id = sub.subject_id AND se.section = sub.section
+                WHERE se.student_id = s.student_id
+                  AND NOT REGEXP_LIKE(sub.subject_id, '^(NSTP|PATHFIT)', 'i')
+                ) AS ACADEMIC_UNITS
+
+        FROM STUDENT s 
+        -- Robust Joins (Trim + Upper case to fix invisible mismatches)
+        LEFT JOIN COURSE c ON UPPER(TRIM(s.COURSE_ID)) = UPPER(TRIM(c.COURSE_ID))
+        LEFT JOIN COLLEGE col ON UPPER(TRIM(c.COLLEGE_ID)) = UPPER(TRIM(col.COLLEGE_ID))
+        LEFT JOIN REGISTRATION_STATUS r ON UPPER(TRIM(s.REGISTRATION_ID)) = UPPER(TRIM(r.REGISTRATION_ID))
+        WHERE s.STUDENT_ID = p_student_id;
+END;
+/
+
 -- STORED PROCEDURE: Uses a CURSOR to produce registered subjects for a student for the given semester/school year.
 DELIMITER $$
 CREATE PROCEDURE sp_get_registered_subjects(
