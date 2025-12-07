@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (el) el.textContent = text;
                 };
 
+                // A. Basic Information
                 setText('display-name', `${student.first_name} ${student.last_name}`);
                 setText('display-student-number', student.student_id);
                 setText('display-email', student.email);
@@ -45,11 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 setText('display-semester', student.semester || '--');
                 setText('display-section', student.section || '--');
 
-                // Handle enrollment status specifically for styling
+                // B. Enrollment Status Sentence
                 const statusBox = document.getElementById('display-full-status');
                 if (statusBox) {
                     const statusText = `<span class="enrollment-highlight">${student.enrollment_status || 'ENROLLED'}</span>`;
                     statusBox.innerHTML = `${statusText} for School Year ${student.school_year} ${student.semester} Semester`;
+                }
+
+                // C. Overall Progress (Units & Percentage) -- NEW ADDITION
+                setText('display-units-total', student.units_total);
+                setText('display-units-acad', student.units_academic);
+                setText('display-units-non', student.units_non_academic);
+                
+                // Percentage Text (Big Number)
+                setText('display-progress-percent', `${student.progress_percent}%`);
+                
+                // Progress Description Text
+                const descEl = document.getElementById('display-progress-desc');
+                if (descEl) {
+                    descEl.textContent = `You've completed ${student.progress_percent}% of your classes' overall assigned curriculum.`;
                 }
 
             } else {
@@ -59,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         } catch (error) {
             console.error("Fetch error:", error);
-            // This happens if db_connection.php is missing
             const nameEl = document.getElementById('display-name');
             if(nameEl) nameEl.textContent = "Connection Error";
         }
@@ -72,11 +86,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const hasSeenSplash = sessionStorage.getItem('plm_dashboard_seen');
 
         if (hasSeenSplash) {
-            // User has seen it this session -> Hide Immediately
             if (splash) splash.style.display = 'none';
             if (content) content.classList.remove('hidden');
         } else {
-            // First time -> Show animation
             if (splash && content) {
                 setTimeout(() => {
                     splash.style.opacity = '0';
@@ -85,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         splash.style.display = 'none';
                         content.classList.remove('hidden');
-                        // Mark as seen so it doesn't show again on reload
                         sessionStorage.setItem('plm_dashboard_seen', 'true');
                     }, 500);
 
@@ -99,14 +110,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     if (fabBtn && fabMenu && logoutBtn) {
         
-        // Toggle Menu
         fabBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             fabMenu.classList.toggle('active');
             fabBtn.style.transform = fabMenu.classList.contains('active') ? 'rotate(90deg)' : 'rotate(0deg)';
         });
 
-        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (!fabMenu.contains(e.target) && !fabBtn.contains(e.target)) {
                 fabMenu.classList.remove('active');
@@ -114,11 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Logout
         logoutBtn.addEventListener('click', () => {
             sessionStorage.clear(); 
             localStorage.removeItem('plm_student_name'); 
-            window.location.href = 'LoginPage.html'; 
+            // IMPORTANT: Redirect to PHP to kill the session properly
+            window.location.href = 'logout.php'; 
         });
     }
 
@@ -130,10 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // --- 5. TAB SWITCHING (Global Function) ---
-// This needs to be outside the event listener to work with onclick="" in HTML
 function switchTab(element) {
     const links = document.querySelectorAll('.nav-link');
     links.forEach(link => link.classList.remove('active'));
     element.classList.add('active');
 }
-

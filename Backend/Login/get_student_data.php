@@ -20,7 +20,7 @@ if (!isset($_SESSION['student_id'])) {
 $student_id = $_SESSION['student_id'];
 
 // =============================================================
-// 3. THE CURSOR APPROACH
+// 3. THE CURSOR APPROACH (Calling the Stored Procedure)
 // =============================================================
 
 // A. Prepare the Procedure Call
@@ -31,19 +31,17 @@ $stid = oci_parse($conn, $sql);
 $p_cursor = oci_new_cursor($conn);
 
 // C. Bind Parameters
-// :id is Input (The Student ID)
-// :cursor_ptr is Output (The Data)
 oci_bind_by_name($stid, ":id", $student_id);
 oci_bind_by_name($stid, ":cursor_ptr", $p_cursor, -1, OCI_B_CURSOR);
 
-// D. Execute the Procedure (This opens the door)
+// D. Execute the Procedure
 if (!oci_execute($stid)) {
     $e = oci_error($stid);
     echo json_encode(['success' => false, 'message' => 'Procedure Failed: ' . $e['message']]);
     exit;
 }
 
-// E. Execute the Cursor (This walks through the door to get data)
+// E. Execute the Cursor
 if (!oci_execute($p_cursor)) {
     $e = oci_error($p_cursor);
     echo json_encode(['success' => false, 'message' => 'Cursor Failed: ' . $e['message']]);
@@ -54,35 +52,46 @@ if (!oci_execute($p_cursor)) {
 $row = oci_fetch_assoc($p_cursor);
 
 if ($row) {
-    // --- (The Logic Below Remains Exactly the Same) ---
-
-    // Program Logic
+    // --- BASIC INFORMATION ---
     $program_full = $row['COURSE_TITLE'] ? $row['COURSE_TITLE'] : $row['COURSE_ID'];
-
-    // College Logic
     $course_id = trim($row['COURSE_ID']);
-    $college = "Unknown College";
 
-    if (strpos($course_id, 'BSIT') === 0 || strpos($course_id, 'BSCS') === 0) {
-        $college = "College of Information Systems and Technology Management";
-    } 
-    elseif (strpos($course_id, 'BSA') === 0) {
-        $college = "College of Accountancy";
-    }
-    elseif (strpos($course_id, 'BS Arch') === 0) {
-        $college = "College of Architecture and Sustainable Built Environments";
-    }
-    elseif (strpos($course_id, 'BSBA') === 0 || strpos($course_id, 'BSE') === 0) {
-        $college = "College of Business Administration";
-    }
-    elseif (strpos($course_id, 'BS CE') === 0 || strpos($course_id, 'BS ME') === 0) {
-        $college = "College of Engineering";
-    }
-    elseif (strpos($course_id, 'BS PT') === 0) {
-        $college = "College of Physical Therapy";
-    }
-    elseif (strpos($course_id, 'BS N') === 0) {
-        $college = "College of Nursing";
+    // =========================================================
+    // FIX: COLLEGE LOGIC (Database Priority)
+    // =========================================================
+    
+    // 1. Try to fetch the college from the database result using various possible aliases
+    $db_college = $row['college_title'] ?? $row['college'] ?? $row['COLLEGE_TITLE'] ?? $row['COLLEGE'] ?? null;
+
+    // 2. If DB returned a valid college, use it. Otherwise, fall back to hardcoded map.
+    if (!empty($db_college) && $db_college !== 'No College Assigned' && $db_college !== 'No College Found') {
+        $college = $db_college;
+    } else {
+        // FALLBACK: Hardcoded mapping (Safety net)
+        $college = "Unknown College";
+
+        // Changed to 'stripos' for case-insensitive matching
+        if (stripos($course_id, 'BSIT') !== false || stripos($course_id, 'BSCS') !== false) {
+            $college = "College of Information Systems and Technology Management";
+        } 
+        elseif (stripos($course_id, 'BSA') !== false) {
+            $college = "College of Accountancy";
+        }
+        elseif (stripos($course_id, 'BS Arch') !== false) {
+            $college = "College of Architecture and Sustainable Built Environments";
+        }
+        elseif (stripos($course_id, 'BSBA') !== false || stripos($course_id, 'BSE') !== false) {
+            $college = "College of Business Administration";
+        }
+        elseif (stripos($course_id, 'BS CE') !== false || stripos($course_id, 'BS ME') !== false) {
+            $college = "College of Engineering";
+        }
+        elseif (stripos($course_id, 'BS PT') !== false) {
+            $college = "College of Physical Therapy";
+        }
+        elseif (stripos($course_id, 'BS N') !== false) {
+            $college = "College of Nursing";
+        }
     }
 
     // Status Logic
@@ -97,13 +106,29 @@ if ($row) {
     // Enrollment Logic
     $enrollment_display = (!empty($row['DATE_ENROLLED'])) ? 'ENROLLED' : 'NOT ENROLLED';
 
-    // Prepare Response
+    // --- UNIT & PERCENTAGE CALCULATIONS ---
+    
+    // 1. Get Values from DB (From the Stored Procedure subqueries)
+    $acad_units = isset($row['ACADEMIC_UNITS']) ? floatval($row['ACADEMIC_UNITS']) : 0;
+    $non_acad_units = isset($row['NON_ACADEMIC_UNITS']) ? floatval($row['NON_ACADEMIC_UNITS']) : 0;
+
+    // 2. Calculate Total
+    $total_units = $acad_units + $non_acad_units;
+
+    // 3. Calculate Percentage (Assuming 180 units is the full curriculum)
+    $max_units = 180; 
+    $progress_percent = ($total_units > 0) ? ($total_units / $max_units) * 100 : 0;
+    
+    // Cap at 100%
+    if ($progress_percent > 100) $progress_percent = 100;
+
+    // --- PREPARE RESPONSE ---
     $data = [
         'student_id' => $row['STUDENT_ID'],
         'first_name' => $row['FIRSTNAME'],
         'last_name'  => $row['LASTNAME'],
         'program'    => $program_full,
-        'college'    => $college,
+        'college'    => $college, // Uses the fixed logic above
         'year_level' => $row['YEAR_LEVEL'], 
         'semester'   => $row['SEMESTER'],
         'section'    => $row['COURSE_ID'] . ' ' . $row['YEAR_LEVEL'] . '-' . $row['SECTION'],
@@ -111,7 +136,13 @@ if ($row) {
         'email'      => strtolower($row['FIRSTNAME'] . '.' . $row['LASTNAME'] . '@plm.edu.ph'),
         'status'            => $status_display,
         'enrollment_status' => $enrollment_display,
-        'gwa'               => '1.75' // Hardcoded (Scope Exclusion)
+        'gwa'               => '1.75', 
+
+        // New Calculated Fields
+        'units_total'       => $total_units,
+        'units_academic'    => $acad_units,
+        'units_non_academic'=> $non_acad_units,
+        'progress_percent'  => round($progress_percent)
     ];
 
     echo json_encode(['success' => true, 'data' => $data]);
@@ -121,6 +152,6 @@ if ($row) {
 
 // 5. CLEAN UP
 oci_free_statement($stid);
-oci_free_statement($p_cursor); // Close the cursor specifically
+oci_free_statement($p_cursor); 
 oci_close($conn);
 ?>
