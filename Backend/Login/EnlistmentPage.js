@@ -6,7 +6,7 @@ let currentSearchTerm = '';
 let currentDepartmentFilter = 'All departments';
 let showOnlyAvailableSlots = false;
 
-
+// CRITICAL: Empty array for fresh enlistment (no mock data)
 const subjectsAlreadyTaken = [];
 
 
@@ -64,15 +64,27 @@ async function fetchStudentProfile() {
 }
 
 
-// --- 2. FETCH SUBJECTS (Working) ---
+// --- 2. FETCH SUBJECTS (Server-Side Filter Integration) ---
 async function fetchSubjects() {
+    // 1. Map the UI filter name to the internal database course code (BSIT, BSCS, etc.)
+    const departmentToCourseMap = {
+        'All departments': 'ALL',
+        'Information Technology': 'BSIT',
+        'Computer Science': 'BSCS'
+    };
+    const filterValue = departmentToCourseMap[currentDepartmentFilter] || 'ALL';
+
+    // 2. Build the URL with the filter parameter
+    const url = `enlistment.php?course_filter=${filterValue}`;
+
     try {
-        const response = await fetch('enlistment.php');
+        const response = await fetch(url);
         const data = await response.json();
 
         if (data.success) {
             subjects = data.subjects;
-            applyFilters(); // Calls render
+            // IMPORTANT: Now we call the client-side filter to apply Search/Slots/Taken status
+            applyFiltersOnClient();
         } else {
             console.error("Failed to fetch subjects:", data.message);
             const container = document.getElementById("subject-list");
@@ -85,26 +97,11 @@ async function fetchSubjects() {
     }
 }
 
-
-// --- 3. SEARCH AND FILTER LOGIC (Updated to show 'Already Taken' subjects for warnings) ---
-
-function applyFilters() {
+// --- 3. SEARCH AND FILTER LOGIC (Client-Side Filtering) ---
+function applyFiltersOnClient() {
     let filteredList = subjects;
 
-    const departmentToCourseMap = {
-        'All departments': 'ALL',
-        'Information Technology': 'BSIT',
-        'Computer Science': 'BSCS'
-    };
-    const targetCourseId = departmentToCourseMap[currentDepartmentFilter];
-
-    if (targetCourseId && targetCourseId !== 'ALL') {
-        filteredList = filteredList.filter(sub => {
-            // Note: PHP output column names are lowercase: sub.course_id
-            return sub.course_id.toUpperCase() === targetCourseId;
-        });
-    }
-
+    // Apply Search Term Filter
     if (currentSearchTerm) {
         const lowerSearchTerm = currentSearchTerm.toLowerCase();
         filteredList = filteredList.filter(sub => {
@@ -114,6 +111,7 @@ function applyFilters() {
         });
     }
 
+    // Apply Available Slots Filter (Simulated)
     if (showOnlyAvailableSlots) {
         filteredList = filteredList.filter(sub => {
             const parts = sub.slots.split('/');
@@ -122,13 +120,11 @@ function applyFilters() {
         });
     }
 
-    // IMPORTANT: We no longer filter out 'subjectsAlreadyTaken' here; we just render them
-    // with a disabled state and warning in renderSubjects().
-
+    // IMPORTANT: We render the filtered list. 'Taken' status is handled visually in renderSubjects.
     renderSubjects(filteredList);
 }
 
-// --- 4. RENDER SUBJECTS (UPDATED to show visual warnings) ---
+// --- 4. RENDER SUBJECTS (Updated to show visual warnings) ---
 function renderSubjects(list = subjects) {
     const container = document.getElementById("subject-list");
     document.getElementById("subject-count").innerText = list.length;
@@ -149,7 +145,7 @@ function renderSubjects(list = subjects) {
         const facultyLine = sub.faculty && sub.faculty !== ', ' ? `| Instructor: ${sub.faculty}` : '';
         const slotsLine = `Slots: ${sub.slots} | Room: ${sub.room}`;
 
-        // ★ NEW LOGIC: Determine statuses and messages
+        // Determine statuses and messages
         const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
         const isAlreadyTaken = subjectsAlreadyTaken.includes(subjectCodeOnly);
 
@@ -165,7 +161,8 @@ function renderSubjects(list = subjects) {
         } else if (isSubjectCodeEnlisted && !isEnlisted) {
             // Priority 2: Another section is already enlisted (Conflict)
             isDisabled = true;
-            warningMessage = `⚠️ Cannot enlist. Section ${enlistedSubjects.find(id => id.startsWith(subjectCodeOnly + '-')).split('-')[1]} is already selected.`;
+            const enlistedSection = enlistedSubjects.find(id => id.startsWith(subjectCodeOnly + '-')).split('-')[1];
+            warningMessage = `⚠️ Cannot enlist. Section ${enlistedSection} is already selected.`;
             cardClass = 'disabled-card';
         }
 
@@ -197,19 +194,16 @@ function renderSubjects(list = subjects) {
 }
 
 
-// --- 5. ACTIONS (Enlist/Unenlist) - CRITICALLY UPDATED (Alert only needed for 'Already Taken') ---
-
+// --- 5. ACTIONS (Enlist/Unenlist) ---
 function toggleEnlist(uniqueId, event) {
     const subjectCodeOnly = uniqueId.split('-')[0];
 
-    // Check if the subject is marked as already taken in the master list
     if (subjectsAlreadyTaken.includes(subjectCodeOnly)) {
         alert(`Error: ${subjectCodeOnly} is already taken or credited.`);
         if(event) event.preventDefault();
         return;
     }
 
-    // Check if the button is disabled due to a conflict (shouldn't happen, but good to check)
     if (event && event.target.disabled) {
         return;
     }
@@ -218,11 +212,10 @@ function toggleEnlist(uniqueId, event) {
         // UNENLIST: Always allowed
         enlistedSubjects = enlistedSubjects.filter(id => id !== uniqueId);
     } else {
-        // ENLIST: Check for subject code conflict (The visual warning prevents this, but alert is a fallback)
+        // ENLIST: Check for subject code conflict
         const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
 
         if (isSubjectCodeEnlisted) {
-            // This should ideally not be reachable if the button is correctly disabled in renderSubjects
             alert(`You have already enlisted a section of ${subjectCodeOnly}. Please remove it first.`);
             return;
         }
@@ -231,7 +224,7 @@ function toggleEnlist(uniqueId, event) {
         enlistedSubjects.push(uniqueId);
     }
 
-    applyFilters();
+    applyFiltersOnClient(); // Use client filter since the data is already fetched
     updateSummary();
 }
 
@@ -257,7 +250,7 @@ function updateSummary() {
 
 function clearAll() {
     enlistedSubjects = [];
-    applyFilters();
+    applyFiltersOnClient(); // Use client filter
     updateSummary();
 }
 
@@ -290,19 +283,22 @@ function submitEnlistment() {
 }
 
 
-// --- 7. EVENT LISTENERS & DROPDOWN (Existing Code) ---
+// --- 7. EVENT LISTENERS & DROPDOWN (Updated to call correct filter functions) ---
 
 function setupEventListeners() {
+    // Search Bar Listener: Calls client filter
     document.getElementById('searchInput').addEventListener('input', (e) => {
         currentSearchTerm = e.target.value;
-        applyFilters();
+        applyFiltersOnClient();
     });
 
+    // Checkbox Listener: Calls client filter
     document.getElementById('slots').addEventListener('change', (e) => {
         showOnlyAvailableSlots = e.target.checked;
-        applyFilters();
+        applyFiltersOnClient();
     });
 
+    // Reset Filters Button Listener: Calls full fetch
     document.querySelector('.sidebar-right .btn-secondary').addEventListener('click', (e) => {
         e.preventDefault();
 
@@ -314,21 +310,22 @@ function setupEventListeners() {
         document.getElementById('selected-text').innerText = 'All departments';
         document.getElementById('slots').checked = false;
 
-        applyFilters();
+        applyFilters(); // Triggers re-fetch from server (All departments)
     });
 }
 
-function toggleDropdown() {
-    const options = document.getElementById("dropdown-options");
-    options.classList.toggle("show");
-}
-
+// Dropdown change: Calls full fetch
 function selectOption(value) {
     document.getElementById("selected-text").innerText = value;
     document.getElementById("dropdown-options").classList.remove("show");
 
     currentDepartmentFilter = value;
-    applyFilters();
+    applyFilters(); // Triggers re-fetch from server with new filter
+}
+
+function toggleDropdown() {
+    const options = document.getElementById("dropdown-options");
+    options.classList.toggle("show");
 }
 
 window.onclick = function(event) {
