@@ -5,7 +5,7 @@
 session_start();
 
 header('Content-Type: application/json');
-require 'db_conn.php';
+require 'db_conn.php'; 
 
 // Get JSON input
 $input = json_decode(file_get_contents('php://input'), true);
@@ -34,7 +34,7 @@ if ($row = oci_fetch_assoc($stid)) {
     $_SESSION['student_id'] = $row['STUDENT_ID'];
 
     echo json_encode([
-        "success" => true,
+        "success" => true, 
         "studentId" => $row['STUDENT_ID'],
         "message" => "Login successful"
     ]);

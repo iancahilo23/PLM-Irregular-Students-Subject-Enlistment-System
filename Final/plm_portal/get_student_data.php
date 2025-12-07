@@ -1,7 +1,7 @@
 <?php
 // c:\xampp\htdocs\plm_portal\get_student_data.php
 
-session_start();
+session_start(); 
 
 // 1. SETTINGS & HEADERS
 error_reporting(0);
@@ -9,7 +9,7 @@ ini_set('display_errors', 0);
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header('Content-Type: application/json');
 
-require_once 'db_conn.php';
+require_once 'db_conn.php'; 
 
 // 2. CHECK LOGIN
 if (!isset($_SESSION['student_id'])) {
@@ -59,7 +59,7 @@ if ($row) {
     // =========================================================
     // FIX: COLLEGE LOGIC (Database Priority)
     // =========================================================
-
+    
     // 1. Try to fetch the college from the database result using various possible aliases
     $db_college = $row['college_title'] ?? $row['college'] ?? $row['COLLEGE_TITLE'] ?? $row['COLLEGE'] ?? null;
 
@@ -73,7 +73,7 @@ if ($row) {
         // Changed to 'stripos' for case-insensitive matching
         if (stripos($course_id, 'BSIT') !== false || stripos($course_id, 'BSCS') !== false) {
             $college = "College of Information Systems and Technology Management";
-        }
+        } 
         elseif (stripos($course_id, 'BSA') !== false) {
             $college = "College of Accountancy";
         }
@@ -107,7 +107,7 @@ if ($row) {
     $enrollment_display = (!empty($row['DATE_ENROLLED'])) ? 'ENROLLED' : 'NOT ENROLLED';
 
     // --- UNIT & PERCENTAGE CALCULATIONS ---
-
+    
     // 1. Get Values from DB (From the Stored Procedure subqueries)
     $acad_units = isset($row['ACADEMIC_UNITS']) ? floatval($row['ACADEMIC_UNITS']) : 0;
     $non_acad_units = isset($row['NON_ACADEMIC_UNITS']) ? floatval($row['NON_ACADEMIC_UNITS']) : 0;
@@ -116,9 +116,9 @@ if ($row) {
     $total_units = $acad_units + $non_acad_units;
 
     // 3. Calculate Percentage (Assuming 180 units is the full curriculum)
-    $max_units = 180;
+    $max_units = 180; 
     $progress_percent = ($total_units > 0) ? ($total_units / $max_units) * 100 : 0;
-
+    
     // Cap at 100%
     if ($progress_percent > 100) $progress_percent = 100;
 
@@ -129,14 +129,14 @@ if ($row) {
         'last_name'  => $row['LASTNAME'],
         'program'    => $program_full,
         'college'    => $college, // Uses the fixed logic above
-        'year_level' => $row['YEAR_LEVEL'],
+        'year_level' => $row['YEAR_LEVEL'], 
         'semester'   => $row['SEMESTER'],
         'section'    => $row['COURSE_ID'] . ' ' . $row['YEAR_LEVEL'] . '-' . $row['SECTION'],
         'school_year' => $row['SCHOOL_YEAR'],
         'email'      => strtolower($row['FIRSTNAME'] . '.' . $row['LASTNAME'] . '@plm.edu.ph'),
         'status'            => $status_display,
         'enrollment_status' => $enrollment_display,
-        'gwa'               => '1.75',
+        'gwa'               => '1.75', 
 
         // New Calculated Fields
         'units_total'       => $total_units,
@@ -152,6 +152,6 @@ if ($row) {
 
 // 5. CLEAN UP
 oci_free_statement($stid);
-oci_free_statement($p_cursor);
+oci_free_statement($p_cursor); 
 oci_close($conn);
 ?>

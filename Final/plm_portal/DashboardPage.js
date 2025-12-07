@@ -9,9 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fabMenu = document.getElementById('fab-menu');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // =========================================================
     // 1. DATA FETCHING LOGIC (Connects to Oracle)
-    // =========================================================
     async function loadStudentData() {
         try {
             console.log("Fetching student data..."); 
@@ -79,9 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // =========================================================
     // 2. SMART SPLASH SCREEN LOGIC (With Memory)
-    // =========================================================
     function handleSplash() {
         const hasSeenSplash = sessionStorage.getItem('plm_dashboard_seen');
 
@@ -105,9 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // =========================================================
     // 3. FAB MENU & LOGOUT LOGIC
-    // =========================================================
     if (fabBtn && fabMenu && logoutBtn) {
         
         fabBtn.addEventListener('click', (e) => {
@@ -131,9 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // =========================================================
     // 4. INITIALIZE EVERYTHING
-    // =========================================================
     handleSplash();
     loadStudentData();
 });
