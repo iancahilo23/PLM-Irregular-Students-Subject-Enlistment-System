@@ -1256,6 +1256,17 @@ EXCEPTION
         ROLLBACK;
 END;
 
+-- course taken table
+CREATE TABLE courses_taken (
+    student_id        VARCHAR(50)       NOT NULL
+    , subject_id      VARCHAR(50)       NOT NULL
+    , grade           DECIMAL(3,2)
+    , remarks         VARCHAR(20)
+    , semester        VARCHAR(50)
+    , school_year     VARCHAR(50)
+    , CONSTRAINT      pk_courses_taken  PRIMARY KEY (student_id, subject_id)
+    , CONSTRAINT      fk_ct_student     FOREIGN KEY (student_id) REFERENCES STUDENT(student_id) ON DELETE CASCADE
+);
 
 -- TABLE TO STORE STUDENT ENLISTMENTS (mapping students to subject sections)
 CREATE TABLE student_enlistment (
