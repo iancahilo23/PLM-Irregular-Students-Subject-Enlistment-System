@@ -1,77 +1,112 @@
+// c:\xampp\htdocs\plm_portal\DashboardPage.js
+
 document.addEventListener("DOMContentLoaded", () => {
     
-    // --- 1. SPLASH SCREEN LOGIC (With Memory) ---
+    // --- GLOBAL VARIABLES ---
     const splash = document.getElementById('dashboard-splash');
     const content = document.getElementById('dashboard-content');
-
-    // Check if we have already shown the splash screen in this session
-    const hasSeenSplash = sessionStorage.getItem('plm_dashboard_seen');
-
-    if (hasSeenSplash) {
-        // CASE A: User has seen it. Hide splash IMMEDIATELY.
-        if (splash) splash.style.display = 'none';
-        if (content) content.classList.remove('hidden');
-    } else {
-        // CASE B: First time. Show splash, then fade out.
-        if (splash && content) {
-            // 1. Wait 2 seconds
-            setTimeout(() => {
-                // 2. Start fade out
-                splash.style.opacity = '0';
-                splash.style.transition = 'opacity 0.5s ease';
-
-                // 3. When fade finishes, hide it and unlock content
-                setTimeout(() => {
-                    splash.style.display = 'none';
-                    content.classList.remove('hidden');
-                    
-                    // 4. MARK AS SEEN (So it won't show on reload)
-                    sessionStorage.setItem('plm_dashboard_seen', 'true');
-                }, 500);
-
-            }, 2000); 
-        }
-    }
-
-    // --- 2. POPULATE MOCK DATA ---
-    const studentData = {
-        name: "ALCORAN, WILLARD JOHN",
-        studentNumber: "2023-36053",
-        email: "wjalcoran2023@plm.edu.ph",
-        status: "Irregular",
-        gwa: "2.23177"
-    };
-
-    const set = (id, value) => {
-        const element = document.getElementById(id);
-        if (element) element.innerText = value;
-    };
-
-    set('display-name', studentData.name);
-    set('display-student-number', studentData.studentNumber);
-    set('display-email', studentData.email);
-    set('display-status', studentData.status);
-    set('display-gwa', studentData.gwa);
-
-
-    // --- 3. FLOATING BUTTON & LOGOUT LOGIC (NEW) ---
     const fabBtn = document.getElementById('fab-main-btn');
     const fabMenu = document.getElementById('fab-menu');
     const logoutBtn = document.getElementById('logout-btn');
 
-    // Only run this if the elements exist in HTML
+    // =========================================================
+    // 1. DATA FETCHING LOGIC (Connects to Oracle)
+    // =========================================================
+    async function loadStudentData() {
+        try {
+            console.log("Fetching student data..."); 
+
+            const response = await fetch('get_student_data.php');
+            
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log("Data received:", result);
+
+            if (result.success && result.data) {
+                const student = result.data;
+                
+                // Safe Helper to avoid null errors if an element is missing
+                const setText = (id, text) => {
+                    const el = document.getElementById(id);
+                    if (el) el.textContent = text;
+                };
+
+                setText('display-name', `${student.first_name} ${student.last_name}`);
+                setText('display-student-number', student.student_id);
+                setText('display-email', student.email);
+                setText('display-status', student.status);
+                setText('display-gwa', student.gwa || '--');
+                setText('display-program', student.program || '--');
+                setText('display-college', student.college || '--');
+                setText('display-year-level', student.year_level || '--');
+                setText('display-semester', student.semester || '--');
+                setText('display-section', student.section || '--');
+
+                // Handle enrollment status specifically for styling
+                const statusBox = document.getElementById('display-full-status');
+                if (statusBox) {
+                    const statusText = `<span class="enrollment-highlight">${student.enrollment_status || 'ENROLLED'}</span>`;
+                    statusBox.innerHTML = `${statusText} for School Year ${student.school_year} ${student.semester} Semester`;
+                }
+
+            } else {
+                console.error("Server reported error:", result.message);
+                document.getElementById('display-name').textContent = "Student Not Found";
+            }
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            // This happens if db_connection.php is missing
+            const nameEl = document.getElementById('display-name');
+            if(nameEl) nameEl.textContent = "Connection Error";
+        }
+    }
+
+    // =========================================================
+    // 2. SMART SPLASH SCREEN LOGIC (With Memory)
+    // =========================================================
+    function handleSplash() {
+        const hasSeenSplash = sessionStorage.getItem('plm_dashboard_seen');
+
+        if (hasSeenSplash) {
+            // User has seen it this session -> Hide Immediately
+            if (splash) splash.style.display = 'none';
+            if (content) content.classList.remove('hidden');
+        } else {
+            // First time -> Show animation
+            if (splash && content) {
+                setTimeout(() => {
+                    splash.style.opacity = '0';
+                    splash.style.transition = 'opacity 0.5s ease';
+
+                    setTimeout(() => {
+                        splash.style.display = 'none';
+                        content.classList.remove('hidden');
+                        // Mark as seen so it doesn't show again on reload
+                        sessionStorage.setItem('plm_dashboard_seen', 'true');
+                    }, 500);
+
+                }, 2000); 
+            }
+        }
+    }
+
+    // =========================================================
+    // 3. FAB MENU & LOGOUT LOGIC
+    // =========================================================
     if (fabBtn && fabMenu && logoutBtn) {
         
-        // A. Toggle Menu on Click
+        // Toggle Menu
         fabBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Stops click from closing immediately
+            e.stopPropagation();
             fabMenu.classList.toggle('active');
-            
-            // Rotate icon 90 degrees when open
             fabBtn.style.transform = fabMenu.classList.contains('active') ? 'rotate(90deg)' : 'rotate(0deg)';
         });
 
-        // B. Close menu when clicking anywhere else on the page
+        // Close when clicking outside
         document.addEventListener('click', (e) => {
             if (!fabMenu.contains(e.target) && !fabBtn.contains(e.target)) {
                 fabMenu.classList.remove('active');
@@ -79,21 +114,26 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // C. HANDLE LOGOUT
+        // Logout
         logoutBtn.addEventListener('click', () => {
-            // 1. Clear session data
-            sessionStorage.clear(); // Resets splash screen history
-            localStorage.removeItem('plm_student_name'); // Clears user data
-            
-            // 2. Redirect to Login Page
+            sessionStorage.clear(); 
+            localStorage.removeItem('plm_student_name'); 
             window.location.href = 'LoginPage.html'; 
         });
     }
+
+    // =========================================================
+    // 4. INITIALIZE EVERYTHING
+    // =========================================================
+    handleSplash();
+    loadStudentData();
 });
 
-// --- 4. TAB SWITCHING LOGIC (Global) ---
+// --- 5. TAB SWITCHING (Global Function) ---
+// This needs to be outside the event listener to work with onclick="" in HTML
 function switchTab(element) {
     const links = document.querySelectorAll('.nav-link');
     links.forEach(link => link.classList.remove('active'));
     element.classList.add('active');
-}   
+}
+
