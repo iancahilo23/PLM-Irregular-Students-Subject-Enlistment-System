@@ -9,6 +9,9 @@ let showOnlyAvailableSlots = false;
 // CRITICAL: Empty array for fresh enlistment (no mock data)
 const subjectsAlreadyTaken = [];
 
+// ★ FIX 1: Define the maximum unit limit (Max 24 units)
+const MAX_UNITS = 24;
+
 
 // --- INITIALIZE ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -17,6 +20,11 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSummary();
     setupEventListeners();
 });
+
+// Helper function (Assumed to exist, added for completion)
+function getStudentId() {
+    return localStorage.getItem('plm_student_name');
+}
 
 
 // --- 1. STUDENT PROFILE (Working) ---
@@ -28,7 +36,7 @@ async function fetchStudentProfile() {
     const currentSemesterEl = document.getElementById('current-semester');
     const studentStatusEl = document.getElementById('student-status');
 
-    const loggedInStudentId = localStorage.getItem('plm_student_name');
+    const loggedInStudentId = getStudentId();
 
     if (!loggedInStudentId) {
         studentNameEl.innerText = 'Login Required';
@@ -66,6 +74,9 @@ async function fetchStudentProfile() {
 
 // --- 2. FETCH SUBJECTS (Server-Side Filter Integration) ---
 async function fetchSubjects() {
+    const studentId = getStudentId();
+    if (!studentId) return;
+
     // 1. Map the UI filter name to the internal database course code (BSIT, BSCS, etc.)
     const departmentToCourseMap = {
         'All departments': 'ALL',
@@ -74,8 +85,8 @@ async function fetchSubjects() {
     };
     const filterValue = departmentToCourseMap[currentDepartmentFilter] || 'ALL';
 
-    // 2. Build the URL with the filter parameter
-    const url = `enlistment.php?course_filter=${filterValue}`;
+    // 2. Build the URL with the filter and student ID parameter
+    const url = `enlistment.php?course_filter=${filterValue}&student_id=${studentId}`;
 
     try {
         const response = await fetch(url);
@@ -83,7 +94,6 @@ async function fetchSubjects() {
 
         if (data.success) {
             subjects = data.subjects;
-            // IMPORTANT: Now we call the client-side filter to apply Search/Slots/Taken status
             applyFiltersOnClient();
         } else {
             console.error("Failed to fetch subjects:", data.message);
@@ -114,13 +124,13 @@ function applyFiltersOnClient() {
     // Apply Available Slots Filter (Simulated)
     if (showOnlyAvailableSlots) {
         filteredList = filteredList.filter(sub => {
+            // Assuming sub.slots is '30/40' format
             const parts = sub.slots.split('/');
             const currentSlots = parseInt(parts[0], 10);
             return currentSlots > 0;
         });
     }
 
-    // IMPORTANT: We render the filtered list. 'Taken' status is handled visually in renderSubjects.
     renderSubjects(filteredList);
 }
 
@@ -148,18 +158,24 @@ function renderSubjects(list = subjects) {
         // Determine statuses and messages
         const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
         const isAlreadyTaken = subjectsAlreadyTaken.includes(subjectCodeOnly);
+        // Note: unmet_prereqs check is part of the previous logic update
+        const isPrereqUnmet = sub.unmet_prereqs && sub.unmet_prereqs.length > 0;
 
         let isDisabled = false;
         let warningMessage = '';
         let cardClass = '';
 
-        if (isAlreadyTaken) {
-            // Priority 1: Already Taken
+        if (isPrereqUnmet) {
+            isDisabled = true;
+            warningMessage = `⚠️ Unmet prerequisite(s): ${sub.unmet_prereqs.join(', ')}.`;
+            cardClass = 'disabled-card';
+        } else if (isAlreadyTaken) {
+            // Priority 2: Already Taken
             isDisabled = true;
             warningMessage = '⚠️ Subject already taken/credited.';
             cardClass = 'taken-subject';
         } else if (isSubjectCodeEnlisted && !isEnlisted) {
-            // Priority 2: Another section is already enlisted (Conflict)
+            // Priority 3: Another section is already enlisted (Conflict)
             isDisabled = true;
             const enlistedSection = enlistedSubjects.find(id => id.startsWith(subjectCodeOnly + '-')).split('-')[1];
             warningMessage = `⚠️ Cannot enlist. Section ${enlistedSection} is already selected.`;
@@ -196,10 +212,19 @@ function renderSubjects(list = subjects) {
 
 // --- 5. ACTIONS (Enlist/Unenlist) ---
 function toggleEnlist(uniqueId, event) {
-    const subjectCodeOnly = uniqueId.split('-')[0];
+    const parts = uniqueId.split('-');
+    const subjectCode = parts[0];
+    const section = parseInt(parts[1]);
+    const subject = subjects.find(s => s.code === subjectCode && s.section == section);
 
-    if (subjectsAlreadyTaken.includes(subjectCodeOnly)) {
-        alert(`Error: ${subjectCodeOnly} is already taken or credited.`);
+    // Safety check for disabled/unmet prereq subjects
+    if (!subject || (subject.unmet_prereqs && subject.unmet_prereqs.length > 0)) {
+        if (event) event.preventDefault();
+        return;
+    }
+
+    if (subjectsAlreadyTaken.includes(subjectCode)) {
+        alert(`Error: ${subjectCode} is already taken or credited.`);
         if(event) event.preventDefault();
         return;
     }
@@ -213,28 +238,42 @@ function toggleEnlist(uniqueId, event) {
         enlistedSubjects = enlistedSubjects.filter(id => id !== uniqueId);
     } else {
         // ENLIST: Check for subject code conflict
-        const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCodeOnly);
+        const isSubjectCodeEnlisted = enlistedSubjects.some(id => id.split('-')[0] === subjectCode);
 
         if (isSubjectCodeEnlisted) {
-            alert(`You have already enlisted a section of ${subjectCodeOnly}. Please remove it first.`);
+            alert(`You have already enlisted a section of ${subjectCode}. Please remove it first.`);
             return;
         }
+
+        // ★ FIX 2: UNIT LIMIT CHECK START
+        if (!subject) {
+             console.error(`Subject with ID ${uniqueId} not found.`);
+             return;
+        }
+
+        const currentTotalUnits = calculateCurrentTotalUnits();
+        const newTotalUnits = currentTotalUnits + subject.units;
+
+        if (newTotalUnits > MAX_UNITS) {
+            alert(`Cannot enlist. Adding ${subject.units} units would exceed the maximum of ${MAX_UNITS} total units.`);
+            return;
+        }
+        // ★ UNIT LIMIT CHECK END
 
         // Proceed with enlistment
         enlistedSubjects.push(uniqueId);
     }
 
-    applyFiltersOnClient(); // Use client filter since the data is already fetched
+    applyFiltersOnClient();
     updateSummary();
 }
 
 
-// --- 6. SUMMARY & SUBMISSION (Existing Code) ---
+// --- 6. SUMMARY & SUBMISSION (Modified to use MAX_UNITS constant) ---
 
-function updateSummary() {
-    const totalSubjects = enlistedSubjects.length;
-
-    const totalUnits = enlistedSubjects.reduce((acc, uniqueId) => {
+// ★ FIX 3: Helper function to calculate total units
+function calculateCurrentTotalUnits() {
+    return enlistedSubjects.reduce((acc, uniqueId) => {
         const parts = uniqueId.split('-');
         const subjectCode = parts[0];
         const section = parseInt(parts[1]);
@@ -243,14 +282,21 @@ function updateSummary() {
 
         return acc + (sub ? sub.units : 0);
     }, 0);
+}
 
-    document.getElementById("total-units").innerText = `${totalUnits}/24`;
+function updateSummary() {
+    const totalSubjects = enlistedSubjects.length;
+
+    // ★ FIX 4: Use the new helper function and MAX_UNITS constant
+    const totalUnits = calculateCurrentTotalUnits();
+
+    document.getElementById("total-units").innerText = `${totalUnits}/${MAX_UNITS}`;
     document.getElementById("total-subjects").innerText = totalSubjects;
 }
 
 function clearAll() {
     enlistedSubjects = [];
-    applyFiltersOnClient(); // Use client filter
+    applyFiltersOnClient();
     updateSummary();
 }
 
@@ -259,6 +305,7 @@ function submitEnlistment() {
         alert("Please enlist at least one subject before submitting.");
         return;
     }
+   
 
     const finalSelection = subjects.filter(sub => {
         const uniqueId = sub.code + '-' + sub.section;
@@ -283,7 +330,7 @@ function submitEnlistment() {
 }
 
 
-// --- 7. EVENT LISTENERS & DROPDOWN (Updated to call correct filter functions) ---
+// --- 7. EVENT LISTENERS & DROPDOWN (Existing Code) ---
 
 function setupEventListeners() {
     // Search Bar Listener: Calls client filter
@@ -310,7 +357,7 @@ function setupEventListeners() {
         document.getElementById('selected-text').innerText = 'All departments';
         document.getElementById('slots').checked = false;
 
-        applyFilters(); // Triggers re-fetch from server (All departments)
+        fetchSubjects(); // Triggers re-fetch from server (All departments)
     });
 }
 
@@ -320,7 +367,7 @@ function selectOption(value) {
     document.getElementById("dropdown-options").classList.remove("show");
 
     currentDepartmentFilter = value;
-    applyFilters(); // Triggers re-fetch from server with new filter
+    fetchSubjects(); // Triggers re-fetch from server with new filter
 }
 
 function toggleDropdown() {
