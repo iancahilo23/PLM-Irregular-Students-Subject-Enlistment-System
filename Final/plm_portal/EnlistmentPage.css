@@ -114,14 +114,12 @@ body {
     min-height: 0;
 }
 
-/* --- HEADERS (Unified Style for All Sections) --- */
 h3 {
     font-size: 18px;
     color: var(--primary-blue);
     font-weight: 700;
-    margin-bottom: 15px;
-
-    /* The Underline Logic */
+    margin-top: 0;       /* Removes the top orange gap */
+    margin-bottom: 10px; /* Reduces the bottom gap */
     display: inline-block;
     position: relative;
     padding-bottom: 8px;
@@ -142,13 +140,14 @@ h3::after {
     background: var(--white);
     border: 1px solid var(--border-color);
     border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
+    padding: 15px 24px;
+    margin-bottom: 10px;
     box-shadow: 0 4px 6px rgba(58, 64, 162, 0.03);
 }
 
-.sidebar-section { margin-bottom: 30px; }
-
+.sidebar-section:last-child {
+    margin-bottom: 0;
+}
 /* --- Profile Sidebar --- */
 .profile-row { margin-bottom: 16px; }
 
@@ -287,6 +286,7 @@ h3::after {
     width: 100%;
     margin-bottom: 15px;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    margin-bottom: 15px !important;
 }
 
 .dropdown-trigger {
@@ -350,7 +350,7 @@ h3::after {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .checkbox-group label {
@@ -359,8 +359,9 @@ h3::after {
     font-weight: 500;
 }
 
-.stat-item-single { margin-bottom: 20px; }
-
+.stat-item-single {
+    margin-bottom: 10px; /* Reduced from 20px */
+}
 .summary-card h2 {
     margin: 0;
     font-size: 28px;
@@ -400,12 +401,12 @@ h3::after {
     background: var(--primary-blue);
     color: var(--white);
     width: 100%;
-    padding: 14px;
+    padding: 10px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 14px;
     transition: background 0.2s;
 }
@@ -416,7 +417,7 @@ h3::after {
     background: var(--light-blue-bg);
     color: var(--primary-blue);
     width: 100%;
-    padding: 14px;
+    padding: 10px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
