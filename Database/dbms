@@ -579,9 +579,208 @@ CREATE TABLE subject_section (
     CONSTRAINT subject_section_enroll_fk FOREIGN KEY (enroll_id) REFERENCES enrollment_status(enroll_id)
 );
 
+-- Create a new table to track subject section capacity and enrollment
+CREATE TABLE subject_section_capacity (
+    capacity_id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_id VARCHAR(50) NOT NULL,
+    section_id INT NOT NULL,
+    total_slots INT DEFAULT 40,
+    filled_slots INT DEFAULT 0,
+    max_capacity INT DEFAULT 40,
+    enrollment_status VARCHAR(10) DEFAULT 'OPEN', -- OPEN, LIMITED, FULL
+    
+    CONSTRAINT fk_capacity_subject_section 
+        FOREIGN KEY (subject_id, section_id) 
+        REFERENCES subject_section(subject_id, section_id)
+        ON DELETE CASCADE,
+    
+    CONSTRAINT fk_capacity_subject 
+        FOREIGN KEY (subject_id) 
+        REFERENCES subject(subject_id)
+        ON DELETE CASCADE,
+        
+    CONSTRAINT uq_subject_section_capacity 
+        UNIQUE (subject_id, section_id)
+);
+
+INSERT INTO subject_section_capacity (subject_id, section_id, total_slots, max_capacity)
+SELECT ss.subject_id, ss.section_id, 40, 40
+FROM subject_section ss;
+
+--stored procedure to check slots before enlisting
+CREATE OR REPLACE PROCEDURE sp_check_slots_before_enlist(
+    p_student_id IN VARCHAR2,
+    p_subject_id IN VARCHAR2,
+    p_section IN NUMBER
+) IS
+    v_available_slots NUMBER;
+    v_total_slots NUMBER;
+    v_filled_slots NUMBER;
+    v_enrollment_status VARCHAR2(10);
+BEGIN
+    SELECT total_slots, filled_slots, enrollment_status
+    INTO v_total_slots, v_filled_slots, v_enrollment_status
+    FROM subject_section_capacity 
+    WHERE subject_id = p_subject_id 
+    AND section_id = p_section;
+
+    IF v_enrollment_status = 'FULL' THEN
+        RAISE_APPLICATION_ERROR(-20001, 'This section is already full. Please choose another section.');
+    END IF;
+
+    v_available_slots := v_total_slots - v_filled_slots;
+
+    IF v_available_slots <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'No available slots in this section.');
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Available slots: ' || v_available_slots || ' out of ' || v_total_slots);
+END;
+
+--trigger for student enlistment
+CREATE OR REPLACE TRIGGER tr_update_section_capacity
+AFTER INSERT ON student_enlistment
+FOR EACH ROW
+DECLARE
+    v_current_filled NUMBER;
+    v_total_slots NUMBER;
+    v_available_slots NUMBER;
+    v_enrollment_status VARCHAR2(10);
+BEGIN
+    UPDATE subject_section_capacity 
+    SET filled_slots = filled_slots + 1,
+        updated_at = SYSTIMESTAMP
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    SELECT filled_slots, total_slots 
+    INTO v_current_filled, v_total_slots
+    FROM subject_section_capacity 
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    v_available_slots := v_total_slots - v_current_filled;
+
+    IF v_current_filled >= v_total_slots THEN
+        v_enrollment_status := 'FULL';
+    ELSIF v_available_slots <= 5 THEN
+        v_enrollment_status := 'LIMITED';
+    ELSE
+        v_enrollment_status := 'OPEN';
+    END IF;
+
+    UPDATE subject_section_capacity 
+    SET enrollment_status = v_enrollment_status,
+        updated_at = SYSTIMESTAMP
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    IF v_enrollment_status = 'FULL' THEN
+        UPDATE subject_section 
+        SET enroll_id = 'FULL'
+        WHERE subject_id = :NEW.subject_id 
+        AND section_id = :NEW.section;
+    END IF;
+
+    --for logging the enrollment
+    INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+    VALUES (
+        'Student ' || :NEW.student_id || ' enlisted in ' || :NEW.subject_id || ' Section ' || :NEW.section ||
+        ' (Slots: ' || v_current_filled || '/' || v_total_slots || ' - Status: ' || v_enrollment_status || ')',
+        SYSDATE,
+        USER,
+        SYSTIMESTAMP
+    );
+END;
+
+--trigger for when a student is removed
+CREATE OR REPLACE TRIGGER tr_decrement_section_capacity
+AFTER DELETE ON student_enlistment
+FOR EACH ROW
+DECLARE
+    v_current_filled NUMBER;
+    v_total_slots NUMBER;
+    v_available_slots NUMBER;
+    v_enrollment_status VARCHAR2(10);
+BEGIN
+    UPDATE subject_section_capacity 
+    SET filled_slots = filled_slots - 1,
+        updated_at = SYSTIMESTAMP
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section;
+
+    SELECT filled_slots, total_slots 
+    INTO v_current_filled, v_total_slots
+    FROM subject_section_capacity 
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section;
+
+    v_available_slots := v_total_slots - v_current_filled;
+
+    IF v_current_filled >= v_total_slots THEN
+        v_enrollment_status := 'FULL';
+    ELSIF v_available_slots <= 5 THEN
+        v_enrollment_status := 'LIMITED';
+    ELSE
+        v_enrollment_status := 'OPEN';
+    END IF;
+
+    UPDATE subject_section_capacity 
+    SET enrollment_status = v_enrollment_status,
+        updated_at = SYSTIMESTAMP
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section;
+
+    IF v_enrollment_status != 'FULL' THEN
+        UPDATE subject_section 
+        SET enroll_id = NULL
+        WHERE subject_id = :OLD.subject_id 
+        AND section_id = :OLD.section
+        AND enroll_id = 'FULL';
+    END IF;
+
+    --logging the removal
+    INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+    VALUES (
+        'Student ' || :OLD.student_id || ' removed from ' || :OLD.subject_id || ' Section ' || :OLD.section ||
+        ' (Slots: ' || v_current_filled || '/' || v_total_slots || ' - Status: ' || v_enrollment_status || ')',
+        SYSDATE,
+        USER,
+        SYSTIMESTAMP
+    );
+END;
+
+--trigger to prevent over-enrollment
+CREATE OR REPLACE TRIGGER tr_prevent_overenrollment
+BEFORE INSERT ON student_enlistment
+FOR EACH ROW
+DECLARE
+    v_available_slots NUMBER;
+    v_enrollment_status VARCHAR2(10);
+BEGIN
+    
+    SELECT (total_slots - filled_slots), enrollment_status
+    INTO v_available_slots, v_enrollment_status
+    FROM subject_section_capacity 
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    IF v_enrollment_status = 'FULL' THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Cannot enroll: This section is already full.');
+    END IF;
+
+    IF v_available_slots <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Cannot enroll: No available slots in this section.');
+    END IF;
+END;
+
+
+
+/*
 truncate table subject;
 truncate table subject_section;
 drop table subject_section;
+*/
 
 -- All dept subjects
 INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', '01:30:00', '00:00:00', 3, NULL);
