@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLM Portal - Login</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.js"></script>
+    <link rel="stylesheet" href="LoginPage.css">
+</head>
+<body>
+
+    <div id="splash-screen" class="splash-container">
+        <img src="Media/Splashlogo.png" alt="PLM Logo" class="flame-logo white-logo" />
+    </div>
+
+    <div id="login-screen" class="login-container hidden">
+    
+    <div class="login-bg-image"></div>
+    <div class="login-bg-overlay"></div>
+
+    <div class="page-header">
+            <img src="Media/Splashlogo.png" alt="PLM Logo" class="header-logo" />
+            <div class="header-text">
+                <h1>Pamantasan ng Lungsod ng Maynila</h1>
+                <p>University of the City of Manila</p>
+            </div>
+        </div>
+
+    <div class="center-wrapper">
+        <div class="login-card">
+            <h2 class="card-title">Main Campus</h2>
+            
+            <form id="login-form" novalidate>
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="username-input" required>
+                    <span class="error-msg">Please input username</span>
+                </div>
+                
+                <div class="input-group">
+                    <div class="label-row">
+                        <label>Password</label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    <input type="password" id="password-input" required>
+                    <span class="error-msg">Please input password</span>
+                </div>
+
+
+
+                <button type="submit" class="login-button">Login</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+    <script src="LoginPage.js"></script>
+</body>
+</html>
