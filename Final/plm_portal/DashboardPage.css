@@ -3,10 +3,6 @@
     box-sizing: border-box;
 }
 
-html {
-    overflow-y: scroll;
-}
-
 :root {
     /* PALETTE (Consistent with Enlistment System) */
     --primary-blue: #3a40a2;       
