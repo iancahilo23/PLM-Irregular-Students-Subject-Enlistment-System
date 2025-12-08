@@ -559,6 +559,8 @@ CREATE TABLE subject (
     lab_hours        VARCHAR2(15)  NOT NULL,
     units            DECIMAL(4,1)  NOT NULL,
     course_id        VARCHAR2(50),           -- Null = All Courses. Not Null = Exclusive
+    total_slots      INT           DEFAULT 40,
+    filled_slots     INT           DEFAULT 0,
     CONSTRAINT subject_id_pk        PRIMARY KEY (subject_id),
     CONSTRAINT fk_course_exclusive  FOREIGN KEY (course_id) REFERENCES COURSE(course_id)
 );
@@ -573,15 +575,19 @@ CREATE TABLE subject_section (
     room              VARCHAR(50),
     faculty_id        VARCHAR(50),
     enroll_id         VARCHAR(5),
+    section_total_slots INT DEFAULT 40,
+    section_filled_slots INT DEFAULT 0,
     CONSTRAINT subject_section_pk PRIMARY KEY (section_id, subject_id, day_of_week),
     CONSTRAINT subject_section_subject_fk FOREIGN KEY (subject_id) REFERENCES subject(subject_id) ON DELETE CASCADE,
     CONSTRAINT subject_section_faculty_fk FOREIGN KEY (faculty_id) REFERENCES faculty(faculty_id) ON DELETE SET NULL,
     CONSTRAINT subject_section_enroll_fk FOREIGN KEY (enroll_id) REFERENCES enrollment_status(enroll_id)
 );
 
-truncate table subject;
+UPDATE subject_section SET section_total_slots = 30, section_filled_slots = 0;
+
+/*truncate table subject;
 truncate table subject_section;
-drop table subject_section;
+drop table subject_section;*/
 
 -- All dept subjects
 INSERT INTO subject VALUES ('STS 0002', 'Science, Technology and Society', '01:30:00', '00:00:00', 3, NULL);
@@ -1178,6 +1184,148 @@ BEGIN
                          ,SYSTIMESTAMP);
      END CASE;
 END;
+
+--trigger for student enlistment
+CREATE OR REPLACE TRIGGER tr_update_subject_slots
+AFTER INSERT ON student_enlistment
+FOR EACH ROW
+DECLARE
+    v_total_slots NUMBER;
+    v_filled_slots NUMBER;
+    v_old_filled_slots NUMBER;
+    v_subject_section_count NUMBER;
+    v_subject_section NUMBER;
+BEGIN
+    
+    SELECT section INTO v_subject_section
+    FROM subject_section 
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section
+    AND ROWNUM = 1;
+    
+    UPDATE subject 
+    SET filled_slots = filled_slots + 1
+    WHERE subject_id = :NEW.subject_id 
+    AND section = v_subject_section;
+
+    SELECT section_total_slots, section_filled_slots 
+    INTO v_total_slots, v_old_filled_slots
+    FROM subject_section 
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    UPDATE subject_section 
+    SET section_filled_slots = v_old_filled_slots + 1
+    WHERE subject_id = :NEW.subject_id 
+    AND section_id = :NEW.section;
+
+    v_filled_slots := v_old_filled_slots + 1;
+
+    -- for logging the enrollment
+    INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+    VALUES (
+        'Student ' || :NEW.student_id || ' enlisted in ' || :NEW.subject_id || ' Section ' || :NEW.section ||
+        ' (Section Slots: ' || v_filled_slots || '/' || v_total_slots || ')',
+        SYSDATE,
+        USER,
+        SYSTIMESTAMP
+    );
+
+    -- update enrollment status if section is full
+    IF v_filled_slots >= v_total_slots THEN
+        UPDATE subject_section 
+        SET enroll_id = 'FULL'
+        WHERE subject_id = :NEW.subject_id 
+        AND section_id = :NEW.section;
+
+        -- update the main subject section status
+        UPDATE subject s
+        SET s.enroll_id = 'FULL'
+        WHERE s.subject_id = :NEW.subject_id 
+        AND s.section = v_subject_section;
+
+        INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+        VALUES (
+            'Section ' || :NEW.section || ' of ' || :NEW.subject_id || ' is now FULL',
+            SYSDATE,
+            USER,
+            SYSTIMESTAMP
+        );
+    END IF;
+END;
+
+--trigger for when a student is removed
+CREATE OR REPLACE TRIGGER tr_decrement_subject_slots
+AFTER DELETE ON student_enlistment
+FOR EACH ROW
+DECLARE
+    v_total_slots NUMBER;
+    v_filled_slots NUMBER;
+    v_new_filled_slots NUMBER;
+    v_subject_section NUMBER;
+BEGIN
+
+    SELECT section INTO v_subject_section
+    FROM subject_section 
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section
+    AND ROWNUM = 1;
+
+    UPDATE subject 
+    SET filled_slots = filled_slots - 1
+    WHERE subject_id = :OLD.subject_id 
+    AND section = v_subject_section;
+
+    SELECT section_total_slots, section_filled_slots 
+    INTO v_total_slots, v_filled_slots
+    FROM subject_section 
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section;
+
+    --decrement filled slots in SUBJECT_SECTION table
+    v_new_filled_slots := v_filled_slots - 1;
+    
+    UPDATE subject_section 
+    SET section_filled_slots = v_new_filled_slots
+    WHERE subject_id = :OLD.subject_id 
+    AND section_id = :OLD.section;
+
+    --for logging the removal
+    INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+    VALUES (
+        'Student ' || :OLD.student_id || ' removed from ' || :OLD.subject_id || ' Section ' || :OLD.section ||
+        ' (Section Slots: ' || v_new_filled_slots || '/' || v_total_slots || ')',
+        SYSDATE,
+        USER,
+        SYSTIMESTAMP
+    );
+
+    --reopen enrollment if section was full and now has openings
+    IF v_new_filled_slots < v_total_slots THEN
+        UPDATE subject_section 
+        SET enroll_id = NULL
+        WHERE subject_id = :OLD.subject_id 
+        AND section_id = :OLD.section
+        AND enroll_id = 'FULL';
+
+        --update the main subject section status
+        UPDATE subject s
+        SET s.enroll_id = NULL
+        WHERE s.subject_id = :OLD.subject_id 
+        AND s.section = v_subject_section
+        AND s.enroll_id = 'FULL';
+
+        INSERT INTO log_table (log_message, log_date, log_user, log_timestamp)
+        VALUES (
+            'Section ' || :OLD.section || ' of ' || :OLD.subject_id || ' now has openings',
+            SYSDATE,
+            USER,
+            SYSTIMESTAMP
+        );
+    END IF;
+END;
+
+
 
 -- EXCEPTIONS
 CREATE OR REPLACE PROCEDURE exLogin_student (
