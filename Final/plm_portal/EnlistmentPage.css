@@ -450,6 +450,20 @@ h3::after {
     cursor: not-allowed;
 }
 
+/* Style for schedule conflicting subjects */
+.subject-card.conflict-subject {
+    background-color: #fef0f0; /* Very light red/pink */
+    border: 1px solid #ffdddd;
+    opacity: 0.8;
+    cursor: not-allowed;
+}
+
+.subject-card.conflict-subject:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: #f99;
+}
+
 .subject-card.disabled-card:hover {
     transform: none;
     box-shadow: none;
