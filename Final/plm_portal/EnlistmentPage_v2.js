@@ -1,4 +1,4 @@
-// EnlistmentPage.js - FIXED VERSION
+// EnlistmentPage_v2.js - COMPLETE WITH FUNCTIONAL SLOTS
 
 // --- Global Scope for access ---
 let subjects = [];
@@ -21,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProfileAndInitialize();
     fetchEnlistedSubjects();
     applyFilters(true);
-    // updateSummary() will be called after subjects load
     setupEventListeners();
 });
 
@@ -82,7 +81,6 @@ async function fetchEnlistedSubjects() {
 
             console.log("Subjects already taken:", subjectsAlreadyTaken);
 
-            // Only update UI if subjects are already loaded
             if (subjects.length > 0) {
                 applyFiltersOnClient();
                 updateSummary();
@@ -111,7 +109,7 @@ async function fetchSubjects() {
         if (data.success) {
             subjects = data.subjects;
             applyFiltersOnClient();
-            updateSummary(); // Update summary after subjects are loaded
+            updateSummary();
         } else {
             console.error("Failed to fetch subjects:", data.message);
             document.getElementById("subject-list").innerHTML = `<p class="subtitle">Error loading subjects: ${data.message}</p>`;
@@ -153,9 +151,9 @@ function applyFiltersOnClient() {
 
         // Available Slots Filter
         if (showOnlyAvailableSlots) {
-            const parts = sub.slots.split('/');
-            const currentSlots = parseInt(parts[0], 10);
-            if (currentSlots <= 0) return false;
+            if (sub.available_slots !== undefined && sub.available_slots <= 0) {
+                return false;
+            }
         }
 
         return true;
@@ -209,14 +207,18 @@ function renderSubjects(list = subjects) {
                 warningMessage = `⚠️ Cannot enlist. Section ${enlistedSection} is already selected or taken.`;
                 cardClass = 'disabled-card';
             } else {
-                // Check for schedule conflicts (check against ALL active subjects)
-                const allActiveSubjects = [...enlistedSubjects, ...subjectsAlreadyTaken];
+                // Check for schedule conflicts
                 const conflict = checkConflict(sub.code, sub.section, subjects, allActiveSubjects);
 
                 if (conflict) {
                     isDisabled = true;
                     warningMessage = `❌ Schedule conflict with ${conflict.existingSubject} on ${conflict.conflictDay}.`;
                     cardClass = 'conflict-subject';
+                } else if (sub.available_slots !== undefined && sub.available_slots <= 0) {
+                    // ⭐ NEW: Check if slots are full
+                    isDisabled = true;
+                    warningMessage = '🚫 This class is full (0 slots remaining).';
+                    cardClass = 'full-subject';
                 }
             }
         }
@@ -232,7 +234,7 @@ function renderSubjects(list = subjects) {
                 <p class="subject-desc">${sub.description}</p>
                 <div class="subject-meta">
                     <span>🕒 Schedule: ${sub.schedule} ${sub.faculty && sub.faculty !== ', ' ? '| Instructor: ' + sub.faculty : ''}</span>
-                    <span>Slots: ${sub.slots} | Room: ${sub.room}</span>
+                    <span>${getSlotsDisplay(sub.available_slots, sub.max_slots)} | Room: ${sub.room}</span>
                     ${warningMessage ? `<p class="subject-warning">${warningMessage}</p>` : ''}
                 </div>
             </div>
@@ -250,6 +252,27 @@ function renderSubjects(list = subjects) {
         card.appendChild(btn);
         container.appendChild(card);
     });
+}
+
+// --- ⭐ NEW: SLOTS DISPLAY HELPER ---
+function getSlotsDisplay(available, max) {
+    if (available === undefined || max === undefined) {
+        return 'Slots: --/--';
+    }
+
+    const percentage = (available / max) * 100;
+    let icon = '✓';
+    let cssClass = '';
+
+    if (available === 0) {
+        icon = '🚫';
+        cssClass = 'slots-full';
+    } else if (percentage < 20) {
+        icon = '⚠️';
+        cssClass = 'slots-low';
+    }
+
+    return `<span class="${cssClass}">${icon} Slots: ${available}/${max}</span>`;
 }
 
 // --- TOGGLE ENLIST ---
@@ -289,12 +312,19 @@ function toggleEnlist(uniqueId, event) {
             return;
         }
 
-        // Check for schedule conflict (check against ALL active subjects)
+        // Check for schedule conflict
         const [newCode, newSection] = parts;
         const conflict = checkConflict(newCode, newSection, subjects, allActiveSubjects);
 
         if (conflict) {
             alert(`ERROR: Schedule conflict detected!\nYou cannot enlist ${newCode} because its schedule conflicts with ${conflict.existingSubject} on ${conflict.conflictDay}.`);
+            return;
+        }
+
+        // ⭐ NEW: Check if slots are available
+        const subject = subjects.find(s => getUniqueSubjectId(s.code, s.section) === uniqueId);
+        if (subject && subject.available_slots !== undefined && subject.available_slots <= 0) {
+            alert(`ERROR: ${newCode} Section ${newSection} is full!\nThere are no available slots remaining.`);
             return;
         }
 
@@ -310,27 +340,16 @@ function updateSummary() {
     const allSelected = [...new Set([...enlistedSubjects, ...subjectsAlreadyTaken])];
     const totalSubjects = allSelected.length;
 
-    console.log("updateSummary called - allSelected:", allSelected);
-    console.log("subjects array length:", subjects.length);
-
     const totalUnits = allSelected.reduce((acc, uniqueId) => {
         const parts = uniqueId.split('-');
         if (parts.length !== 2) {
-            console.warn(`Skipping invalid ID in summary: ${uniqueId}`);
             return acc;
         }
         const [subjectCode, section] = parts;
 
         const sub = subjects.find(s => s.code === subjectCode && String(s.section) === String(section));
-
-        if (!sub) {
-            console.warn(`Subject not found for ID: ${uniqueId} (code: ${subjectCode}, section: ${section})`);
-        }
-
         return acc + (sub ? sub.units : 0);
     }, 0);
-
-    console.log("Total units calculated:", totalUnits);
 
     document.getElementById("total-units").innerText = `${totalUnits}/24`;
     document.getElementById("total-subjects").innerText = totalSubjects;
@@ -485,13 +504,9 @@ window.addEventListener('scroll', () => {
 });
 
 // ============================================
-// ★ SCHEDULE CONFLICT DETECTION (FIXED) ★
+// ★ SCHEDULE CONFLICT DETECTION ★
 // ============================================
 
-/**
- * Parse schedule string into array of schedule objects
- * Handles formats like: "MWF 10:00 AM - 11:30 AM / TTH 2:00 PM - 3:30 PM"
- */
 function parseSchedule(scheduleString) {
     if (!scheduleString) return [];
 
@@ -505,7 +520,7 @@ function parseSchedule(scheduleString) {
             return null;
         }
 
-        const days = match[1].toUpperCase(); // Normalize to uppercase
+        const days = match[1].toUpperCase();
         const startMinutes = timeToMinutes(match[2], match[3]);
         const endMinutes = timeToMinutes(match[4], match[5]);
 
@@ -513,25 +528,18 @@ function parseSchedule(scheduleString) {
     }).filter(p => p !== null);
 }
 
-/**
- * Convert 12-hour time to minutes since midnight
- */
 function timeToMinutes(timeStr, period) {
     let [hour, minute] = timeStr.split(':').map(Number);
 
     if (period.toUpperCase() === 'PM' && hour !== 12) {
         hour += 12;
     } else if (period.toUpperCase() === 'AM' && hour === 12) {
-        hour = 0; // Midnight
+        hour = 0;
     }
 
     return hour * 60 + minute;
 }
 
-/**
- * Split days string into array, handling "TH" as single unit
- * Examples: "MWF" -> ["M","W","F"], "TTH" -> ["T","TH"]
- */
 function splitDays(daysStr) {
     if (!daysStr) return [];
 
@@ -551,44 +559,26 @@ function splitDays(daysStr) {
     return result;
 }
 
-/**
- * Check if two day strings have any overlapping days
- * Examples:
- *   "MWF" vs "MW" -> true (overlaps M and W)
- *   "MWF" vs "TTH" -> false (no overlap)
- *   "TH" vs "Th" -> true (case insensitive)
- */
 function daysOverlap(days1, days2) {
     const d1 = splitDays(days1);
     const d2 = splitDays(days2);
     return d1.some(day => d2.includes(day));
 }
 
-/**
- * Find which specific days overlap between two day strings
- * Example: "MWF" vs "MW" -> "MW"
- */
 function findOverlapDays(days1, days2) {
     const d1 = splitDays(days1);
     const d2 = splitDays(days2);
     return d1.filter(day => d2.includes(day)).join('');
 }
 
-/**
- * Main conflict detection function
- * Returns conflict object if found, null otherwise
- */
 function checkConflict(newSubjectCode, newSection, subjectsList, currentEnlisted) {
-    // Find the new subject
     const newSub = subjectsList.find(s => s.code === newSubjectCode && String(s.section) === String(newSection));
     if (!newSub) return null;
 
     const newSchedules = parseSchedule(newSub.schedule);
     const newUniqueId = getUniqueSubjectId(newSubjectCode, newSection);
 
-    // Check against all enlisted subjects
     for (const uniqueId of currentEnlisted) {
-        // Skip checking against itself
         if (uniqueId === newUniqueId) continue;
 
         const parts = uniqueId.split('-');
@@ -601,17 +591,12 @@ function checkConflict(newSubjectCode, newSection, subjectsList, currentEnlisted
 
         const existingSchedules = parseSchedule(existingSub.schedule);
 
-        // Compare all schedule combinations
         for (const newSched of newSchedules) {
             for (const existingSched of existingSchedules) {
-                // Check if days overlap
                 if (daysOverlap(newSched.days, existingSched.days)) {
-                    // Check if times overlap
                     const overlap = Math.min(newSched.end, existingSched.end) -
                                    Math.max(newSched.start, existingSched.start);
 
-                    // Conflict only if overlap is positive (sharing time)
-                    // overlap = 0 means back-to-back (allowed)
                     if (overlap > 0) {
                         return {
                             existingSubject: existingSub.code,
@@ -623,5 +608,5 @@ function checkConflict(newSubjectCode, newSection, subjectsList, currentEnlisted
         }
     }
 
-    return null; // No conflict
+    return null;
 }
